@@ -10,7 +10,7 @@ function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const handleSubmit = () => {
-    if (email === "waleedsabryyy@gmail.com" && password === "asdasd") {
+    if (email === "admin@gmail.com" && password === "admin") {
       cookies.set("_auth_token", "token");
       cookies.set("_auth_role", "admin");
       window.location.pathname = "/";
