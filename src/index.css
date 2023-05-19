@@ -7,7 +7,53 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.nav {
+  position: relative;
+  padding-bottom: 8px;
+  margin-right: 16px;
+  color: #45454598;
+  text-decoration: none;
+  transition: all;
+  transition-duration: 300ms;
+  margin: 2 0;
+  display: block;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.nav:hover {
+  color: black;
+}
+
+.nav.active::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #000;
+}
+
+.white-underline:before,
+.white-underline:after {
+  border-bottom-color: white !important;
+}
+
+.white-focused:hover:before,
+.white-focused:hover:after {
+  border-bottom-color: white !important;
+}
+
+.white-focused:after {
+  border-bottom-width: 2px !important;
+}
+.styled-textField{
+  border-radius: 40px;
+}
+
+.styled-textField::before, .styled-textField::after {
+  border-radius: 40px;
 }
