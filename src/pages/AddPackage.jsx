@@ -48,9 +48,10 @@ function AddPackage() {
       navigator('/');
     }, 2000);
   };
-
   return (
-    <Box height={"100vh"} width={"100%"}>
+    <motion.Box height={"100vh"} width={"100%"}       initial={{ opacity: 0, transition: { duration: 0.5 } }}
+    animate={{ opacity: 1, transition: { duration: 0.5 } }}
+    exit={{ opacity: 0, transition: { duration: 0.5 } }}>
       <TopBar />
       <Box
         display={"flex"}
@@ -472,7 +473,7 @@ function AddPackage() {
         </Box>
       </Box>
       <Footer />
-    </Box>
+    </motion.Box>
   );
 }
 

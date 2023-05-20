@@ -12,12 +12,14 @@ import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
-
+import { motion } from "framer-motion";
 function AllPackages() {
   const [filter, setFilter] = React.useState();
   const navigator = useNavigate();
   return (
-    <Box height={"100vh"} width={"100%"}>
+    <motion.Box height={"100vh"} width={"100%"}       initial={{ opacity: 0, transition: { duration: 0.5 } }}
+    animate={{ opacity: 1, transition: { duration: 0.5 } }}
+    exit={{ opacity: 0, transition: { duration: 0.5 } }}>
       <TopBar />
       <Box sx={{ direction: "rtl", backgroundColor: "#F2F2F2" }}>
         <Box display={"flex"} flexDirection={"column"} p={5} height={"100%"}>
@@ -955,7 +957,7 @@ function AllPackages() {
         </Box>
       </Box>
       <Footer />
-    </Box>
+    </motion.Box>
   );
 }
 

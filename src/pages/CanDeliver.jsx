@@ -7,9 +7,6 @@ import {
   ImageList,
   ImageListItem,
   IconButton,
-  FormControl,
-  MenuItem,
-  Select,
   Dialog,
   DialogContent,
 } from "@mui/material";
@@ -21,11 +18,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { motion } from "framer-motion";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import TimerIcon from "@mui/icons-material/Timer";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
-
 function CanDeliver() {
   const [conditions, setConditions] = useState(false);
   const [open, setOpen] = useState(false);
@@ -39,7 +32,7 @@ function CanDeliver() {
   };
 
   return (
-    <Box height={"100vh"} width={"100%"}>
+    <motion.Box height={"100vh"} width={"100%"}>
       <TopBar />
       <Box
         display={"flex"}
@@ -296,7 +289,7 @@ function CanDeliver() {
         </Box>
       </Box>
       <Footer />
-    </Box>
+    </motion.Box>
   );
 }
 

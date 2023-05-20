@@ -12,7 +12,9 @@ import DeliverMessage from "./pages/DeliverMessage";
 import DriverInfo from "./pages/DriverInfo";
 import PackageInfo from "./pages/PackageInfo";
 import AdminPanel from "./pages/Admin/AdminPanel";
-import SidePanel from "./pages/components/SidePanel";
+import TermsOfUse from "./pages/Admin/Termsofuse";
+import Conditions from "./pages/Admin/Conditions";
+import Taxes from "./pages/Admin/Taxes";
 function App() {
   const cookies = new Cookies();
   return (
@@ -30,7 +32,12 @@ function App() {
         <Route path="/driverInfo/:id" element={<DriverInfo />} />
         <Route path="/packageInfo/:id" element={<PackageInfo />} />
         {cookies.get("_auth_role") === "admin" ? (
-              <Route path="/adminpanel" element={<AdminPanel />} />
+          <>
+            <Route path="/admin/adminpanel" element={<AdminPanel />} />
+            <Route path="/admin/termsofuse" element={<TermsOfUse />} />
+            <Route path="/admin/conditions" element={<Conditions />} />
+            <Route path="/admin/taxes" element={<Taxes />} />
+          </>
         ) : (
           ""
         )}

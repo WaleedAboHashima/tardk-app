@@ -14,6 +14,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import * as yup from "yup";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 function Pay() {
   const navigator = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -30,7 +31,9 @@ function Pay() {
     }, 2000);
   };
   return (
-    <Box height={"100vh"} width={"100%"}>
+    <motion.Box height={"100vh"} width={"100%"}      initial={{ opacity: 0, transition: { duration: 0.5 } }}
+    animate={{ opacity: 1, transition: { duration: 0.5 } }}
+    exit={{ opacity: 0, transition: { duration: 0.5 } }}>
       <TopBar />
       <Box
         sx={{ backgroundColor: "#F2F2F2" }}
@@ -216,10 +219,9 @@ function Pay() {
         </Box>
       </Box>
       <Footer />
-    </Box>
+    </motion.Box>
   );
 }
-
 const validSchema = yup.object({
   password: yup.string().required("مطلوب*"),
 });

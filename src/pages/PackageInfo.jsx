@@ -3,11 +3,14 @@ import React from "react";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import { useNavigate } from "react-router-dom";
+import { motion } from 'framer-motion';
 
 function PackageInfo() {
   const navigator = useNavigate();
   return (
-    <Box height={"100vh"} width={"100%"}>
+    <motion.Box height={"100vh"} width={"100%"}       initial={{ opacity: 0, transition: { duration: 0.5 } }}
+    animate={{ opacity: 1, transition: { duration: 0.5 } }}
+    exit={{ opacity: 0, transition: { duration: 0.5 } }}>
       <TopBar />
       <Box
         height={"80%"}
@@ -72,7 +75,7 @@ function PackageInfo() {
         </Box>
       </Box>
       <Footer />
-    </Box>
+    </motion.Box>
   );
 }
 

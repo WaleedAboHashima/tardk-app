@@ -15,9 +15,56 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
+import { motion } from "framer-motion";
 function Home() {
+  const drivers = [
+    {
+      name: "السائق محمد أحمد",
+      phone: "0101xxxx",
+      price: "10$",
+      city: "غذه",
+      travelDate: "123",
+      travelPlace: "رفح",
+    },
+    {
+      name: "السائق محمد أحمد",
+      phone: "0101xxxx",
+      price: "10$",
+      city: "غذه",
+      travelDate: "123",
+      travelPlace: "رفح",
+    },
+    {
+      name: "السائق محمد أحمد",
+      phone: "0101xxxx",
+      price: "10$",
+      city: "غذه",
+      travelDate: "123",
+      travelPlace: "رفح",
+    },
+    {
+      name: "السائق محمد أحمد",
+      phone: "0101xxxx",
+      price: "10$",
+      city: "غذه",
+      travelDate: "123",
+      travelPlace: "رفح",
+    },
+    {
+      name: "السائق محمد أحمد",
+      phone: "0101xxxx",
+      price: "10$",
+      city: "غذه",
+      travelDate: "123",
+      travelPlace: "رفح",
+    },
+  ];
   return (
-    <>
+    <motion.Box
+      initial={{ opacity: 0, transition: { duration: 0.5 } }}
+      animate={{ opacity: 1, transition: { duration: 0.5 } }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    >
       <TopBar />
       <Box
         display="flex"
@@ -55,7 +102,7 @@ function Home() {
                 backgroundColor: "white",
               }}
               InputProps={{
-                style: {fontSize: '25px', paddingRight: 10},
+                style: { fontSize: "25px", paddingRight: 10 },
                 endAdornment: (
                   <IconButton
                     position="end"
@@ -69,7 +116,7 @@ function Home() {
                       ":hover": { backgroundColor: "#454545" },
                     }}
                   >
-                    <SearchIcon sx={{height: '40px', width: '40px'}} />
+                    <SearchIcon sx={{ height: "40px", width: "40px" }} />
                   </IconButton>
                 ),
               }}
@@ -117,8 +164,7 @@ function Home() {
                 >
                   <Box className="package">لدي طرد</Box>
                   <Button
-                    onClick={() => window.location.pathname = '/addPackage'}
-                    
+                    onClick={() => (window.location.pathname = "/addPackage")}
                     sx={{
                       display: "none",
                       backgroundColor: "tranparent",
@@ -182,7 +228,7 @@ function Home() {
                     بإمكاني التوصيل
                   </Box>
                   <Button
-                    onClick={() => window.location.pathname = '/canDeliver'}
+                    onClick={() => (window.location.pathname = "/canDeliver")}
                     sx={{
                       display: "none",
                       backgroundColor: "tranparent",
@@ -222,7 +268,11 @@ function Home() {
             fontSize={"50px"}
           >
             أحدث الطرود
-            <Button onClick={() => window.location.pathname = '/allPackages'} variant="" sx={{ fontSize: "30px", color: "#454545" }}>
+            <Button
+              onClick={() => (window.location.pathname = "/allPackages")}
+              variant=""
+              sx={{ fontSize: "30px", color: "#454545" }}
+            >
               الكل
             </Button>
           </Box>
@@ -615,1155 +665,217 @@ function Home() {
             fontSize={"50px"}
           >
             أحدث السائقين
-            <Button onClick={() => window.location.pathname = '/allDrivers'} variant="" sx={{ fontSize: "30px", color: "#454545" }}>
+            <Button
+              onClick={() => (window.location.pathname = "/allDrivers")}
+              variant=""
+              sx={{ fontSize: "30px", color: "#454545" }}
+            >
               الكل
             </Button>
           </Box>
           <Carousel responsive={responsive} rtl itemClass="4">
-            <Paper
-              border="2px solid #454545"
-              fontSize={"50px"}
-              fontWeight={"bold"}
-              color={"white"}
-              sx={{
-                position: "relative",
-                backgroundColor: "transparent",
-                m: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "232px",
-                borderRadius: 30,
-                width: "355px",
-                ":hover": {
-                  height: "396px",
-                  my: 2,
-                  borderRadius: 20,
-                },
-                "&:hover .driverContainer": {
-                  borderRadius: 20,
-                  height: "396px",
-                  backgroundColor: "#45454580",
-                  backdropFilter: "blur(2px)",
-                },
-                ":hover img": {
-                  height: "100%",
-                  width: "100%",
-                },
-                ":hover div img": {
-                  height: "95px",
-                  width: "95px",
-                },
-                "&:hover .driverDetails": {
-                  display: "flex",
-                },
-                "&:hover .number": {
-                  display: "none",
-                },
-                transition: "500ms ease",
-              }}
-              m={8}
-            >
-              <img
-                src="./assets/driver.png"
-                alt="driver"
-                style={{ borderRadius: 80 }}
-              />
-              <Box
-                className="driverContainer"
-                sx={{ backgroundColor: "#45454546", transition: "0.2s ease" }}
-                borderRadius={20}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                height={"100%"}
-                width={"100%"}
-                position={"absolute"}
-                flexDirection={"column"}
-                color={"white"}
-                fontSize={"26px"}
-                fontWeight={"bold"}
-              >
-                <img
-                  width={"95px"}
-                  height={"95px"}
-                  src="./assets/personLogox2.png"
-                  style={{ transition: "0.2s ease" }}
-                />
-                <Box>السائق محمد أحمد</Box>
-                <Box className="number">رقم التواصل : 0101xxxx</Box>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
+            {drivers.map((driver) => (
+              <Box height={"355px"}>
+                <Paper
+                  border="2px solid #454545"
+                  fontSize={"50px"}
+                  fontWeight={"bold"}
+                  color={"white"}
                   sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
+                    position: "relative",
+                    backgroundColor: "transparent",
+                    m: 8,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 30,
+                    width: "355px",
+                    ":hover": {
+                      height: "396px",
+                      my: 2,
+                      borderRadius: 20,
+                    },
+                    "&:hover .driverContainer": {
+                      borderRadius: 20,
+                      height: "396px",
+                      backgroundColor: "#45454580",
+                      backdropFilter: "blur(2px)",
+                    },
+                    ":hover img": {
+                      height: "100%",
+                      width: "100%",
+                    },
+                    ":hover div img": {
+                      height: "95px",
+                      width: "95px",
+                    },
+                    "&:hover .driverDetails": {
+                      display: "flex",
+                    },
+                    "&:hover .number": {
+                      display: "none",
+                    },
+                    transition: "500ms ease",
                   }}
-                  dir="rtl"
+                  m={8}
                 >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
+                  <img
+                    src="/assets/driver.png"
+                    alt="driver"
+                    style={{ borderRadius: 80 }}
+                  />
+                  <Box
+                    className="driverContainer"
+                    sx={{ transition: "0.2s ease" }}
+                    borderRadius={20}
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    height={"100%"}
+                    width={"100%"}
+                    position={"absolute"}
+                    flexDirection={"column"}
+                    color={"white"}
+                    fontSize={"26px"}
+                    fontWeight={"bold"}
+                  >
+                    <img
+                      width={"95px"}
+                      height={"95px"}
+                      src="./assets/personLogox2.png"
+                      style={{ transition: "0.2s ease" }}
                     />
-                  </ListItemIcon>
-                  رقم التواصل: 0101xxxx
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
+                    <Box>{driver.name}</Box>
+                    <Box className="number">{driver.phone}</Box>
+                    <ListItem
+                      className="driverDetails"
+                      disableGutters
+                      sx={{
+                        display: "none",
+                        justifyContent: "right",
+                        marginRight: 10,
                       }}
-                    />
-                  </ListItemIcon>
-                  سعر الخدمه 10$
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
+                      dir="rtl"
+                    >
+                      <ListItemIcon sx={{ minWidth: 0 }}>
+                        <div
+                          style={{
+                            width: "0.5em",
+                            height: "0.5em",
+                            textAlign: "right",
+                            borderRadius: "50%",
+                            backgroundColor: "white",
+                          }}
+                        />
+                      </ListItemIcon>
+                      الرقم:
+                      {driver.phone}
+                    </ListItem>
+                    <ListItem
+                      className="driverDetails"
+                      disableGutters
+                      sx={{
+                        display: "none",
+                        justifyContent: "right",
+                        marginRight: 10,
                       }}
-                    />
-                  </ListItemIcon>
-                  مكان السكن: غذه
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
+                      dir="rtl"
+                    >
+                      <ListItemIcon sx={{ minWidth: 0 }}>
+                        <div
+                          style={{
+                            width: "0.5em",
+                            height: "0.5em",
+                            textAlign: "right",
+                            borderRadius: "50%",
+                            backgroundColor: "white",
+                          }}
+                        />
+                      </ListItemIcon>
+                      السعر:
+                      {driver.price}
+                    </ListItem>
+                    <ListItem
+                      className="driverDetails"
+                      disableGutters
+                      sx={{
+                        display: "none",
+                        justifyContent: "right",
+                        marginRight: 10,
                       }}
-                    />
-                  </ListItemIcon>
-                  تاريخ السفر: 123
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
+                      dir="rtl"
+                    >
+                      <ListItemIcon sx={{ minWidth: 0 }}>
+                        <div
+                          style={{
+                            width: "0.5em",
+                            height: "0.5em",
+                            textAlign: "right",
+                            borderRadius: "50%",
+                            backgroundColor: "white",
+                          }}
+                        />
+                      </ListItemIcon>
+                      مكان السكن:
+                      {driver.city}
+                    </ListItem>
+                    <ListItem
+                      className="driverDetails"
+                      disableGutters
+                      sx={{
+                        display: "none",
+                        justifyContent: "right",
+                        marginRight: 10,
                       }}
-                    />
-                  </ListItemIcon>
-                  مكان السفر: رفح
-                </ListItem>
+                      dir="rtl"
+                    >
+                      <ListItemIcon sx={{ minWidth: 0 }}>
+                        <div
+                          style={{
+                            width: "0.5em",
+                            height: "0.5em",
+                            textAlign: "right",
+                            borderRadius: "50%",
+                            backgroundColor: "white",
+                          }}
+                        />
+                      </ListItemIcon>
+                      تاريخ السفر:
+                      {driver.travelDate}
+                    </ListItem>
+                    <ListItem
+                      className="driverDetails"
+                      disableGutters
+                      sx={{
+                        display: "none",
+                        justifyContent: "right",
+                        marginRight: 10,
+                      }}
+                      dir="rtl"
+                    >
+                      <ListItemIcon sx={{ minWidth: 0 }}>
+                        <div
+                          style={{
+                            width: "0.5em",
+                            height: "0.5em",
+                            textAlign: "right",
+                            borderRadius: "50%",
+                            backgroundColor: "white",
+                          }}
+                        />
+                      </ListItemIcon>
+                      مكان السفر:
+                      {driver.travelPlace}
+                    </ListItem>
+                  </Box>
+                </Paper>
               </Box>
-            </Paper>
-            <Paper
-              border="2px solid #454545"
-              fontSize={"50px"}
-              fontWeight={"bold"}
-              color={"white"}
-              sx={{
-                position: "relative",
-                backgroundColor: "transparent",
-                m: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "232px",
-                borderRadius: 30,
-                width: "355px",
-                ":hover": {
-                  height: "396px",
-                  my: 2,
-                  borderRadius: 20,
-                },
-                "&:hover .driverContainer": {
-                  borderRadius: 20,
-                  height: "396px",
-                  backgroundColor: "#45454580",
-                  backdropFilter: "blur(2px)",
-                },
-                ":hover img": {
-                  height: "100%",
-                  width: "100%",
-                },
-                ":hover div img": {
-                  height: "95px",
-                  width: "95px",
-                },
-                "&:hover .driverDetails": {
-                  display: "flex",
-                },
-                "&:hover .number": {
-                  display: "none",
-                },
-                transition: "500ms ease",
-
-              }}
-              m={8}
-            >
-              <img
-                src="./assets/driver.png"
-                alt="driver"
-                style={{ borderRadius: 80 }}
-              />
-              <Box
-                className="driverContainer"
-                sx={{ backgroundColor: "#45454546", transition: "0.2s ease" }}
-                borderRadius={20}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                height={"100%"}
-                width={"100%"}
-                position={"absolute"}
-                flexDirection={"column"}
-                color={"white"}
-                fontSize={"26px"}
-                fontWeight={"bold"}
-              >
-                <img
-                  width={"95px"}
-                  height={"95px"}
-                  src="./assets/personLogox2.png"
-                  style={{ transition: "0.2s ease" }}
-                />
-                <Box>السائق محمد أحمد</Box>
-                <Box className="number">رقم التواصل : 0101xxxx</Box>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  رقم التواصل: 0101xxxx
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  سعر الخدمه 10$
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السكن: غذه
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  تاريخ السفر: 123
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السفر: رفح
-                </ListItem>
-              </Box>
-            </Paper>
-            <Paper
-              border="2px solid #454545"
-              fontSize={"50px"}
-              fontWeight={"bold"}
-              color={"white"}
-              sx={{
-                position: "relative",
-                backgroundColor: "transparent",
-                m: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "232px",
-                borderRadius: 30,
-                width: "355px",
-                ":hover": {
-                  height: "396px",
-                  my: 2,
-                  borderRadius: 20,
-                },
-                "&:hover .driverContainer": {
-                  borderRadius: 20,
-                  height: "396px",
-                  backgroundColor: "#45454580",
-                  backdropFilter: "blur(2px)",
-                },
-                ":hover img": {
-                  height: "100%",
-                  width: "100%",
-                },
-                ":hover div img": {
-                  height: "95px",
-                  width: "95px",
-                },
-                "&:hover .driverDetails": {
-                  display: "flex",
-                },
-                "&:hover .number": {
-                  display: "none",
-                },
-                transition: "500ms ease",
-
-              }}
-              m={8}
-            >
-              <img
-                src="./assets/driver.png"
-                alt="driver"
-                style={{ borderRadius: 80 }}
-              />
-              <Box
-                className="driverContainer"
-                sx={{ backgroundColor: "#45454546", transition: "0.2s ease" }}
-                borderRadius={20}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                height={"100%"}
-                width={"100%"}
-                position={"absolute"}
-                flexDirection={"column"}
-                color={"white"}
-                fontSize={"26px"}
-                fontWeight={"bold"}
-              >
-                <img
-                  width={"95px"}
-                  height={"95px"}
-                  src="./assets/personLogox2.png"
-                  style={{ transition: "0.2s ease" }}
-                />
-                <Box>السائق محمد أحمد</Box>
-                <Box className="number">رقم التواصل : 0101xxxx</Box>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  رقم التواصل: 0101xxxx
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  سعر الخدمه 10$
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السكن: غذه
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  تاريخ السفر: 123
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السفر: رفح
-                </ListItem>
-              </Box>
-            </Paper>
-            <Paper
-              border="2px solid #454545"
-              fontSize={"50px"}
-              fontWeight={"bold"}
-              color={"white"}
-              sx={{
-                position: "relative",
-                backgroundColor: "transparent",
-                m: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "232px",
-                borderRadius: 30,
-                width: "355px",
-                ":hover": {
-                  height: "396px",
-                  my: 2,
-                  borderRadius: 20,
-                },
-                "&:hover .driverContainer": {
-                  borderRadius: 20,
-                  height: "396px",
-                  backgroundColor: "#45454580",
-                  backdropFilter: "blur(2px)",
-                },
-                ":hover img": {
-                  height: "100%",
-                  width: "100%",
-                },
-                ":hover div img": {
-                  height: "95px",
-                  width: "95px",
-                },
-                "&:hover .driverDetails": {
-                  display: "flex",
-                },
-                "&:hover .number": {
-                  display: "none",
-                },
-                transition: "500ms ease",
-
-              }}
-              m={8}
-            >
-              <img
-                src="./assets/driver.png"
-                alt="driver"
-                style={{ borderRadius: 80 }}
-              />
-              <Box
-                className="driverContainer"
-                sx={{ backgroundColor: "#45454546", transition: "0.2s ease" }}
-                borderRadius={20}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                height={"100%"}
-                width={"100%"}
-                position={"absolute"}
-                flexDirection={"column"}
-                color={"white"}
-                fontSize={"26px"}
-                fontWeight={"bold"}
-              >
-                <img
-                  width={"95px"}
-                  height={"95px"}
-                  src="./assets/personLogox2.png"
-                  style={{ transition: "0.2s ease" }}
-                />
-                <Box>السائق محمد أحمد</Box>
-                <Box className="number">رقم التواصل : 0101xxxx</Box>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  رقم التواصل: 0101xxxx
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  سعر الخدمه 10$
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السكن: غذه
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  تاريخ السفر: 123
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السفر: رفح
-                </ListItem>
-              </Box>
-            </Paper>
-            <Paper
-              border="2px solid #454545"
-              fontSize={"50px"}
-              fontWeight={"bold"}
-              color={"white"}
-              sx={{
-                position: "relative",
-                backgroundColor: "transparent",
-                m: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "232px",
-                borderRadius: 30,
-                width: "355px",
-                ":hover": {
-                  height: "396px",
-                  my: 2,
-                  borderRadius: 20,
-                },
-                "&:hover .driverContainer": {
-                  borderRadius: 20,
-                  height: "396px",
-                  backgroundColor: "#45454580",
-                  backdropFilter: "blur(2px)",
-                },
-                ":hover img": {
-                  height: "100%",
-                  width: "100%",
-                },
-                ":hover div img": {
-                  height: "95px",
-                  width: "95px",
-                },
-                "&:hover .driverDetails": {
-                  display: "flex",
-                },
-                "&:hover .number": {
-                  display: "none",
-                },
-                transition: "500ms ease",
-
-              }}
-              m={8}
-            >
-              <img
-                src="./assets/driver.png"
-                alt="driver"
-                style={{ borderRadius: 80 }}
-              />
-              <Box
-                className="driverContainer"
-                sx={{ backgroundColor: "#45454546", transition: "0.2s ease" }}
-                borderRadius={20}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                height={"100%"}
-                width={"100%"}
-                position={"absolute"}
-                flexDirection={"column"}
-                color={"white"}
-                fontSize={"26px"}
-                fontWeight={"bold"}
-              >
-                <img
-                  width={"95px"}
-                  height={"95px"}
-                  src="./assets/personLogox2.png"
-                  style={{ transition: "0.2s ease" }}
-                />
-                <Box>السائق محمد أحمد</Box>
-                <Box className="number">رقم التواصل : 0101xxxx</Box>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  رقم التواصل: 0101xxxx
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  سعر الخدمه 10$
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السكن: غذه
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  تاريخ السفر: 123
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السفر: رفح
-                </ListItem>
-              </Box>
-            </Paper>
-            <Paper
-              border="2px solid #454545"
-              fontSize={"50px"}
-              fontWeight={"bold"}
-              color={"white"}
-              sx={{
-                position: "relative",
-                backgroundColor: "transparent",
-                m: 8,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "232px",
-                borderRadius: 30,
-                width: "355px",
-                ":hover": {
-                  height: "396px",
-                  my: 2,
-                  borderRadius: 20,
-                },
-                "&:hover .driverContainer": {
-                  borderRadius: 20,
-                  height: "396px",
-                  backgroundColor: "#45454580",
-                  backdropFilter: "blur(2px)",
-                },
-                ":hover img": {
-                  height: "100%",
-                  width: "100%",
-                },
-                ":hover div img": {
-                  height: "95px",
-                  width: "95px",
-                },
-                "&:hover .driverDetails": {
-                  display: "flex",
-                },
-                "&:hover .number": {
-                  display: "none",
-                },
-                transition: "0.5s ease",
-
-              }}
-              m={8}
-            >
-              <img
-                src="./assets/driver.png"
-                alt="driver"
-                style={{ borderRadius: 80 }}
-              />
-              <Box
-                className="driverContainer"
-                sx={{ backgroundColor: "#45454546", transition: "0.2s ease" }}
-                borderRadius={20}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                height={"100%"}
-                width={"100%"}
-                position={"absolute"}
-                flexDirection={"column"}
-                color={"white"}
-                fontSize={"26px"}
-                fontWeight={"bold"}
-              >
-                <img
-                  width={"95px"}
-                  height={"95px"}
-                  src="./assets/personLogox2.png"
-                  style={{ transition: "0.2s ease" }}
-                />
-                <Box>السائق محمد أحمد</Box>
-                <Box className="number">رقم التواصل : 0101xxxx</Box>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  رقم التواصل: 0101xxxx
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  سعر الخدمه 10$
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السكن: غذه
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  تاريخ السفر: 123
-                </ListItem>
-                <ListItem
-                  className="driverDetails"
-                  disableGutters
-                  sx={{
-                    display: "none",
-                    justifyContent: "right",
-                    marginRight: 10,
-                  }}
-                  dir="rtl"
-                >
-                  <ListItemIcon sx={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        width: "0.5em",
-                        height: "0.5em",
-                        textAlign: "right",
-                        borderRadius: "50%",
-                        backgroundColor: "white",
-                      }}
-                    />
-                  </ListItemIcon>
-                  مكان السفر: رفح
-                </ListItem>
-              </Box>
-            </Paper>
+            ))}
           </Carousel>
         </Box>
       </Box>
       <Footer />
-    </>
+    </motion.Box>
   );
 }
 

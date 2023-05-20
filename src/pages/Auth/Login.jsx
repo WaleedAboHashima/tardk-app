@@ -121,6 +121,7 @@ function Login() {
                     }}
                   />
                   <TextField
+                    type="password"
                     name="password"
                     placeholder="كلمه المرور"
                     value={values.password}

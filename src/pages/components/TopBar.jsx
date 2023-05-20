@@ -106,7 +106,7 @@ function TopBar() {
         onClick={toggleDrawer(anchor, false)}
         onKeyDown={toggleDrawer(anchor, false)}
       >
-        <img src="./assets/personLogo.png" alt="logoperson" />
+        <img src="/assets/personLogo.png" alt="logoperson" />
         <Typography
           variant="h2"
           fontSize="17px"
@@ -229,7 +229,7 @@ function TopBar() {
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex" },
-              gap: "10px",
+              gap: 4,
             }}
           >
             {pages.map((page) => (
@@ -307,7 +307,7 @@ function TopBar() {
                           <img
                             width={"43px"}
                             height={"43px"}
-                            src="./assets/personLogo.png"
+                            src="/assets/personLogo.png"
                             alt="personLogo"
                           />
                           {message.name}
@@ -395,7 +395,7 @@ function TopBar() {
                   width={"69px"}
                   height={"69px"}
                   alt="Remy Sharp"
-                  src="./assets/personLogo.png"
+                  src="/assets/personLogo.png"
                 />
               </IconButton>
             </Tooltip>
@@ -420,7 +420,7 @@ function TopBar() {
               <MenuList dense sx={{ width: 200, direction: "rtl" }}>
                 {cookies.get("_auth_role") === "admin" ? (
                   <>
-                    <MenuItem onClick={() => cookies.get('_auth_role') === 'admin' ? navigator('/adminpanel') : null}>
+                    <MenuItem onClick={() => cookies.get('_auth_role') === 'admin' ? navigator('/admin/adminpanel') : null}>
                       <Box fontSize={"25px"} color={"#454545"}>
                         لوحه التحكم
                       </Box>

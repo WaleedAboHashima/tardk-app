@@ -189,7 +189,10 @@ function DeliverMessage() {
                     <span>{info[0].status}</span>
                   </Box>
                 </Box>
-                <IconButton onClick={() => navigator('/driverInfo/1')} sx={{ width: "30px", height: "30px", mt: 3 }}>
+                <IconButton
+                  onClick={() => navigator("/driverInfo/1")}
+                  sx={{ width: "30px", height: "30px", mt: 3 }}
+                >
                   <InfoIcon
                     sx={{ color: "#454545", width: "30px", height: "30px" }}
                   />
@@ -197,7 +200,78 @@ function DeliverMessage() {
               </Box>
             </Box>
             <Divider sx={{ borderColor: "#454545" }} />
-            <Box sx={{ backgroundColor: "blue", height: "80%" }}></Box>
+            <Box
+              sx={{ height: "80%" }}
+              display={"flex"}
+              flexDirection={"column"}
+            >
+              <Box
+                width={"100%"}
+                height={"50%"}
+                display={"flex"}
+                flexDirection={"column"}
+                gap={2}
+              >
+                <Box
+                  maxWidth={"320px"}
+                  p={3}
+                  sx={{
+                    backgroundColor: "#E6E6E6",
+                    borderRadius: "20px 20px 0 20px",
+                    direction: "rtl",
+                  }}
+                >
+                  السلام عليكم أخي أسعد الله أوقاتك بكل خير...
+                </Box>
+                <Box
+                  maxWidth={"320px"}
+                  p={3}
+                  sx={{
+                    backgroundColor: "#E6E6E6",
+                    borderRadius: "20px 0 0 20px",
+                    direction: "rtl",
+                  }}
+                >
+                  لدي استفسار معين
+                </Box>
+                <Box
+                  maxWidth={"320px"}
+                  p={3}
+                  sx={{
+                    backgroundColor: "#E6E6E6",
+                    borderRadius: "20px 0 20px 20px",
+                    direction: "rtl",
+                  }}
+                >
+                  هل بإمكانك مساعدتي
+                </Box>
+              </Box>
+              <Box
+                width={"100%"}
+                height={"50%"}
+                sx={{ direction: "ltr" }}
+                display={"flex"}
+              >
+                <img
+                  width={"47px"}
+                  height={"47px"}
+                  src="/assets/personLogox2.png"
+                  alt="logoo"
+                />
+                <Box
+                  maxHeight={'20px'}
+                  maxWidth={"320px"}
+                  borderRadius={9}
+                  p={2}
+                  sx={{
+                    backgroundColor: "#E6E6E6",
+                    direction: "rtl",
+                  }}
+                >
+وعليكم السلام، تفضل أخي
+                </Box>
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Box>
