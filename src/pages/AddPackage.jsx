@@ -12,8 +12,9 @@ import {
   Select,
   Dialog,
   DialogContent,
+  Backdrop,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import { Formik } from "formik";
@@ -25,14 +26,31 @@ import TimerIcon from "@mui/icons-material/Timer";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AddPackageHandler } from "../apis/Packages/AddPackage";
+import Cookies from "universal-cookie";
+import CircularProgress from "@mui/material/CircularProgress";
+import { RulesHandler } from "./../apis/rules";
 function AddPackage() {
   const [files, setFiles] = useState([]);
-  const [packageType, setPackageType] = useState();
   const [taxes, setTaxes] = useState(false);
   const [conditions, setConditions] = useState(false);
   const [open, setOpen] = useState(false);
+  const [arrival_time, setArrivalTime] = useState();
+  const [eviction_name, setEvictionName] = useState();
+  const [username, setUsername] = useState();
+  const [source_location, setSourceLocation] = useState();
+  const [type_eviction, setTypeEviction] = useState();
+  const [price, setPrice] = useState();
+  const [phone, setPhone] = useState();
+  const [eviction_size, setEvictionSize] = useState();
+  const [dis_location, setDisLocation] = useState();
   const navigator = useNavigate();
-
+  const dispatch = useDispatch();
+  const cookies = new Cookies();
+  const rules = useSelector((state) => state.Rules);
+  const [commission, setCommission] = useState();
+  const state = useSelector((state) => state.AddPackage);
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     const updatedFiles = files.map((file, index) => ({
@@ -41,34 +59,69 @@ function AddPackage() {
     }));
     setFiles(updatedFiles);
   };
-
-  const handleOpen = () => {
-    setOpen(true);
-    setTimeout(() => {
-      navigator('/');
-    }, 2000);
+  const handleSubmit = () => {
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("arrival_time", arrival_time);
+    formData.append("eviction_name", eviction_name);
+    formData.append("source_location", source_location);
+    formData.append("type_eviction", type_eviction);
+    formData.append("dis_location", type_eviction);
+    formData.append("price", price);
+    formData.append("phone", phone);
+    formData.append("eviction_size", eviction_size);
+    formData.append("order_photo", files);
+    dispatch(AddPackageHandler(formData)).then(() => handleStatus());
   };
+  const handleStatus = () => {
+    if (state.status) {
+      switch (state.status) {
+        case 201:
+          setOpen(true);
+          setTimeout(() => {
+            navigator("/");
+          }, 2000);
+          break;
+        default:
+          setOpen(false);
+          break;
+      }
+    }
+  };
+  useEffect(() => {
+    handleStatus();
+    dispatch(RulesHandler()).then((res) => {
+      if (res.payload.data) {
+        const filteredType = res.payload.data.rules.filter(rules => rules.type === "commission")
+        setCommission(filteredType)
+      }
+    })
+  }, [state.status]);
+
   return (
-    <motion.Box height={"100vh"} width={"100%"}       initial={{ opacity: 0, transition: { duration: 0.5 } }}
-    animate={{ opacity: 1, transition: { duration: 0.5 } }}
-    exit={{ opacity: 0, transition: { duration: 0.5 } }}>
+    <motion.Box
+      height={"100vh"}
+      width={"100%"}
+      initial={{ opacity: 0, transition: { duration: 0.5 } }}
+      animate={{ opacity: 1, transition: { duration: 0.5 } }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    >
       <TopBar />
       <Box
         display={"flex"}
         sx={{ backgroundColor: "#F2F2F2", direction: "rtl" }}
       >
-        <Box width={"50%"} p={5} display={"flex"} flexDirection={"column"}>
+        <Box
+          width={{ lg: "60%", xl: "50%" }}
+          p={5}
+          display={"flex"}
+          flexDirection={"column"}
+        >
           <Box fontSize={"35px"}>يرجى تعبئة البيانات التالية (أضافه طرد)</Box>
-          <Formik onSubmit={() => console.log("done")}>
-            {({
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-            }) => (
+          <Formik initialValues={initialState} onSubmit={handleSubmit}>
+            {({ values, handleChange, handleSubmit, setFieldValue }) => (
               <form
+                onSubmit={handleSubmit}
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
@@ -79,12 +132,18 @@ function AddPackage() {
               >
                 <Box display={"flex"} gap={"30px"}>
                   <TextField
+                    name="username"
+                    value={values.username}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setUsername(e.target.value)}
+                    sx={{
+                      width: { lg: "300px", xl: "369px" },
+                    }}
                     placeholder="اسم الشخص"
                     InputProps={{
                       style: {
                         backgroundColor: "white",
                         border: "2px solid black",
-                        width: "369px",
                         borderRadius: 99,
                         fontSize: "25px",
                         height: "50px",
@@ -100,12 +159,18 @@ function AddPackage() {
                     }}
                   />
                   <TextField
+                    name="source_location"
+                    value={values.source_location}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setSourceLocation(e.target.value)}
+                    sx={{
+                      width: { lg: "300px", xl: "369px" },
+                    }}
                     placeholder="مكان السكن"
                     InputProps={{
                       style: {
                         backgroundColor: "white",
                         border: "2px solid black",
-                        width: "369px",
                         borderRadius: 99,
                         fontSize: "25px",
                         height: "50px",
@@ -115,6 +180,35 @@ function AddPackage() {
                         <InputAdornment position="start">
                           <LocationOnIcon
                             sx={{ width: 35, height: 35, color: "#454545" }}
+                          />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    name="eviction_name"
+                    value={values.eviction_name}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setEvictionName(e.target.value)}
+                    sx={{
+                      width: { lg: "240px", xl: "369px" },
+                    }}
+                    placeholder="أسم الطرد"
+                    InputProps={{
+                      style: {
+                        backgroundColor: "white",
+                        border: "2px solid black",
+                        borderRadius: 99,
+                        fontSize: "25px",
+                        height: "50px",
+                        color: "black",
+                      },
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <img
+                            src="/assets/inputPackage.png"
+                            alt="packageinput"
+                            style={{ width: 35, height: 35, color: "#454545" }}
                           />
                         </InputAdornment>
                       ),
@@ -123,12 +217,18 @@ function AddPackage() {
                 </Box>
                 <Box display={"flex"} gap={"30px"}>
                   <TextField
+                    name="dis_location"
+                    value={values.dis_location}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setDisLocation(e.target.value)}
+                    sx={{
+                      width: { lg: "300px", xl: "369px" },
+                    }}
                     placeholder="مكان التوصيل"
                     InputProps={{
                       style: {
                         backgroundColor: "white",
                         border: "2px solid black",
-                        width: "369px",
                         borderRadius: 99,
                         fontSize: "25px",
                         height: "50px",
@@ -144,12 +244,18 @@ function AddPackage() {
                     }}
                   />
                   <TextField
+                    name="price"
+                    value={values.price}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setPrice(e.target.value)}
+                    sx={{
+                      width: { lg: "300px", xl: "369px" },
+                    }}
                     placeholder="سعر الخدمة"
                     InputProps={{
                       style: {
                         backgroundColor: "white",
                         border: "2px solid black",
-                        width: "369px",
                         borderRadius: 99,
                         fontSize: "25px",
                         height: "50px",
@@ -176,7 +282,7 @@ function AddPackage() {
                             color: "white",
                             height: "100%",
                             borderRadius: "99px",
-                            width: "107px",
+                            width: "110px",
                             ":hover": { backgroundColor: "#454545" },
                           }}
                         >
@@ -186,19 +292,25 @@ function AddPackage() {
                             justifyContent={"center"}
                             alignItems={"center"}
                           >
-                            العموله
+                            {commission ? `${commission [0].commission}%` : ""}
                           </Box>
                         </IconButton>
                       ),
                     }}
                   />
                   <TextField
+                    name="arrival_time"
+                    value={values.arrival_time}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setArrivalTime(e.target.value)}
+                    sx={{
+                      width: { lg: "240px", xl: "369px" },
+                    }}
                     placeholder="موعد وصول الطرد للمستلم"
                     InputProps={{
                       style: {
                         backgroundColor: "white",
                         border: "2px solid black",
-                        width: "369px",
                         borderRadius: 99,
                         fontSize: "25px",
                         height: "50px",
@@ -223,11 +335,15 @@ function AddPackage() {
                     }}
                   >
                     <Select
-                      defaultValue={0}
+                      name="type_eviction"
+                      value={values.type_eviction}
+                      label="نوع الطرد"
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={packageType}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        setTypeEviction(e.target.value);
+                        setFieldValue("type_eviction", e.target.value);
+                      }}
                       sx={{
                         backgroundColor: "white",
                         border: "2px solid #454545",
@@ -237,19 +353,23 @@ function AddPackage() {
                       <MenuItem disabled dir="rtl" value={0}>
                         نوع الطرد
                       </MenuItem>
-                      <MenuItem dir="rtl" value={10}>
-                        نوع
+                      <MenuItem dir="rtl" value={"بلاستيك"}>
+                        بلاستيك
                       </MenuItem>
-                      <MenuItem dir="rtl" value={20}>
-                        نوع
+                      <MenuItem dir="rtl" value={"معدن"}>
+                        معدن
                       </MenuItem>
-                      <MenuItem dir="rtl" value={30}>
-                        نوع
+                      <MenuItem dir="rtl" value={"قابل للكسر"}>
+                        قابل للكسر
                       </MenuItem>
                     </Select>
                   </FormControl>
                   <TextField
-                    placeholder="رقم التواصل (اختياري)"
+                    name="phone"
+                    value={values.phone}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setPhone(e.target.value)}
+                    placeholder="رقم التواصل"
                     InputProps={{
                       style: {
                         backgroundColor: "white",
@@ -270,6 +390,10 @@ function AddPackage() {
                     }}
                   />
                   <TextField
+                    name="eviction_size"
+                    value={values.eviction_size}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setEvictionSize(e.target.value)}
                     placeholder="حجم الطرد"
                     InputProps={{
                       style: {
@@ -295,6 +419,8 @@ function AddPackage() {
                 </Box>
                 <Box>
                   <TextField
+                    value={values.order_photo}
+                    onChange={handleChange}
                     type="file"
                     placeholder="صوره الطرد"
                     InputProps={{
@@ -411,8 +537,22 @@ function AddPackage() {
                 </Box>
                 <Box display={"flex"} justifyContent={"left"}>
                   <Button
-                    onClick={handleOpen}
-                    disabled={conditions && taxes ? false : true}
+                    type="submit"
+                    disabled={
+                      conditions &&
+                      taxes &&
+                      username &&
+                      eviction_name &&
+                      eviction_size &&
+                      arrival_time &&
+                      source_location &&
+                      dis_location &&
+                      type_eviction &&
+                      price &&
+                      files.length > 0
+                        ? false
+                        : true
+                    }
                     sx={{
                       fontSize: "25px",
                       fontWeight: "bold",
@@ -426,7 +566,20 @@ function AddPackage() {
                     <img src="/assets/checkMarkWhite.png" alt="checkmark" />
                     اضف الطرد
                   </Button>
-                  <Dialog open={open} close={() => setOpen(!open)} sx={{backdropFilter: "blur(5px)"}}>
+                  <Backdrop
+                    sx={{
+                      color: "#fff",
+                      zIndex: (theme) => theme.zIndex.drawer + 1,
+                    }}
+                    open={state.loading ? true : false}
+                  >
+                    <CircularProgress color="inherit" />
+                  </Backdrop>
+                  <Dialog
+                    open={open}
+                    close={() => setOpen(!open)}
+                    sx={{ backdropFilter: "blur(5px)" }}
+                  >
                     <DialogContent
                       sx={{
                         width: "507px",
@@ -454,8 +607,8 @@ function AddPackage() {
             )}
           </Formik>
         </Box>
-        <Box width={"50%"} sx={{ direction: "ltr" }} p={5}>
-          <ImageList sx={{ width: 500 }} cols={7}>
+        <Box width={{ lg: "40%", xl: "50%" }} sx={{ direction: "ltr" }} p={5}>
+          <ImageList sx={{ width: { lg: 350, xl: 500 } }} cols={7}>
             {itemData.map((item) => (
               <ImageListItem
                 key={item.img}
@@ -512,5 +665,18 @@ const itemData = [
     cols: 3,
   },
 ];
+
+const initialState = {
+  arrival_time: "",
+  eviction_name: "",
+  username: "",
+  source_location: "",
+  dis_location: "",
+  type_eviction: "",
+  price: "",
+  phone: "",
+  eviction_size: "",
+  order_photo: "",
+};
 
 export default AddPackage;

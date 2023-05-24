@@ -6,20 +6,33 @@ import {
   FormControl,
   MenuItem,
   TextField,
+  Backdrop,
 } from "@mui/material";
-import React from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+import React, { useEffect } from "react";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { GetPackagesHandler } from "../apis/Packages/GetAll";
 function AllPackages() {
   const [filter, setFilter] = React.useState();
   const navigator = useNavigate();
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state.GetPackages);
+  useEffect(() => {
+    dispatch(GetPackagesHandler());
+  }, []);
   return (
-    <motion.Box height={"100vh"} width={"100%"}       initial={{ opacity: 0, transition: { duration: 0.5 } }}
-    animate={{ opacity: 1, transition: { duration: 0.5 } }}
-    exit={{ opacity: 0, transition: { duration: 0.5 } }}>
+    <motion.Box
+      height={"100vh"}
+      width={"100%"}
+      initial={{ opacity: 0, transition: { duration: 0.5 } }}
+      animate={{ opacity: 1, transition: { duration: 0.5 } }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    >
       <TopBar />
       <Box sx={{ direction: "rtl", backgroundColor: "#F2F2F2" }}>
         <Box display={"flex"} flexDirection={"column"} p={5} height={"100%"}>
@@ -64,895 +77,96 @@ function AllPackages() {
             justifyContent={"space-evenly"}
             flexWrap={"wrap"}
           >
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="/assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
+            {state.loading ? (
+              <Box height={"100vh"} width={"100vw"} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                <CircularProgress color="success" />
+              </Box>
+            ) : (
+              state.data.orders &&
+              state.data.orders.map((order) => (
+                <Paper
+                  sx={{
+                    height: 369,
+                    width: 347,
+                    margin: 4,
+                    backgroundColor: "white",
+                    borderRadius: "45px",
+                    position: "relative",
+                    "&:hover div": {
+                      height: "100%",
+                      transform: "translate(-50%, -90%)",
+                      borderRadius: "50px",
+                    },
+                    "&:hover div div": {
+                      display: "none",
+                    },
+                    "&:hover div button": {
+                      display: "flex",
+                    },
+                  }}
+                >
+                  <img src="/assets/packages.png" alt="packaage" />
                   <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
+                    position={"absolute"}
+                    top={"90%"}
+                    left={"50%"}
+                    sx={{
+                      transform: "translate(-50%, -50%)",
+                      backgroundColor: "#FFFFFF80",
+                      backdropFilter: "blur(2px)",
+                      width: "100%",
+                      height: "20%",
+                      borderRadius: "0px 0px 50px 50px",
+                      transition: "transform 0.5s ease",
+                    }}
                     display={"flex"}
                     justifyContent={"center"}
                     alignItems={"center"}
-                    gap={1}
                   >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
+                    <Box p={"0 20px"} width={"50%"}>
+                      <Box
+                        color={"#454545"}
+                        fontSize={"23px"}
+                        fontWeight={"bold"}
+                      >
+                        {order.eviction_name}
+                      </Box>
+                      <Box
+                        color={"#454545"}
+                        fontSize={"20px"}
+                        display={"flex"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        gap={1}
+                      >
+                        المكان
+                        <span style={{ fontSize: "14px" }}>
+                          {order.source_location}
+                        </span>
+                      </Box>
+                    </Box>
+                    <Button
+                      onClick={() => navigator(`/packageInfo/${order._id}`)}
+                      sx={{
+                        display: "none",
+                        width: "40%",
+                        color: "#454545",
+                        fontSize: "25px",
+                        border: "2px solid",
+                        borderRadius: "99px",
+                      }}
+                    >
+                      أذهب
+                      <ArrowBackIosIcon />
+                    </Button>
+                    <Box width={"50%"}>
+                      <Box>رقم التواصل</Box>
+                      <Box>{order.phone}</Box>
+                    </Box>
                   </Box>
-                </Box>
-                <Button
-                  onClick={() => navigator("/packageInfo/1")}
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
-            <Paper
-              sx={{
-                height: 369,
-                width: 347,
-                margin: 4,
-                backgroundColor: "white",
-                borderRadius: "45px",
-                position: "relative",
-                "&:hover div": {
-                  height: "100%",
-                  transform: "translate(-50%, -90%)",
-                  borderRadius: "50px",
-                },
-                "&:hover div div": {
-                  display: "none",
-                },
-                "&:hover div button": {
-                  display: "flex",
-                },
-              }}
-            >
-              <img src="./assets/packages.png" />
-              <Box
-                position={"absolute"}
-                top={"90%"}
-                left={"50%"}
-                sx={{
-                  transform: "translate(-50%, -50%)",
-                  backgroundColor: "#FFFFFF80",
-                  backdropFilter: "blur(2px)",
-                  width: "100%",
-                  height: "20%",
-                  borderRadius: "0px 0px 50px 50px",
-                  transition: "transform 0.5s ease",
-                }}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Box p={"0 20px"} width={"50%"}>
-                  <Box color={"#454545"} fontSize={"23px"} fontWeight={"bold"}>
-                    اسم الطرد
-                  </Box>
-                  <Box
-                    color={"#454545"}
-                    fontSize={"20px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    gap={1}
-                  >
-                    المكان
-                    <span style={{ fontSize: "14px" }}>المكان</span>
-                  </Box>
-                </Box>
-                <Button
-                  sx={{
-                    display: "none",
-                    width: "40%",
-                    color: "#454545",
-                    fontSize: "25px",
-                    border: "2px solid",
-                    borderRadius: "99px",
-                  }}
-                >
-                  أذهب
-                  <ArrowBackIosIcon />
-                </Button>
-                <Box width={"50%"}>
-                  <Box>رقم التواصل</Box>
-                  <Box>+970</Box>
-                </Box>
-              </Box>
-            </Paper>
+                </Paper>
+              ))
+            )}
           </Box>
         </Box>
       </Box>

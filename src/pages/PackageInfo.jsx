@@ -1,16 +1,39 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
-import { useNavigate } from "react-router-dom";
-import { motion } from 'framer-motion';
+import { useNavigate, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { GetPackagesHandler } from "../apis/Packages/GetAll";
 
 function PackageInfo() {
   const navigator = useNavigate();
+  const params = useParams();
+  const dispatch = useDispatch();
+  const [order, setOrder] = useState();
+  console.log(order)
+  const [firstImage, setFirstImage] = useState();
+  useEffect(() => {
+    dispatch(GetPackagesHandler()).then((res) => {
+      if (res.payload.data) {
+        const filteredOrder = res.payload.data.orders.filter(
+          (order) => order._id === params.id
+        );
+        setOrder(filteredOrder[0]);
+        setFirstImage(filteredOrder[0].eviction_imgs[0])
+        console.log(filteredOrder);
+      }
+    });
+  }, [params.id]);
   return (
-    <motion.Box height={"100vh"} width={"100%"}       initial={{ opacity: 0, transition: { duration: 0.5 } }}
-    animate={{ opacity: 1, transition: { duration: 0.5 } }}
-    exit={{ opacity: 0, transition: { duration: 0.5 } }}>
+    <motion.Box
+      height={"100vh"}
+      width={"100%"}
+      initial={{ opacity: 0, transition: { duration: 0.5 } }}
+      animate={{ opacity: 1, transition: { duration: 0.5 } }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    >
       <TopBar />
       <Box
         height={"80%"}
@@ -36,17 +59,34 @@ function PackageInfo() {
             <Box fontSize={"30px"} color={"#454545"}>
               اسم الطرد( معلومات حول الطرد )
               <ul>
-                <li>اسم الطرد:</li>
-                <li>مكان صاحب الطرد:</li>
-                <li>مكان التوصيل:</li>
-                <li>سعر الخدمة:</li>
-                <li>موعد الاستلام:</li>
+                <li>اسم صاحب الطرد: {order ? order.username : ""}</li>
+                <li>اسم الطرد: {order ? order.eviction_name : ""}</li>
+                <li>مكان صاحب الطرد: {order ? order.source_location : ""}</li>
+                <li>مكان التوصيل: {order ? order.dis_location : ""}</li>
+                <li>سعر الخدمة: {order ? order.price : ""}</li>
+                <li>موعد الاستلام: {order ? order.arrival_time : ""}</li>
                 <li>صور الطرد:</li>
               </ul>
-              <Box width={"100%"} display={'flex'} gap={'19px'} justifyContent={'center'}>
-                <Box><img src="/assets/packagePic1.png" alt="packagepics1" /></Box>
-                <Box><img src="/assets/packagePic2.png" alt="packagepics1" /></Box>
-                <Box><img src="/assets/packagePic3.png" alt="packagepics1" /></Box>
+              <Box
+                width={"100%"}
+                display={"flex"}
+                gap={"19px"}
+                justifyContent={"center"}
+              >
+                {order
+                  ? order.eviction_imgs.map((img, index) => (
+                      <Box sx={{cursor: 'pointer'}} key={index++}>
+                      <img
+                        onClick={() => setFirstImage(img)}
+                        width={'171px'}
+                        height={'171px'}
+                        style={{borderRadius: 10}}
+                          src={`https://tardq.onrender.com/${img}`}
+                          alt="لا يوجد صور لهذا الطرد"
+                        />
+                      </Box>
+                    ))
+                  : ""}
               </Box>
             </Box>
           </Box>
@@ -56,11 +96,11 @@ function PackageInfo() {
             justifyContent={"center"}
             alignItems={"center"}
             flexDirection={"column"}
-            gap={"20px"}
+            gap={"50px"}
           >
-            <img src="/assets/packageInfo.png" alt="logo" />
+            <img style={{textAlign: 'center'}} width={'80%'} src={`https://tardq.onrender.com/${firstImage}`} alt="لا يوجد صور لهذا الطرد" />
             <Box
-              onClick={() => navigator("/message/1")}
+              onClick={() => navigator(`/message/${order.user._id}`)}
               display={"flex"}
               gap={2}
               fontSize={"19px"}

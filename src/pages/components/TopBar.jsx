@@ -7,6 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
+  CircularProgress,
   Divider,
   List,
   ListItem,
@@ -18,56 +19,28 @@ import {
   Typography,
 } from "@mui/material";
 import Cookies from "universal-cookie";
-const pages = [
-  { id: "1", name: "الرئيسية", to: "/" },
-  { id: "2", name: "دفع عمولة", to: "/pay" },
-  { id: "3", name: "جميع الطرود", to: "/allPackages" },
-  { id: "4", name: "جميع السائقين", to: "/allDrivers" },
-];
-
-const messagess = [
-  {
-    id: 1,
-    name: "السائق محمد احمد",
-    time: "30د",
-    message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير...",
-  },
-  {
-    id: 2,
-    name: "السائق محمد احمد",
-    time: "30د",
-    message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير...",
-  },
-  {
-    id: 3,
-    name: "السائق محمد احمد",
-    time: "30د",
-    message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير...",
-  },
-  {
-    id: 4,
-    name: "السائق محمد احمد",
-    time: "30د",
-    message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير...",
-  },
-  {
-    id: 5,
-    name: "السائق محمد احمد",
-    time: "30د",
-    message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير...",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { GetMessagesHandler } from "../../apis/User/GetMessage";
 
 function TopBar() {
+  const cookies = new Cookies();
+  const pages = [
+    { id: "1", name: "الرئيسية", to: "/" },
+    { id: "2", name: "دفع عمولة", to: "/pay" },
+    { id: "3", name: "جميع الطرود", to: "/allPackages" },
+    { id: "4", name: "جميع السائقين", to: "/allDrivers" },
+  ];
   ////////////////////////
   const navigator = useNavigate();
-  const cookies = new Cookies();
   const [anchorEl, setanchorEl] = React.useState(null);
-  const [messages, setMessages] = React.useState(null);
+  const [messages, setMessages] = React.useState([]);
   const [settings, setSettings] = React.useState(null);
+  const [messageOpen, setMessagesOpen] = React.useState(null);
+  const messagesState = useSelector((state) => state.Messages);
   const open = Boolean(anchorEl);
-  const open2 = Boolean(messages);
+  const messageMenu = Boolean(messageOpen);
   const openSettings = Boolean(settings);
+  const dispatch = useDispatch();
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -247,88 +220,126 @@ function TopBar() {
                 {page.name}
               </Link>
             ))}
-            <Link
-              aria-controls={open2 ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open2 ? "true" : undefined}
-              onMouseEnter={(e) => setMessages(e.currentTarget)}
-              className={"nav"}
-              style={{ color: "#454545" }}
-              underline="none"
-            >
-              رسائلي
-            </Link>
-            <Menu
-              elevation={0}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              id="basic-menu"
-              anchorEl={messages}
-              open={open2}
-              onClose={() => setMessages(null)}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuList
-                dense
-                sx={{ width: 378.5, height: 482, direction: "rtl" }}
-              >
-                {messagess.map((message, index) => (
-                  <Box key={message.id}>
-                    <MenuItem
-                      onClick={() => navigator(`/message/${message.id}`)}
-                      style={menuItemStyle}
-                      key={message.id}
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        height: "101.5px",
-                        gap: "20px",
-                      }}
-                    >
+            {cookies.get("_auth_token") && cookies.get("_auth_role") ? (
+              <>
+                <Link
+                  aria-controls={messageMenu ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={messageMenu ? "true" : undefined}
+                  onMouseEnter={(e) => {
+                    setMessagesOpen(e.currentTarget);
+                    dispatch(GetMessagesHandler()).then((res) => {
+                      if (res.payload.data) {
+                        const messages = res.payload.data.allConversations.map(
+                          (message) => setMessages(message)
+                        );
+                      }
+                    });
+                  }}
+                  className={"nav"}
+                  style={{ color: "#454545" }}
+                  underline="none"
+                >
+                  رسائلي
+                </Link>
+                <Menu
+                  elevation={0}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  id="basic-menu"
+                  anchorEl={messageOpen}
+                  open={messageMenu}
+                  onClose={() => setMessagesOpen(false)}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <MenuList
+                    dense
+                    sx={{ width: 378.5, height: 482, direction: "rtl" }}
+                  >
+                    {messagesState.loading ? (
                       <Box
-                        fontSize={"15px"}
-                        fontWeight={"bold"}
-                        color={"#454545"}
-                        justifyContent={"space-between"}
-                        sx={{
-                          width: "100%",
-                          display: "flex",
-                        }}
+                        display="flex"
+                        height={"100%"}
+                        width={"100%"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
                       >
-                        <Box width={"100%"} display={"flex"}>
-                          <img
-                            width={"43px"}
-                            height={"43px"}
-                            src="/assets/personLogo.png"
-                            alt="personLogo"
-                          />
-                          {message.name}
-                        </Box>
-                        <span
-                          style={{ fontSize: "11px", fontWeight: "normal" }}
-                        >
-                          {message.time}
-                        </span>
+                        <CircularProgress />
                       </Box>
-                      <Box fontSize={"17px"} width={"100%"}>
-                        {message.message}
-                      </Box>
-                    </MenuItem>
-                    <Divider
-                      sx={{ borderWidth: "2px", borderColor: "#454545" }}
-                    />
-                  </Box>
-                ))}
-              </MenuList>
-            </Menu>
+                    ) : (
+                      messages.map((message) => {
+                        const time = new Date(message.createdAt);
+                        const timeMinutes = time.getMinutes();
+                        return (
+                          <Box key={message._id}>
+                            <MenuItem
+                              onClick={() =>
+                                navigator(`/message/${message._id}`)
+                              }
+                              style={menuItemStyle}
+                              key={message._id}
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                height: "101.5px",
+                                gap: "20px",
+                              }}
+                            >
+                              <Box
+                                fontSize={"15px"}
+                                fontWeight={"bold"}
+                                color={"#454545"}
+                                justifyContent={"space-between"}
+                                sx={{
+                                  width: "100%",
+                                  display: "flex",
+                                }}
+                              >
+                                <Box width={"100%"} display={"flex"}>
+                                  <img
+                                    width={"43px"}
+                                    height={"43px"}
+                                    src="/assets/personLogo.png"
+                                    alt="personLogo"
+                                  />
+                                  {message.from.username}
+                                </Box>
+                                <span
+                                  style={{
+                                    fontSize: "11px",
+                                    fontWeight: "normal",
+                                  }}
+                                >
+                                  {timeMinutes}د
+                                </span>
+                              </Box>
+                              <Box fontSize={"17px"} width={"100%"}>
+                                {message.message}
+                              </Box>
+                            </MenuItem>
+                            <Divider
+                              sx={{
+                                borderWidth: "2px",
+                                borderColor: "#454545",
+                              }}
+                            />
+                          </Box>
+                        );
+                      })
+                    )}
+                  </MenuList>
+                </Menu>
+              </>
+            ) : null}
+
             <Link
               aria-controls={open ? "basic-menu" : undefined}
               aria-haspopup="true"
@@ -359,13 +370,25 @@ function TopBar() {
               }}
             >
               <MenuList dense sx={{ width: 200, direction: "rtl" }}>
-                <MenuItem onClick={() => navigator("/addPackage")}>
+                <MenuItem
+                  onClick={() =>
+                    cookies.get("_auth_token") && cookies.get("_auth_role")
+                      ? navigator("/addPackage")
+                      : navigator("login")
+                  }
+                >
                   <Box fontSize={"25px"} color={"#454545"}>
                     لدي طرد
                   </Box>
                 </MenuItem>
                 <Divider sx={{ backgroundColor: "black" }} />
-                <MenuItem onClick={() => navigator("/canDeliver")}>
+                <MenuItem
+                  onClick={() =>
+                    cookies.get("_auth_token") && cookies.get("_auth_role")
+                      ? navigator("/canDeliver")
+                      : navigator("login")
+                  }
+                >
                   <Box fontSize={"25px"} color={"#454545"}>
                     بإمكاني التوصيل
                   </Box>
@@ -418,9 +441,15 @@ function TopBar() {
               }}
             >
               <MenuList dense sx={{ width: 200, direction: "rtl" }}>
-                {cookies.get("_auth_role") === "admin" ? (
+                {cookies.get("_auth_role") === "651001091051101310" ? (
                   <>
-                    <MenuItem onClick={() => cookies.get('_auth_role') === 'admin' ? navigator('/admin/adminpanel') : null}>
+                    <MenuItem
+                      onClick={() =>
+                        cookies.get("_auth_role") === "651001091051101310"
+                          ? navigator("/admin/adminpanel")
+                          : null
+                      }
+                    >
                       <Box fontSize={"25px"} color={"#454545"}>
                         لوحه التحكم
                       </Box>
@@ -430,8 +459,9 @@ function TopBar() {
                 ) : undefined}
                 <MenuItem
                   onClick={() => {
+                    cookies.remove("_auth_role");
                     cookies.remove("_auth_token");
-                    window.location.reload();
+                    window.location.pathname = "/";
                   }}
                 >
                   <Box fontSize={"25px"} color={"#454545"}>
@@ -456,7 +486,7 @@ function TopBar() {
               display="flex"
               width="200px"
               fontWeight={"bold"}
-              fontSize={30}
+              fontSize={{ lg: 20, xl: 30 }}
               justifyContent="center"
               alignItems="center"
               sx={{ cursor: "pointer" }}
@@ -467,7 +497,7 @@ function TopBar() {
               onClick={() => navigator("/register")}
               width="150px"
               fontWeight={"bold"}
-              fontSize={30}
+              fontSize={{ lg: 20, xl: 30 }}
               display={"flex"}
               justifyContent={"center"}
               alignItems={"center"}

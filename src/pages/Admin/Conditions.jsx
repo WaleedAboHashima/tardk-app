@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import SidePanel from "../components/SidePanel";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { ConditionsHandler } from './../../apis/Admin/Conditions';
 
 function Conditions() {
+  const dispatch = useDispatch();
+  const [message, setMessage] = useState();
+  const state = useSelector(state => state.Conditions)
   return (
     <Box sx={{ direction: "rtl" }} display={"flex"}>
       <SidePanel />
@@ -15,7 +20,7 @@ function Conditions() {
         alignItems={"center"}
         sx={{ backgroundColor: "#F2F2F2" }}
       >
-        <Box width={"1257px"} height={"682px"} display={"flex"}>
+        <Box width={"1257px"} display={"flex"}>
           <Box
             sx={{ backgroundColor: "white" }}
             p={5}
@@ -36,7 +41,7 @@ function Conditions() {
               تغيير سياسة الخصوصية
             </Typography>
             <Formik
-              onSubmit={() => console.log("done")}
+              onSubmit={()=>dispatch(ConditionsHandler({message: message}))}
               initialValues={initialState}
             >
               {({
@@ -53,6 +58,7 @@ function Conditions() {
                 >
                   <TextField
                     name="message"
+                    onChangeCapture={(e) => setMessage(e.target.value)}
                     error={!!touched.message && !!errors.message}
                     helperText={touched.message && errors.message}
                     onBlur={handleBlur}
@@ -79,6 +85,7 @@ function Conditions() {
                     <img src="/assets/checkMarkWhite.png" alt="checkmark" />
                     تطبيق التغيير
                   </Button>
+                  <Box width={'100%'} textAlign={'center'} fontWeight={'bold'} p={2} color={'red'}>{state.status === 200 ? "تمت العمليه بنجاح" : state.status === 400 ?  "فشل في العمليه" : ""}</Box>
                 </form>
               )}
             </Formik>

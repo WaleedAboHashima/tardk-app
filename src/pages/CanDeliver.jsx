@@ -8,10 +8,12 @@ import {
   ImageListItem,
   IconButton,
   Dialog,
+  Backdrop,
   DialogContent,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopBar from "./components/TopBar";
+import CircularProgress from "@mui/material/CircularProgress";
 import Footer from "./components/Footer";
 import { Formik } from "formik";
 import PersonIcon from "@mui/icons-material/Person";
@@ -19,17 +21,65 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { motion } from "framer-motion";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import PhoneIcon from "@mui/icons-material/Phone";
+import { RulesHandler } from "../apis/rules";
+import { AddDriverHandler } from "./../apis/Drivers/AddDriver";
 function CanDeliver() {
   const [conditions, setConditions] = useState(false);
   const [open, setOpen] = useState(false);
+  const [username, setUsername] = useState();
+  const [source_location, setSource_Location] = useState();
+  const [dis_location, setDis_Location] = useState();
+  const [price, setPrice] = useState();
+  const [packageSize, setPackageSize] = useState();
   const navigator = useNavigate();
+  const dispatch = useDispatch();
+  const [commission, setCommission] = useState();
+  const [phone, setPhone] = useState();
+  const [error, setError] = useState();
+  const state = useSelector((state) => state.AddDelivery);
 
-  const handleOpen = () => {
-    setOpen(true);
-    setTimeout(() => {
-      navigator("/");
-    }, 2000);
+  const handleSubmit = () => {
+    dispatch(
+      AddDriverHandler({
+        username: username,
+        source_location: source_location,
+        dis_location: dis_location,
+        phone: phone,
+        price: price,
+        eviction_size: packageSize,
+      })
+    );
   };
+  const handleStatus = () => {
+    if (state.status) {
+      switch (state.status) {
+        case 201:
+          setOpen(true);
+          setTimeout(() => {
+            window.location.pathname = '/'
+          }, 2000);
+          break;
+        case 400: 
+          setError('خطا في البيانات')
+        default:
+          break;
+      }
+    }
+  }
+
+  useEffect(() => {
+    handleStatus();
+    dispatch(RulesHandler()).then((res) => {
+      if (res.payload.data) {
+        const conditions = res.payload.data.rules.filter(
+          (rules) => rules.type === "commission"
+        );
+        setCommission(conditions[0].commission);
+      }
+    });
+  }, [state.status]);
 
   return (
     <motion.Box height={"100vh"} width={"100%"}>
@@ -38,18 +88,23 @@ function CanDeliver() {
         display={"flex"}
         sx={{ backgroundColor: "#F2F2F2", direction: "rtl" }}
       >
-        <Box width={"50%"} p={5} display={"flex"} flexDirection={"column"}>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={state.loading ? true : false}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <Box
+          width={{ lg: "40%", xl: "50%" }}
+          p={5}
+          display={"flex"}
+          flexDirection={"column"}
+        >
           <Box fontSize={"35px"}>يرجى تعبئة البيانات التالية (أضافه طرد)</Box>
-          <Formik onSubmit={() => console.log("done")}>
-            {({
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-            }) => (
+          <Formik onSubmit={handleSubmit} initialValues={initialState}>
+            {({ values, errors, touched, handleChange, handleSubmit }) => (
               <form
+                onSubmit={handleSubmit}
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
@@ -60,6 +115,12 @@ function CanDeliver() {
               >
                 <Box display={"flex"} gap={"30px"}>
                   <TextField
+                    name="username"
+                    value={values.username}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setUsername(e.target.value)}
+                    error={!!errors.username && !!touched.username}
+                    helperText={errors.username && touched.username}
                     placeholder="اسم الشخص"
                     InputProps={{
                       style: {
@@ -81,6 +142,16 @@ function CanDeliver() {
                     }}
                   />
                   <TextField
+                    name="source_location"
+                    value={source_location}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setSource_Location(e.target.value)}
+                    error={
+                      !!errors.source_location && !!touched.source_location
+                    }
+                    helperText={
+                      errors.source_location && touched.source_location
+                    }
                     placeholder="مكان السكن"
                     InputProps={{
                       style: {
@@ -104,6 +175,12 @@ function CanDeliver() {
                 </Box>
                 <Box display={"flex"} gap={"30px"}>
                   <TextField
+                    name="dis_location"
+                    value={values.dis_location}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setDis_Location(e.target.value)}
+                    error={!!errors.dis_location && !!touched.dis_location}
+                    helperText={errors.dis_location && touched.dis_location}
                     placeholder="مكان السفر"
                     InputProps={{
                       style: {
@@ -125,6 +202,12 @@ function CanDeliver() {
                     }}
                   />
                   <TextField
+                    name="price"
+                    value={values.price}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setPrice(e.target.value)}
+                    error={!!errors.price && !!touched.price}
+                    helperText={errors.price && touched.price}
                     placeholder="سعر التوصيل/ ك"
                     InputProps={{
                       style: {
@@ -167,7 +250,7 @@ function CanDeliver() {
                             justifyContent={"center"}
                             alignItems={"center"}
                           >
-                            العموله
+                            {commission ? commission : "العموله"}
                           </Box>
                         </IconButton>
                       ),
@@ -176,6 +259,12 @@ function CanDeliver() {
                 </Box>
                 <Box display={"flex"} gap={"30px"}>
                   <TextField
+                    name="packageSize"
+                    value={values.packageSize}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setPackageSize(e.target.value)}
+                    error={!!errors.packageSize && !!touched.packageSize}
+                    helperText={errors.packageSize && touched.packageSize}
                     placeholder="حجم الاعلي الطرد"
                     InputProps={{
                       style: {
@@ -198,7 +287,35 @@ function CanDeliver() {
                       ),
                     }}
                   />
+                  <TextField
+                    name="phone"
+                    value={values.phone}
+                    onChange={handleChange}
+                    onChangeCapture={(e) => setPhone(e.target.value)}
+                    error={!!errors.phone && !!touched.phone}
+                    helperText={errors.phone && touched.phone}
+                    placeholder="رقم الهاتف"
+                    InputProps={{
+                      style: {
+                        backgroundColor: "white",
+                        border: "2px solid black",
+                        width: "369px",
+                        borderRadius: 99,
+                        fontSize: "25px",
+                        height: "50px",
+                        color: "black",
+                      },
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PhoneIcon
+                            sx={{ width: 35, height: 35, color: "#454545" }}
+                          />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
                 </Box>
+                <Box display={'flex'} justifyContent={'center'} alignItems={'center'} fontSize={20} color={'red'} fontWeight={'bold'}>{error}</Box>
                 <Divider sx={{ borderWidth: 2 }} />
                 <Box height={"140px"}>
                   <Box
@@ -223,8 +340,17 @@ function CanDeliver() {
                 </Box>
                 <Box display={"flex"} justifyContent={"left"}>
                   <Button
-                    onClick={handleOpen}
-                    disabled={conditions ? false : true}
+                    type="submit"
+                    disabled={
+                      conditions &&
+                      username &&
+                      packageSize &&
+                      dis_location &&
+                      source_location &&
+                      price
+                        ? false
+                        : true
+                    }
                     sx={{
                       fontSize: "25px",
                       fontWeight: "bold",
@@ -270,8 +396,8 @@ function CanDeliver() {
             )}
           </Formik>
         </Box>
-        <Box width={"50%"} sx={{ direction: "ltr" }} p={5}>
-          <ImageList sx={{ width: 500 }} cols={7}>
+        <Box width={{ lg: "60%", xl: "50%" }} sx={{ direction: "ltr" }} p={5}>
+          <ImageList sx={{ width: { lg: 400, xl: 500 } }} cols={7}>
             {itemData.map((item) => (
               <ImageListItem
                 key={item.img}
@@ -301,6 +427,15 @@ function srcset(image, size, rows = 1, cols = 1) {
     }&fit=crop&auto=format&dpr=2 2x`,
   };
 }
+
+const initialState = {
+  username: "",
+  dis_location: "",
+  price: "",
+  packageSize: "",
+  source_location: "",
+  phone: "",
+};
 
 const itemData = [
   {

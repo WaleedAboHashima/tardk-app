@@ -6,38 +6,69 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import React from "react";
+import { useEffect, useState } from "react";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import { Formik } from "formik";
-import LockIcon from "@mui/icons-material/Lock";
+import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
 import * as yup from "yup";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { PayTaxesHandler } from "../apis/Payment/PayTaxes";
 function Pay() {
   const navigator = useNavigate();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState();
+  const [amount, setAmount] = useState();
+  const [error, setError] = useState();
+  const state = useSelector((state) => state.PayTaxes);
+  const dispatch = useDispatch();
   const styless = {
     input: {
       borderRadius: "40px",
     },
   };
-
-  const handleSubmit = () => {
-    setOpen(true);
-    setTimeout(() => {
-      navigator("/");
-    }, 2000);
+  const handleStateChange = () => {
+    if (state.status) {
+      switch (state.status) {
+        case 200:
+          window.open(state.data.approvalUrl, "_blank");
+          break;
+        case 400:
+          setError("كلمه المرور غير صحيحه");
+          break;
+        case 401:
+          setError("برجاء تسجيل الدخول");
+          break;
+        default:
+          break;
+      }
+    }
   };
+  const handleSubmit = () => {
+    dispatch(PayTaxesHandler({ password: password, amount: amount })).then(() =>
+      handleStateChange()
+    );
+  };
+
+  useEffect(() => {
+    handleStateChange();
+  }, [state.status]);
+
   return (
-    <motion.Box height={"100vh"} width={"100%"}      initial={{ opacity: 0, transition: { duration: 0.5 } }}
-    animate={{ opacity: 1, transition: { duration: 0.5 } }}
-    exit={{ opacity: 0, transition: { duration: 0.5 } }}>
+    <motion.Box
+      height={"100vh"}
+      width={"100%"}
+      initial={{ opacity: 0, transition: { duration: 0.5 } }}
+      animate={{ opacity: 1, transition: { duration: 0.5 } }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    >
       <TopBar />
       <Box
         sx={{ backgroundColor: "#F2F2F2" }}
-        height={"90%"}
+        height={"100vh"}
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
@@ -45,7 +76,7 @@ function Pay() {
         <Box
           p={2}
           sx={{ backgroundColor: "white" }}
-          height={"90%"}
+          height={"80%"}
           width={"80%"}
           display={"flex"}
         >
@@ -75,7 +106,7 @@ function Pay() {
               <Box display={"flex"} height={"100%"}>
                 <Formik
                   validationSchema={validSchema}
-                  initialValues={{ password: "" }}
+                  initialValues={{ password: "", amount: "" }}
                   onSubmit={handleSubmit}
                 >
                   {({
@@ -95,10 +126,38 @@ function Pay() {
                       }}
                     >
                       <TextField
+                        name="amount"
+                        value={values.amount}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        onChangeCapture={(e) => setAmount(e.target.value)}
+                        error={!!touched.amount && !!errors.amount}
+                        helperText={touched.amount && errors.amount}
+                        fullWidth
+                        type="text"
+                        InputProps={{
+                          style: styless.input,
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <CurrencyPoundIcon sx={{color: 'black'}} />
+                            </InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <img
+                                src="./assets/successTick.png"
+                                alt="success"
+                              />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <TextField
                         name="password"
                         value={values.password}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        onChangeCapture={(e) => setPassword(e.target.value)}
                         error={!!touched.password && !!errors.password}
                         helperText={touched.password && errors.password}
                         fullWidth
@@ -126,6 +185,7 @@ function Pay() {
                           ),
                         }}
                       />
+                      <Box color={"red"}>{error}</Box>
                       <Box
                         width={"100%"}
                         height={"150px"}
@@ -223,6 +283,7 @@ function Pay() {
   );
 }
 const validSchema = yup.object({
+  amount: yup.string().required("مطلوب*"),
   password: yup.string().required("مطلوب*"),
 });
 

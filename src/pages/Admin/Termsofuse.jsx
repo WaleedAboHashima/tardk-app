@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import SidePanel from "../components/SidePanel";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { TermsHandler } from "../../apis/Admin/ChangeTerms";
 
 function TermsOfUse() {
+  const dispatch = useDispatch();
+  const [message, setMessage] = useState();
+  const state = useSelector(state => state.Terms)
   return (
     <Box sx={{ direction: "rtl" }} display={"flex"}>
       <SidePanel />
@@ -15,7 +20,7 @@ function TermsOfUse() {
         alignItems={"center"}
         sx={{ backgroundColor: "#F2F2F2" }}
       >
-        <Box width={"1257px"} height={"682px"} display={"flex"}>
+        <Box width={"1257px"} display={"flex"}>
           <Box
             sx={{ backgroundColor: "white" }}
             p={5}
@@ -36,7 +41,7 @@ function TermsOfUse() {
 تغيير سياسة الاستخدام
             </Typography>
             <Formik
-              onSubmit={() => console.log("done")}
+              onSubmit={() => dispatch(TermsHandler({message: message}))}
               initialValues={initialState}
             >
               {({
@@ -58,6 +63,7 @@ function TermsOfUse() {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.message}
+                    onChangeCapture={(e) => setMessage(e.target.value)}
                     multiline
                     rows={18}
                     sx={{ width: "100%", direction: "rtl" }}
@@ -79,6 +85,7 @@ function TermsOfUse() {
                     <img src="/assets/checkMarkWhite.png" alt="checkmark" />
                     تطبيق التغيير
                   </Button>
+                  <Box width={'100%'} textAlign={'center'} fontWeight={'bold'} p={2} color={'red'}>{state.status === 200 ? "تمت العمليه بنجاح" : state.status === 400 ?  "فشل في العمليه" : ""}</Box>
                 </form>
               )}
             </Formik>

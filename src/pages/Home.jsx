@@ -7,6 +7,7 @@ import {
   Paper,
   ListItem,
   ListItemIcon,
+  useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
@@ -59,6 +60,7 @@ function Home() {
       travelPlace: "رفح",
     },
   ];
+  const theme = useTheme();
   return (
     <motion.Box
       initial={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -69,13 +71,15 @@ function Home() {
       <Box
         display="flex"
         flexDirection={"column"}
-        width="100%"
+        width="100vw"
         sx={{ backgroundColor: "#F2F2F2", direction: "rtl" }}
       >
         <Box
-          width={"100%"}
+          width={{xl: '100%', lg: '90%'}}
           height={"900px"}
-          sx={{ backgroundColor: "#F2F2F2" }}
+          sx={{
+            backgroundColor: "#F2F2F2",
+          }}
           display={"flex"}
         >
           <Box
@@ -93,7 +97,7 @@ function Home() {
               variant="standard"
               placeholder="ابحث عن ..."
               sx={{
-                width: "60%",
+                width: {lg: '80%'},
                 my: 10,
                 border: "2px solid #454545",
                 color: "blue",

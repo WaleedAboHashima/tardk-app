@@ -1,49 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Divider, IconButton } from "@mui/material";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import { useNavigate, useParams } from "react-router-dom";
 import InfoIcon from "@mui/icons-material/Info";
+import { useDispatch } from "react-redux";
+import { GetMessagesHandler } from "../apis/User/GetMessage";
+import Cookies from "universal-cookie";
 function DeliverMessage() {
   const params = useParams();
+  const dispatch = useDispatch();
   const navigator = useNavigate();
-  const messages = [
-    {
-      id: "1",
-      name: "السائق محمد أحمد",
-      time: "منذ 30د",
-      status: "متصل",
-      message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-    },
-    {
-      id: "2",
-      name: "السائق محمد أحمد",
-      time: "منذ 30د",
-      status: "متصل",
-      message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-    },
-    {
-      id: "3",
-      name: "السائق محمد أحمد",
-      time: "منذ 30د",
-      status: "متصل",
-      message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-    },
-    {
-      id: "4",
-      name: "السائق محمد أحمد",
-      time: "منذ 30د",
-      status: "متصل",
-      message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-    },
-    {
-      id: "5",
-      name: "السائق محمد أحمد",
-      time: "منذ 30د",
-      status: "متصل",
-      message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-    },
-  ];
+  const cookies = new Cookies();
+  // const messages = [
+  //   {
+  //     id: "1",
+  //     name: "السائق محمد أحمد",
+  //     time: "منذ 30د",
+  //     status: "متصل",
+  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "السائق محمد أحمد",
+  //     time: "منذ 30د",
+  //     status: "متصل",
+  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "السائق محمد أحمد",
+  //     time: "منذ 30د",
+  //     status: "متصل",
+  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "السائق محمد أحمد",
+  //     time: "منذ 30د",
+  //     status: "متصل",
+  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
+  //   },
+  //   {
+  //     id: "5",
+  //     name: "السائق محمد أحمد",
+  //     time: "منذ 30د",
+  //     status: "متصل",
+  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
+  //   },
+  // ];
+  const [messages, setMessages] = useState([]);
   const info = [
     {
       id: "1",
@@ -53,14 +59,27 @@ function DeliverMessage() {
       message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
     },
   ];
+  const [filterMessage, setFilterMessage] = useState();
+  useEffect(() => {
+    dispatch(GetMessagesHandler()).then((res) => {
+      if (res.payload.data) {
+        setMessages(res.payload.data.allConversations[0]);
+        setFilterMessage(
+          res.payload.data.allConversations[0].filter(
+            (message) => message._id === params.id
+          )
+        );
+      }
+    });
+  }, [params.id]);
   return (
     <Box width={"100%"} height={"100vh"}>
       <TopBar />
       <Box
         p={3}
-        sx={{ backgroundColor: "#F3F3F3" }}
+        sx={{ backgroundColor: "#F2F2F2" }}
         display={"flex"}
-        height={"80%"}
+        height={"100vh"}
         justifyContent={"center"}
         alignItems={"center"}
       >
@@ -84,7 +103,7 @@ function DeliverMessage() {
                 flexDirection={"column"}
                 sx={{
                   backgroundColor:
-                    params.id === message.id ? "#F2F2F2" : "#454545",
+                    params.id === message._id ? "#F2F2F2" : "#454545",
                 }}
                 borderRadius={3}
               >
@@ -93,13 +112,13 @@ function DeliverMessage() {
                     <Box
                       textOverflow={"ellipsis"}
                       height={"166px"}
-                      onClick={() => navigator(`/message/${message.id}`)}
-                      key={message.id}
+                      onClick={() => navigator(`/message/${message._id}`)}
+                      key={message._id}
                       sx={{
                         display: "flex",
                         flexDirection: "column",
                         gap: "20px",
-                        color: params.id === message.id ? "#454545" : "white",
+                        color: params.id === message._id ? "#454545" : "white",
                         cursor: "pointer",
                         ":hover": {
                           backgroundColor: "#FFFFFF20",
@@ -111,7 +130,7 @@ function DeliverMessage() {
                       <Box
                         fontSize={"15px"}
                         fontWeight={"bold"}
-                        color={params.id === message.id ? "#454545" : "white"}
+                        color={params.id === message._id ? "#454545" : "white"}
                         justifyContent={"space-between"}
                         sx={{
                           width: "100%",
@@ -126,8 +145,8 @@ function DeliverMessage() {
                             alt="personLogo"
                           />
                           <Box p={2} display={"flex"} flexDirection={"column"}>
-                            <span>{message.name}</span>
-                            <span>{message.status}</span>
+                            <span>السائق: {message.from.username}</span>
+                            <span>متصل</span>
                           </Box>
                         </Box>
                         <span
@@ -170,7 +189,6 @@ function DeliverMessage() {
               <Box
                 fontSize={"15px"}
                 fontWeight={"bold"}
-                // color={params.id === message.id ? "#454545" : "white"}
                 justifyContent={"space-between"}
                 sx={{
                   width: "100%",
@@ -185,12 +203,18 @@ function DeliverMessage() {
                     alt="personLogo"
                   />
                   <Box p={2} display={"flex"} flexDirection={"column"}>
-                    <span>{info[0].name}</span>
-                    <span>{info[0].status}</span>
+                    <span>
+                      {filterMessage
+                        ? filterMessage[0].from.username
+                        : "أسم السائق"}
+                    </span>
+                    <span>متصل</span>
                   </Box>
                 </Box>
                 <IconButton
-                  onClick={() => navigator("/driverInfo/1")}
+                  onClick={() =>
+                    navigator(`/driverInfo/${filterMessage[0].from._id}`)
+                  }
                   sx={{ width: "30px", height: "30px", mt: 3 }}
                 >
                   <InfoIcon
@@ -221,7 +245,7 @@ function DeliverMessage() {
                     direction: "rtl",
                   }}
                 >
-                  السلام عليكم أخي أسعد الله أوقاتك بكل خير...
+                  {filterMessage ? filterMessage[0].message : "الرساله"}
                 </Box>
                 <Box
                   maxWidth={"320px"}
@@ -259,7 +283,7 @@ function DeliverMessage() {
                   alt="logoo"
                 />
                 <Box
-                  maxHeight={'20px'}
+                  maxHeight={"20px"}
                   maxWidth={"320px"}
                   borderRadius={9}
                   p={2}
@@ -268,7 +292,7 @@ function DeliverMessage() {
                     direction: "rtl",
                   }}
                 >
-وعليكم السلام، تفضل أخي
+                  وعليكم السلام، تفضل أخي
                 </Box>
               </Box>
             </Box>

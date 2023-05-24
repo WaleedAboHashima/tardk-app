@@ -1,16 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Link } from "@mui/material"
+import { useDispatch, useSelector } from "react-redux";
+import rules, { RulesHandler } from './../../apis/rules';
 
 function Footer() {
+  const dispatch = useDispatch();
+  const state = useSelector(state => state.Rules)
+  const [termsOfUse, setTermsOfUse] = useState();
+  const [conditions, setConditions] = useState();
+  const [icon, setIcon] = useState();
+  useEffect(() => {
+    dispatch(RulesHandler()).then((res) => {
+      if (res.payload.data) {
+        const termsOfUse = res.payload.data.rules.filter(rule => rule.type === "uses")
+        const condition = res.payload.data.rules.filter(rule => rule.type === "privacy")
+        const icon = res.payload.data.rules.filter(rule => rule.type === "main_img")
+        setTermsOfUse(termsOfUse[0].textBody)
+        setConditions(condition[0].textBody)
+        setIcon(icon[0].main_img)
+      }
+    })
+  }, [dispatch])
     return (
     <Box width="100%" display={'flex'} flexDirection={'column'} height="512px" sx={{ direction: "rtl" }}>
-      <Box p={3}>
-        <Typography variant="h6">
-          .هذا الموقع هو منصة لتوصيل الطرود، حيث يمكن للمستخدمين إرسال الطرود
-          واختيار طريقة التوصيل المفضلة لديهم
+      <Box p={3} display={'flex'} flexDirection={'column'} gap={2}>
+          <Typography variant="h6">
+            سياسه الاستخدام: 
+          <Box>{state.data.rules ? termsOfUse : "سياسه الاستخدام"}</Box>
         </Typography>
         <Typography variant="h6">
-        .يمكن للمستخدمين أيضًا تحديد عنوان التسليم وتتبع الحالة الحالية للشحنة في الوقت الحقيقي
+        سياسه الخصوصيه: 
+            <Box>{state.data.rules ? conditions : "سياسه الخصوصيه"}</Box>
         </Typography>
           </Box>
           <Box p={3} display={'flex'} gap={15} justifyContent={'space-between'}>
@@ -24,8 +44,7 @@ function Footer() {
               </Box>
               <Box width={'300px'} height={'200px'}  display={'flex'} flexDirection={'column'} textAlign={'center'} p={1}>
                   <Typography variant="h6" fontWeight={'bold'} py={2}>روابط سريعة</Typography>
-                  <Box display={'flex'} gap={1} justifyContent={'center'} flexDirection={'column'}>
-                      <Link sx={{color: 'black', cursor: 'pointer'}} underline="none">الشروط والأحكام</Link>
+                  <Box display={'flex'} gap={1} width={{lg: '100px', xl: 'auto'}} justifyContent={'center'} flexDirection={'column'}>
                       <Link sx={{color: 'black', cursor: 'pointer'}} underline="none">جميع السائقين</Link>
                       <Link sx={{color: 'black', cursor: 'pointer'}} underline="none">جميع الطرود</Link>
                   </Box>
@@ -39,7 +58,7 @@ function Footer() {
                   </Box>
               </Box>
               <Box width={'auto'} height={'200px'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-                  <img src="/assets/TARDK.png"  alt="Tardk"/>
+            <img width={'418px'} height={'133px'} src={`${icon ? `https://tardq.onrender.com/${icon}` : 'TARDK.png'} `}  alt="Tardk"/>
               </Box>
           </Box>
     </Box>
