@@ -1,4 +1,5 @@
 import {
+  Backdrop,
   Box,
   Button,
   Dialog,
@@ -7,10 +8,11 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import CircularProgress from '@mui/material/CircularProgress';
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import { Formik } from "formik";
-import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
+import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import * as yup from "yup";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +36,7 @@ function Pay() {
     if (state.status) {
       switch (state.status) {
         case 200:
+          localStorage.setItem("amount", amount);
           window.open(state.data.approvalUrl, "_blank");
           break;
         case 400:
@@ -65,6 +68,12 @@ function Pay() {
       animate={{ opacity: 1, transition: { duration: 0.5 } }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
     >
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={state.loading ? true : false}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <TopBar />
       <Box
         sx={{ backgroundColor: "#F2F2F2" }}
@@ -139,7 +148,7 @@ function Pay() {
                           style: styless.input,
                           startAdornment: (
                             <InputAdornment position="start">
-                              <CurrencyPoundIcon sx={{color: 'black'}} />
+                              <CurrencyPoundIcon sx={{ color: "black" }} />
                             </InputAdornment>
                           ),
                           endAdornment: (
