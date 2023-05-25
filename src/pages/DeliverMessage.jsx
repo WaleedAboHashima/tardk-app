@@ -23,7 +23,7 @@ function DeliverMessage() {
   const navigator = useNavigate();
   const [messages, setMessages] = useState([]);
   const state = useSelector((state) => state.Messages);
-  const socket = io(`http://localhost:8080?id=${cookies.get("_auth_id")}`);
+  const socket = io(`https://tardq.onrender.com?id=${cookies.get("_auth_id")}`);
   const [allMessages, setAllMessages] = useState([]);
   const [privateMessage, setPrivateMessage] = useState();
   const [socketChange, setSocketChange] = useState(false);
