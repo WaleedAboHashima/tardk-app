@@ -47,8 +47,6 @@ function AddPackage() {
   const [dis_location, setDisLocation] = useState();
   const navigator = useNavigate();
   const dispatch = useDispatch();
-  const cookies = new Cookies();
-  const rules = useSelector((state) => state.Rules);
   const [commission, setCommission] = useState();
   const state = useSelector((state) => state.AddPackage);
   const handleFileChange = (event) => {
@@ -109,7 +107,8 @@ function AddPackage() {
       <TopBar />
       <Box
         display={"flex"}
-        sx={{ backgroundColor: "#F2F2F2", direction: "rtl" }}
+        width={{xs: '100vw', lg: '100%'}}
+        sx={{ backgroundColor: "#F2F2F2", direction: "rtl" , overflowX: 'scroll'}}
       >
         <Box
           width={{ lg: "60%", xl: "50%" }}
@@ -120,6 +119,7 @@ function AddPackage() {
           <Box fontSize={"35px"}>يرجى تعبئة البيانات التالية (أضافه طرد)</Box>
           <Formik initialValues={initialState} onSubmit={handleSubmit}>
             {({ values, handleChange, handleSubmit, setFieldValue }) => (
+              <Box>
               <form
                 onSubmit={handleSubmit}
                 style={{
@@ -603,11 +603,12 @@ function AddPackage() {
                     </DialogContent>
                   </Dialog>
                 </Box>
-              </form>
+                </form>
+                </Box>
             )}
           </Formik>
         </Box>
-        <Box width={{ lg: "40%", xl: "50%" }} sx={{ direction: "ltr" }} p={5}>
+        <Box display={{lg: 'initial' , xs: 'none'}} width={{ lg: "40%", xl: "50%" }} sx={{ direction: "ltr" }} p={5}>
           <ImageList sx={{ width: { lg: 350, xl: 500 } }} cols={7}>
             {itemData.map((item) => (
               <ImageListItem

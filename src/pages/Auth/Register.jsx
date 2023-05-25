@@ -9,7 +9,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { RegisterHandler } from "../../apis/Auth/Register";
-import Cookies from "universal-cookie";
 import CircularProgress from "@mui/material/CircularProgress";
 function Register() {
   const dispatch = useDispatch();
@@ -20,7 +19,6 @@ function Register() {
   const [error, setError] = React.useState();
   const [password, setPassword] = React.useState();
   const state = useSelector((state) => state.Register);
-  const cookies = new Cookies();
   //Functions
 
   const handleStateChange = () => {

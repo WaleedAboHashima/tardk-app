@@ -32,6 +32,7 @@ function Success() {
           case 500:
             setError(500);
             localStorage.removeItem("amount");
+            break;
           default:
             break;
         }

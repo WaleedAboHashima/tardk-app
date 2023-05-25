@@ -20,7 +20,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { motion } from "framer-motion";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { RulesHandler } from "../apis/rules";
@@ -33,7 +32,6 @@ function CanDeliver() {
   const [dis_location, setDis_Location] = useState();
   const [price, setPrice] = useState();
   const [packageSize, setPackageSize] = useState();
-  const navigator = useNavigate();
   const dispatch = useDispatch();
   const [commission, setCommission] = useState();
   const [phone, setPhone] = useState();
@@ -61,8 +59,9 @@ function CanDeliver() {
             window.location.pathname = '/'
           }, 2000);
           break;
-        case 400: 
+        case 400:
           setError('خطا في البيانات')
+          break;
         default:
           break;
       }
@@ -86,7 +85,7 @@ function CanDeliver() {
       <TopBar />
       <Box
         display={"flex"}
-        sx={{ backgroundColor: "#F2F2F2", direction: "rtl" }}
+        sx={{ backgroundColor: "#F2F2F2", direction: "rtl", overflowX: {xs: 'scroll', lg: 'unset'} }}
       >
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -396,7 +395,7 @@ function CanDeliver() {
             )}
           </Formik>
         </Box>
-        <Box width={{ lg: "60%", xl: "50%" }} sx={{ direction: "ltr" }} p={5}>
+        <Box display={{lg: 'initial', xs: 'none'}} width={{ lg: "60%", xl: "50%" }} sx={{ direction: "ltr" }} p={5}>
           <ImageList sx={{ width: { lg: 400, xl: 500 } }} cols={7}>
             {itemData.map((item) => (
               <ImageListItem

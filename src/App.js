@@ -60,9 +60,11 @@ function App() {
         <Route path="/addPackage" element={<AddPackage />} />
         <Route path="/canDeliver" element={<CanDeliver />} />
         <Route path="/message/:id" element={<DeliverMessage />} />
+        <Route path="/message" element={<DeliverMessage />} />
         <Route path="/driverInfo/:id" element={<DriverInfo />} />
         <Route path="/packageInfo/:id" element={<PackageInfo />} />
         <Route path="/success" element={<Success />} />
+
         {cookies.get("_auth_role") === "651001091051101310" ? (
           <>
             <Route path="/admin/adminpanel" element={<AdminPanel />} />

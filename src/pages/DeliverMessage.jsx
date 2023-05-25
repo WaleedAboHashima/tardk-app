@@ -1,77 +1,77 @@
-import React, { useEffect, useState } from "react";
-import { Box, Button, Divider, IconButton } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import { useNavigate, useParams } from "react-router-dom";
-import InfoIcon from "@mui/icons-material/Info";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import ReplyIcon from "@mui/icons-material/Reply";
 import { GetMessagesHandler } from "../apis/User/GetMessage";
 import Cookies from "universal-cookie";
+import CircularProgress from "@mui/material/CircularProgress";
+import { io } from "socket.io-client";
+
 function DeliverMessage() {
+  const cookies = new Cookies();
   const params = useParams();
   const dispatch = useDispatch();
   const navigator = useNavigate();
-  const cookies = new Cookies();
-  // const messages = [
-  //   {
-  //     id: "1",
-  //     name: "السائق محمد أحمد",
-  //     time: "منذ 30د",
-  //     status: "متصل",
-  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "السائق محمد أحمد",
-  //     time: "منذ 30د",
-  //     status: "متصل",
-  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "السائق محمد أحمد",
-  //     time: "منذ 30د",
-  //     status: "متصل",
-  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "السائق محمد أحمد",
-  //     time: "منذ 30د",
-  //     status: "متصل",
-  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-  //   },
-  //   {
-  //     id: "5",
-  //     name: "السائق محمد أحمد",
-  //     time: "منذ 30د",
-  //     status: "متصل",
-  //     message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-  //   },
-  // ];
   const [messages, setMessages] = useState([]);
-  const info = [
-    {
-      id: "1",
-      name: "السائق محمد أحمد",
-      time: "منذ 30د",
-      status: "متصل",
-      message: "السلام عليكم أخي أسعد الله أوقاتك بكل خير",
-    },
-  ];
-  const [filterMessage, setFilterMessage] = useState();
+  const state = useSelector((state) => state.Messages);
+  const socket = io(`http://localhost:8080?id=${cookies.get("_auth_id")}`);
+  const [allMessages, setAllMessages] = useState([]);
+  const [privateMessage, setPrivateMessage] = useState();
+  const [socketChange, setSocketChange] = useState(false);
+  const containerRef = useRef(null);
+  const input = useRef();
+  const handleSocket = () => {
+    socket.emit("newMessage", {
+      sender: cookies.get("_auth_id"),
+      receiver: params.id,
+      message: privateMessage,
+    });
+    setPrivateMessage("");
+    input.current.value = "";
+    setSocketChange(!socketChange);
+  };
+
+  function scrollToBottom() {
+    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [allMessages]);
+
   useEffect(() => {
     dispatch(GetMessagesHandler()).then((res) => {
       if (res.payload.data) {
-        setMessages(res.payload.data.allConversations[0]);
-        setFilterMessage(
-          res.payload.data.allConversations[0].filter(
-            (message) => message._id === params.id
-          )
+        const lastMessages = [];
+        for (const conversation of Object.values(
+          res.payload.data.allConversations
+        )) {
+          const userId = Object.keys(conversation)[0];
+          const messages = conversation[userId];
+          lastMessages.push(messages);
+        }
+        setMessages(lastMessages);
+        Object.values(res.payload.data.allConversations).map(
+          (c)  => {
+            const userId = Object.keys(c)[0];
+            if (userId === params.id) {
+              const message = c[userId];
+              setAllMessages(message);
+            }
+          }
         );
       }
     });
-  }, [params.id]);
+  }, [params.id, socketChange]);
   return (
     <Box width={"100%"} height={"100vh"}>
       <TopBar />
@@ -79,19 +79,20 @@ function DeliverMessage() {
         p={3}
         sx={{ backgroundColor: "#F2F2F2" }}
         display={"flex"}
-        height={"100vh"}
+        height={{ lg: "100vh", sx: "auto" }}
         justifyContent={"center"}
         alignItems={"center"}
       >
         <Box
           sx={{ direction: "rtl" }}
-          width={"1234px"}
-          height={"763px"}
+          width={{ lg: "1234px", xs: "100%" }}
+          height={{ lg: "763px", xs: "auto" }}
           display={"flex"}
+          flexDirection={{ xs: "column", lg: "row" }}
         >
           <Box
-            sx={{ backgroundColor: "white", overflowY: "scroll" }}
-            width={"30%"}
+            sx={{ backgroundColor: "white", overflowY: "auto" }}
+            width={{ lg: "30%", xs: "100%" }}
             p={2}
             display={"flex"}
             flexDirection={"column"}
@@ -103,7 +104,10 @@ function DeliverMessage() {
                 flexDirection={"column"}
                 sx={{
                   backgroundColor:
-                    params.id === message._id ? "#F2F2F2" : "#454545",
+                    params.id === message[message.length - 1].from._id ||
+                    params.id === message[message.length - 1].to._id
+                      ? "#F2F2F2"
+                      : "#454545",
                 }}
                 borderRadius={3}
               >
@@ -112,13 +116,26 @@ function DeliverMessage() {
                     <Box
                       textOverflow={"ellipsis"}
                       height={"166px"}
-                      onClick={() => navigator(`/message/${message._id}`)}
-                      key={message._id}
+                      onClick={() =>
+                        navigator(
+                          `/message/${
+                            cookies.get("_auth_id") !==
+                            message[message.length - 1].from._id
+                              ? message[message.length - 1].from._id
+                              : message[message.length - 1].to._id
+                          }`
+                        )
+                      }
+                      key={message[message.length - 1]._id}
                       sx={{
                         display: "flex",
                         flexDirection: "column",
                         gap: "20px",
-                        color: params.id === message._id ? "#454545" : "white",
+                        color:
+                          params.id === message[message.length - 1].from._id ||
+                          params.id === message[message.length - 1].to._id
+                            ? "#454545"
+                            : "white",
                         cursor: "pointer",
                         ":hover": {
                           backgroundColor: "#FFFFFF20",
@@ -130,7 +147,12 @@ function DeliverMessage() {
                       <Box
                         fontSize={"15px"}
                         fontWeight={"bold"}
-                        color={params.id === message._id ? "#454545" : "white"}
+                        color={
+                          params.id === message[message.length - 1].from._id ||
+                          params.id === message[message.length - 1].to._id
+                            ? "#454545"
+                            : "white"
+                        }
                         justifyContent={"space-between"}
                         sx={{
                           width: "100%",
@@ -145,7 +167,10 @@ function DeliverMessage() {
                             alt="personLogo"
                           />
                           <Box p={2} display={"flex"} flexDirection={"column"}>
-                            <span>السائق: {message.from.username}</span>
+                            <span>
+                              السائق:{" "}
+                              {message[message.length - 1].from.username}
+                            </span>
                             <span>متصل</span>
                           </Box>
                         </Box>
@@ -156,7 +181,7 @@ function DeliverMessage() {
                             paddingTop: "30px",
                           }}
                         >
-                          {message.time}
+                          {message[message.length - 1].time}
                         </span>
                       </Box>
                       <Box
@@ -166,7 +191,7 @@ function DeliverMessage() {
                         height={"20%"}
                         width={"100%"}
                       >
-                        {message.message}
+                        {message[message.length - 1].message}
                       </Box>
                     </Box>
                   </Box>
@@ -174,129 +199,149 @@ function DeliverMessage() {
               </Box>
             ))}
           </Box>
-          <Box
-            sx={{
-              backgroundColor: "white",
-              boxShadow: "rgba(0, 0.2, 0, 0) 0px 19px 38px",
-            }}
-            width={"70%"}
-            p={2}
-            display={"flex"}
-            flexDirection={"column"}
-            gap={1}
-          >
-            <Box sx={{ height: "15%" }}>
-              <Box
-                fontSize={"15px"}
-                fontWeight={"bold"}
-                justifyContent={"space-between"}
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                }}
-              >
-                <Box width={"100%"} display={"flex"} p={2}>
-                  <img
-                    width={"69px"}
-                    height={"69px"}
-                    src="/assets/personLogo.png"
-                    alt="personLogo"
-                  />
-                  <Box p={2} display={"flex"} flexDirection={"column"}>
-                    <span>
-                      {filterMessage
-                        ? filterMessage[0].from.username
-                        : "أسم السائق"}
-                    </span>
-                    <span>متصل</span>
-                  </Box>
-                </Box>
-                <IconButton
-                  onClick={() =>
-                    navigator(`/driverInfo/${filterMessage[0].from._id}`)
-                  }
-                  sx={{ width: "30px", height: "30px", mt: 3 }}
-                >
-                  <InfoIcon
-                    sx={{ color: "#454545", width: "30px", height: "30px" }}
-                  />
-                </IconButton>
-              </Box>
-            </Box>
-            <Divider sx={{ borderColor: "#454545" }} />
+          {state.loading ? (
             <Box
-              sx={{ height: "80%" }}
+              width={"100%"}
+              sx={{ background: "white" }}
               display={"flex"}
-              flexDirection={"column"}
+              justifyContent={"center"}
+              alignItems={"center"}
             >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
               <Box
-                width={"100%"}
-                height={"50%"}
+                sx={{
+                  backgroundColor: "white",
+                  boxShadow: "rgba(0, 0.2, 0, 0) 0px 19px 38px",
+                }}
+                width={{ lg: "70%", xs: "100%" }}
+                p={2}
                 display={"flex"}
                 flexDirection={"column"}
-                gap={2}
+                gap={1}
               >
-                <Box
-                  maxWidth={"320px"}
-                  p={3}
-                  sx={{
-                    backgroundColor: "#E6E6E6",
-                    borderRadius: "20px 20px 0 20px",
-                    direction: "rtl",
-                  }}
-                >
-                  {filterMessage ? filterMessage[0].message : "الرساله"}
+                <Box sx={{ height: "15%" }}>
+                  <Box
+                    fontSize={"15px"}
+                    fontWeight={"bold"}
+                    justifyContent={"space-between"}
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                    }}
+                  >
+                    <Box width={"100%"} display={"flex"} p={2}>
+                      <img
+                        width={"69px"}
+                        height={"69px"}
+                        src="/assets/personLogo.png"
+                        alt="personLogo"
+                      />
+                      <Box p={2} display={"flex"} flexDirection={"column"}>
+                        <span>
+                          {messages
+                            ? messages.map(
+                                (message, index) =>
+                                  message[index].from._id === params.id &&
+                                  message[message.length - 1].from.username
+                              )
+                            : ""}
+                        </span>
+                        <span>متصل</span>
+                      </Box>
+                    </Box>
+                  </Box>
                 </Box>
+                <Divider sx={{ borderColor: "#454545" }} />
                 <Box
-                  maxWidth={"320px"}
-                  p={3}
-                  sx={{
-                    backgroundColor: "#E6E6E6",
-                    borderRadius: "20px 0 0 20px",
-                    direction: "rtl",
-                  }}
+                  sx={{ height: { lg: "70%", xs: "auto" } }}
+                  display={"flex"}
+                  flexDirection={"column"}
                 >
-                  لدي استفسار معين
+                  <Box
+                    width={"100%"}
+                    height={"100%"}
+                    sx={{ overflowY: "auto", overflowX: "hidden" }}
+                    ref={containerRef}
+                    display={"flex"}
+                    flexDirection={"column"}
+                    gap={2}
+                  >
+                    {/* Box */}
+                    {allMessages.map((m) => (
+                      <>
+                        {m.from._id === params.id ? (
+                          <Box
+                            maxWidth={"320px"}
+                            p={3}
+                            sx={{
+                              backgroundColor: "#E6E6E6",
+                              borderRadius: "20px 20px 0 20px",
+                              direction: "rtl",
+                            }}
+                          >
+                            {m.message}
+                          </Box>
+                        ) : (
+                          <Box
+                            p={3}
+                            py={1}
+                            height={"auto"}
+                            sx={{ direction: "ltr" }}
+                            display={"flex"}
+                          >
+                            <img
+                              width={"47px"}
+                              height={"47px"}
+                              src="/assets/personLogox2.png"
+                              alt="logoo"
+                            />
+                            <Box
+                              height={"auto"}
+                              width={{lg: "320px", xs: '200px'}}
+                              borderRadius={9}
+                              wordWrap="break-word"
+                              p={2}
+                              sx={{
+                                backgroundColor: "#E6E6E6",
+                                direction: "rtl",
+                              }}
+                            >
+                              <Typography sx={{ wordWrap: "break-word" }}>
+                                {m.message}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        )}
+                      </>
+                    ))}
+
+                    {/* Box */}
+                  </Box>
                 </Box>
-                <Box
-                  maxWidth={"320px"}
-                  p={3}
-                  sx={{
-                    backgroundColor: "#E6E6E6",
-                    borderRadius: "20px 0 20px 20px",
-                    direction: "rtl",
+                <TextField
+                  multiline
+                  maxRows={3}
+                  value={privateMessage}
+                  ref={input}
+                  onChange={(e) => setPrivateMessage(e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <Button
+                        onClick={handleSocket}
+                        variant="contained"
+                        sx={{ height: "100%", backgroundColor: "#454545" }}
+                      >
+                        <ReplyIcon />
+                      </Button>
+                    ),
                   }}
-                >
-                  هل بإمكانك مساعدتي
-                </Box>
-              </Box>
-              <Box
-                width={"100%"}
-                height={"50%"}
-                sx={{ direction: "ltr" }}
-                display={"flex"}
-              >
-                <img
-                  width={"47px"}
-                  height={"47px"}
-                  src="/assets/personLogox2.png"
-                  alt="logoo"
                 />
-                <Box
-                  maxHeight={"20px"}
-                  maxWidth={"320px"}
-                  borderRadius={9}
-                  p={2}
-                  sx={{
-                    backgroundColor: "#E6E6E6",
-                    direction: "rtl",
-                  }}
-                >
-                  وعليكم السلام، تفضل أخي
-                </Box>
               </Box>
-            </Box>
-          </Box>
+            </>
+          )}
         </Box>
       </Box>
       <Footer />

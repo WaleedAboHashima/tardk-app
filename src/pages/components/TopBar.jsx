@@ -7,6 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
+  Button,
   CircularProgress,
   Divider,
   List,
@@ -41,13 +42,13 @@ function TopBar() {
   const messageMenu = Boolean(messageOpen);
   const openSettings = Boolean(settings);
   const dispatch = useDispatch();
+  const [username, setUsername] = React.useState(cookies.get("_auth_username"));
   const [state, setState] = React.useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
-
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event &&
@@ -79,17 +80,24 @@ function TopBar() {
         onClick={toggleDrawer(anchor, false)}
         onKeyDown={toggleDrawer(anchor, false)}
       >
-        <img src="/assets/personLogo.png" alt="logoperson" />
-        <Typography
-          variant="h2"
-          fontSize="17px"
-          pt={2}
-          fontWeight="bold"
-          color="white"
-        >
-          اسم السائق
-        </Typography>
+        {cookies.get("_auth_token") && "_auth_role" ? (
+          <>
+            <img src="/assets/personLogo.png" alt="logoperson" />
+            <Typography
+              variant="h2"
+              fontSize="17px"
+              pt={2}
+              fontWeight="bold"
+              color="white"
+            >
+              {username}
+            </Typography>
+          </>
+        ) : (
+          ""
+        )}
       </Box>
+
       <Box>
         <List sx={{ direction: "rtl" }}>
           <ListItem
@@ -104,6 +112,7 @@ function TopBar() {
           >
             {pages.map((page) => (
               <ListItemButton
+                onClick={() => navigator(`${page.to}`)}
                 key={page.id}
                 sx={
                   location.pathname === page.to
@@ -133,6 +142,149 @@ function TopBar() {
               </ListItemButton>
             ))}
           </ListItem>
+          {cookies.get("_auth_token") && cookies.get("_auth_role") ? (
+            <ListItem
+              sx={{
+                color: "white",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "right",
+                justifyContent: "right",
+              }}
+              disablePadding
+            >
+              <ListItemButton
+                onClick={() => navigator(`/message`)}
+                sx={
+                  location.pathname === `/message`
+                    ? {
+                        width: "100%",
+                        background: "white",
+                        color: "#454545",
+                        transition: "cubic-bezier(0.4, 0, 0.2, 1)",
+                        transitionDelay: "100ms",
+                        ":hover": {
+                          backgroundColor: "white",
+                        },
+                        fontWeight: "bold",
+                      }
+                    : {
+                        width: "100%",
+                        ":hover": {
+                          backgroundColor: "white",
+                          color: "#454545",
+                          transitionDelay: "100ms",
+                        },
+                        fontWeight: "bold",
+                      }
+                }
+              >
+                الرسائل
+              </ListItemButton>
+            </ListItem>
+          ) : cookies.get('_auth_role') === "651001091051101310" ? (
+            <ListItem
+            sx={{
+              color: "white",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "right",
+              justifyContent: "right",
+            }}
+            disablePadding
+          >
+            <ListItemButton
+              onClick={() => navigator(`/admin/adminpanel`)}
+              sx={
+                location.pathname === `/admin/adminpanel`
+                  ? {
+                      width: "100%",
+                      background: "white",
+                      color: "#454545",
+                      transition: "cubic-bezier(0.4, 0, 0.2, 1)",
+                      transitionDelay: "100ms",
+                      ":hover": {
+                        backgroundColor: "white",
+                      },
+                      fontWeight: "bold",
+                    }
+                  : {
+                      width: "100%",
+                      ":hover": {
+                        backgroundColor: "white",
+                        color: "#454545",
+                        transitionDelay: "100ms",
+                      },
+                      fontWeight: "bold",
+                    }
+              }
+            >
+              لوحه التحكم
+            </ListItemButton>
+          </ListItem>
+          ) : ""}
+          {!cookies.get("_auth_token") ? (
+            <Box
+              display={"flex"}
+              p={3}
+              justifyContent={"center"}
+              alignItems={"center"}
+              flexDirection={"column"}
+              gap={2}
+            >
+              <Button
+                onClick={() => (window.location.pathname = "/login")}
+                sx={{
+                  backgroundColor: "white",
+                  color: "#454545",
+                  ":hover": { backgroundColor: "#454545", color: "white" },
+                }}
+                fullWidth
+                variant="contained"
+              >
+                تسجيل الدخول
+              </Button>
+              <Button
+                onClick={() => (window.location.pathname = "/register")}
+                sx={{
+                  backgroundColor: "white",
+                  color: "#454545",
+                  ":hover": { backgroundColor: "#454545", color: "white" },
+                }}
+                fullWidth
+                variant="contained"
+              >
+                انشاء حساب
+              </Button>
+            </Box>
+          ) : (
+            <Box
+              display={"flex"}
+              p={3}
+              justifyContent={"center"}
+              alignItems={"center"}
+              flexDirection={"column"}
+              gap={2}
+            >
+              <Button
+                onClick={() => {
+                  cookies.remove("_auth_token");
+                  cookies.remove("_auth_role");
+                  cookies.remove("_auth_username");
+                  window.location.pathname = "/login";
+                }}
+                sx={{
+                  backgroundColor: "white",
+                  color: "red",
+                  ":hover": { backgroundColor: "#454545", color: "red" },
+                }}
+                fullWidth
+                variant="contained"
+              >
+                تسجيل الخروج
+              </Button>
+            </Box>
+          )}
         </List>
       </Box>
     </Box>
@@ -173,8 +325,8 @@ function TopBar() {
             <React.Fragment>
               <SwipeableDrawer
                 sx={{ backdropFilter: "blur(3px)" }}
-                onOpen={() => console.log("open")}
                 anchor={"right"}
+                onOpen={toggleDrawer("right", true)}
                 open={state["right"]}
                 onClose={toggleDrawer("right", false)}
               >
@@ -186,7 +338,7 @@ function TopBar() {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
@@ -229,11 +381,16 @@ function TopBar() {
                   onMouseEnter={(e) => {
                     setMessagesOpen(e.currentTarget);
                     dispatch(GetMessagesHandler()).then((res) => {
-                      if (res.payload.data) {
-                        const messages = res.payload.data.allConversations.map(
-                          (message) => setMessages(message)
-                        );
+                      const lastMessages = [];
+                      for (const conversation of Object.values(
+                        res.payload.data.allConversations
+                      )) {
+                        const userId = Object.keys(conversation)[0];
+                        const messages = conversation[userId];
+                        const lastMessage = messages[messages.length - 1];
+                        lastMessages.push(lastMessage);
                       }
+                      setMessages(lastMessages)
                     });
                   }}
                   className={"nav"}
@@ -282,7 +439,7 @@ function TopBar() {
                           <Box key={message._id}>
                             <MenuItem
                               onClick={() =>
-                                navigator(`/message/${message._id}`)
+                                navigator(`/message/${cookies.get('_auth_id') === message.from._id ? message.to._id : message.from._id}`)
                               }
                               style={menuItemStyle}
                               key={message._id}
@@ -461,7 +618,11 @@ function TopBar() {
                   onClick={() => {
                     cookies.remove("_auth_role");
                     cookies.remove("_auth_token");
-                    window.location.pathname = "/";
+                    cookies.remove("_auth_username");
+                    cookies.remove("_auth_id");
+                    setTimeout(() => {
+                      window.location.pathname = '/'
+                    }, 1000);
                   }}
                 >
                   <Box fontSize={"25px"} color={"#454545"}>

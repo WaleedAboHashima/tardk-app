@@ -28,10 +28,14 @@ function Login() {
           if (state.data.user.role === "admin") {
             cookies.set("_auth_token", state.data.token);
             cookies.set("_auth_role", "651001091051101310");
+            cookies.set("_auth_username", state.data.user.username);
+            cookies.set("_auth_id", state.data.user._id);
             window.location.pathname = "/";
           } else {
             cookies.set("_auth_token", state.data.token);
+            cookies.set("_auth_username", state.data.user.username);
             cookies.set("_auth_role", "67108105101110116");
+            cookies.set("_auth_id", state.data.user._id);
             window.location.pathname = "/";
           }
           break;

@@ -4,9 +4,7 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { Box, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
-import PowerSettingsNewOutlinedIcon from "@mui/icons-material/PowerSettingsNewOutlined";
 import Cookies from "universal-cookie";
 
 const Item = ({ title, to, selected, setSelected }) => {
@@ -43,7 +41,6 @@ const SidePanel = () => {
 
   const navigator = useNavigate();
   const cookies = new Cookies();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState(window.location.pathname);
   return (
     <Box
