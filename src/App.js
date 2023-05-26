@@ -20,6 +20,7 @@ import { RulesHandler } from "./apis/rules";
 import { useEffect, useState } from "react";
 import ChangeLogo from "./pages/Admin/ChangeLogo";
 import Success from "./pages/Success";
+import Search from "./pages/Search";
 function App() {
   const cookies = new Cookies();
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ function App() {
     }
   }
   return (
-    <div className="App" style={{overflowX:"hidden"}}>
+    <div className="App" style={{overflowX:"hidden", overflowY: 'hidden'}}>
       <Routes>
         <Route path="/*" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -57,14 +58,20 @@ function App() {
         <Route path="/pay" element={<Pay />} />
         <Route path="/allPackages" element={<AllProducts />} />
         <Route path="/allDrivers" element={<AllDrivers />} />
-        <Route path="/addPackage" element={<AddPackage />} />
-        <Route path="/canDeliver" element={<CanDeliver />} />
-        <Route path="/message/:id" element={<DeliverMessage />} />
-        <Route path="/message" element={<DeliverMessage />} />
-        <Route path="/driverInfo/:id" element={<DriverInfo />} />
-        <Route path="/packageInfo/:id" element={<PackageInfo />} />
         <Route path="/success" element={<Success />} />
-
+        <Route path="/search/:input" element={<Search />} />
+        {cookies.get("_auth_role") && cookies.get("_auth_token") ? (
+          <>
+          <Route path="/addPackage" element={<AddPackage />} />
+          <Route path="/canDeliver" element={<CanDeliver />} />
+          <Route path="/message/:id" element={<DeliverMessage />} />
+          <Route path="/message" element={<DeliverMessage />} />
+          <Route path="/driverInfo/:id" element={<DriverInfo />} />
+          <Route path="/packageInfo/:id" element={<PackageInfo />} />
+          </>
+        ) : (
+          ""
+        )}
         {cookies.get("_auth_role") === "651001091051101310" ? (
           <>
             <Route path="/admin/adminpanel" element={<AdminPanel />} />

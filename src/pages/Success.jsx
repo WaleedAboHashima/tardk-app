@@ -29,7 +29,7 @@ function Success() {
               window.location.pathname = "/";
             }, 3000);
             break;
-          case 500:
+          case 500 || 401:
             setError(500);
             localStorage.removeItem("amount");
             break;
@@ -50,7 +50,18 @@ function Success() {
         alignItems: "center",
       }}
     >
-          {error === 200 ? <img width={'50%'} height={'50%'} src="/assets/PaymentSuccess.png" alt="PaymentSuccessful" /> : error === 500 ? <img src="/assets/PaymentFailure.png" alt="PaymentFailure" /> : ""}
+      {error === 200 ? (
+        <img
+          width={"50%"}
+          height={"50%"}
+          src="/assets/PaymentSuccess.png"
+          alt="PaymentSuccessful"
+        />
+      ) : error === 500 ? (
+        <img src="/assets/PaymentFailure.png" alt="PaymentFailure" />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

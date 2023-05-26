@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Box,
-  Button,
-  Divider,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import { useNavigate, useParams } from "react-router-dom";
@@ -41,7 +35,9 @@ function DeliverMessage() {
   };
 
   function scrollToBottom() {
-    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
   }
 
   useEffect(() => {
@@ -60,20 +56,18 @@ function DeliverMessage() {
           lastMessages.push(messages);
         }
         setMessages(lastMessages);
-        Object.values(res.payload.data.allConversations).map(
-          (c)  => {
-            const userId = Object.keys(c)[0];
-            if (userId === params.id) {
-              const message = c[userId];
-              setAllMessages(message);
-            }
+        Object.values(res.payload.data.allConversations).map((c) => {
+          const userId = Object.keys(c)[0];
+          if (userId === params.id) {
+            const message = c[userId];
+            setAllMessages(message);
           }
-        );
+        });
       }
     });
   }, [params.id, socketChange]);
   return (
-    <Box width={"100%"} height={"100vh"}>
+    <Box width={"100%"} height={"100vh"} sx={{ overflowY: "scroll" }}>
       <TopBar />
       <Box
         p={3}
@@ -91,7 +85,12 @@ function DeliverMessage() {
           flexDirection={{ xs: "column", lg: "row" }}
         >
           <Box
-            sx={{ backgroundColor: "white", overflowY: "auto" }}
+            sx={{
+              backgroundColor: "white",
+              overflowY: "auto",
+              borderLeft: { lg: "1px solid black", xs: "0px" },
+              borderBottom: { xs: "1px solid black", lg: "0px" },
+            }}
             width={{ lg: "30%", xs: "100%" }}
             p={2}
             display={"flex"}
@@ -168,10 +167,22 @@ function DeliverMessage() {
                           />
                           <Box p={2} display={"flex"} flexDirection={"column"}>
                             <span>
-                              السائق:{" "}
-                              {message[message.length - 1].from.username}
+                              السائق:
+                              {cookies.get("_auth_id") ===
+                              message[message.length - 1].from._id
+                                ? message[message.length - 1].to.username
+                                : message[message.length - 1].from.username}
                             </span>
-                            <span>متصل</span>
+                            <span>
+                              {cookies.get("_auth_id") ===
+                              message[message.length - 1].from._id
+                                ? message[message.length - 1].to.active
+                                  ? "متصل"
+                                  : "غير متصل"
+                                : message[message.length - 1].from.active
+                                ? "متصل"
+                                : "غير متصل"}
+                            </span>
                           </Box>
                         </Box>
                         <span
@@ -243,13 +254,22 @@ function DeliverMessage() {
                         <span>
                           {messages
                             ? messages.map(
-                                (message, index) =>
-                                  message[index].from._id === params.id &&
-                                  message[message.length - 1].from.username
+                                (message) =>
+                                cookies.get("_auth_id") ===
+                                message[message.length - 1].from._id
+                                  ? message[message.length - 1].to.username
+                                  : message[message.length - 1].from.username
                               )
-                            : ""}
+                            : messages.map((m) => m[m.length - 1].to.username)}
                         </span>
-                        <span>متصل</span>
+                        <span>
+                          {messages.map((message) =>
+                            cookies.get("_auth_id") ===
+                            message[message.length - 1].from._id
+                              ? message[message.length - 1].to.active ? "متصل" : "غير متصل"
+                              : message[message.length - 1].from.active ? "متصل" : "غير متصل"
+                          )}
+                        </span>
                       </Box>
                     </Box>
                   </Box>
@@ -300,7 +320,7 @@ function DeliverMessage() {
                             />
                             <Box
                               height={"auto"}
-                              width={{lg: "320px", xs: '200px'}}
+                              width={{ lg: "320px", xs: "200px" }}
                               borderRadius={9}
                               wordWrap="break-word"
                               p={2}

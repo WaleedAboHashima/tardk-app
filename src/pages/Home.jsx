@@ -7,6 +7,8 @@ import {
   Paper,
   ListItem,
   ListItemIcon,
+  Autocomplete,
+  createFilterOptions,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
@@ -20,12 +22,14 @@ import { useDispatch } from "react-redux";
 import { GetPackagesHandler } from "./../apis/Packages/GetAll";
 import { GetDriversHandler } from "./../apis/Drivers/GetAllDrivers";
 import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 function Home() {
   const [allOrders, setallOrders] = useState();
   const [drivers, setDrivers] = useState();
   const navigator = useNavigate();
-
+  const cookies = new Cookies();
   const dispatch = useDispatch();
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     dispatch(GetPackagesHandler()).then((res) => {
@@ -52,7 +56,7 @@ function Home() {
       <Box
         display="flex"
         flexDirection={"column"}
-        width="100vw"
+        width="auto"
         sx={{ backgroundColor: "#F2F2F2", direction: "rtl" }}
       >
         <Box
@@ -70,24 +74,25 @@ function Home() {
             width={{ lg: "50%", xs: "100%" }}
             display={"flex"}
             flexDirection={"column"}
-            p={{lg: 5, xs: 2}}
+            p={{ lg: 5, xs: 2 }}
             py={{ lg: "200px", xs: "30px" }}
           >
             <Typography
               fontSize={{ lg: "50px", xs: "22px" }}
               fontWeight={"bold"}
-              mx={{xs: '20px', lg: ''}}
+              mx={{ xs: "20px", lg: "" }}
             >
               إذا كنت تبحث عن معلومات حول طرد معين ابحث هنا حول ما تريد
             </Typography>
             <TextField
               color="error"
+              onChange={(e) => setSearch(e.target.value)}
               variant="standard"
               placeholder="ابحث عن ..."
               sx={{
                 width: { lg: "80%" },
                 my: 10,
-                mx: { xs: 2, lg: ''},
+                mx: { xs: 2, lg: "" },
                 border: "2px solid #454545",
                 color: "blue",
                 borderRadius: "0px",
@@ -98,6 +103,7 @@ function Home() {
                 style: { fontSize: "25px", paddingRight: 10 },
                 endAdornment: (
                   <IconButton
+                    onClick={() =>  window.location.pathname = `/search/${search}`}
                     position="end"
                     sx={{
                       cursor: "pointer",
@@ -115,142 +121,148 @@ function Home() {
               }}
             />
           </Box>
-          <Box width={"50%"}>
-            <Box display={"flex"} gap={{ lg: "65px", xs: "25px" }}>
+          <Box display={"flex"} gap={{ lg: "65px", xs: "25px" }}>
+            <Box
+              width={{ lg: "319px", xs: "auto" }}
+              height={{ lg: "572px", xs: "294px" }}
+              border="2px solid #454545"
+              borderRadius={99}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              fontSize={{ lg: "50px", xs: "25px" }}
+              fontWeight={"bold"}
+              color={"white"}
+              position={"relative"}
+            >
+              <img
+                width={"auto"}
+                height={"100%"}
+                src="/assets/havePackage.png"
+                alt="havepackage"
+              />
               <Box
-                width={{ lg: "319px", xs: "117px" }}
-                height={{ lg: "572px", xs: "211px" }}
-                border="2px solid #454545"
-                borderRadius={99}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                fontSize={{ lg: "50px", xs: "25px" }}
-                fontWeight={"bold"}
-                color={"white"}
-                position={"relative"}
-              >
-                <img
-                  width={"auto"}
-                  height={"100%"}
-                  src="/assets/havePackage.png"
-                  alt="havepackage"
-                />
-                <Box
-                  sx={{
-                    backgroundColor: "#45454536",
-                    borderRadius: 99,
-                    transition: "0.2s ease",
-                    ":hover": {
-                      cursor: "pointer",
-                      backgroundColor: "#ffffff17",
-                      backdropFilter: "blur(2px)",
-                    },
+                sx={{
+                  backgroundColor: "#45454536",
+                  borderRadius: 99,
+                  transition: "0.2s ease",
+                  ":hover": {
+                    cursor: "pointer",
+                    backgroundColor: "#ffffff17",
+                    backdropFilter: "blur(2px)",
+                  },
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  "&:hover .package": {
+                    display: "none",
+                  },
+                  "&:hover Button": {
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    "&:hover .package": {
-                      display: "none",
-                    },
-                    "&:hover Button": {
-                      display: "flex",
+                  },
+                }}
+                position={"absolute"}
+                width={"100%"}
+                height={"100%"}
+              >
+                <Box className="package">لدي طرد</Box>
+                <Button
+                  onClick={() =>
+                    cookies.get("_auth_token")
+                      ? (window.location.pathname = "/addPackage")
+                      : (window.location.pathname = "/login")
+                  }
+                  sx={{
+                    display: "none",
+                    backgroundColor: "tranparent",
+                    border: "3px solid #454545",
+                    width: "50%",
+                    height: "10%",
+                    borderRadius: 99,
+                    fontSize: "30px",
+                    fontWeight: "bold",
+                    ":hover": {
+                      backgroundColor: "#00000036",
                     },
                   }}
-                  position={"absolute"}
-                  width={"100%"}
-                  height={"100%"}
                 >
-                  <Box className="package">لدي طرد</Box>
-                  <Button
-                    onClick={() => (window.location.pathname = "/addPackage")}
-                    sx={{
-                      display: "none",
-                      backgroundColor: "tranparent",
-                      border: "3px solid #454545",
-                      width: "50%",
-                      height: "10%",
-                      borderRadius: 99,
-                      fontSize: "30px",
-                      fontWeight: "bold",
-                      ":hover": {
-                        backgroundColor: "#00000036",
-                      },
-                    }}
-                  >
-                    <ArrowBackIosIcon sx={{ color: "grey" }} />
-                    <ArrowBackIosIcon sx={{ color: "#454545" }} />
-                    <ArrowBackIosIcon sx={{ color: "#454545" }} />
-                  </Button>
-                </Box>
+                  <ArrowBackIosIcon sx={{ color: "grey" }} />
+                  <ArrowBackIosIcon sx={{ color: "#454545" }} />
+                  <ArrowBackIosIcon sx={{ color: "#454545" }} />
+                </Button>
               </Box>
+            </Box>
+            <Box
+              width={{ lg: "319px", xs: "auto" }}
+              height={{ lg: "572px", xs: "294px" }}
+              border="2px solid #454545"
+              borderRadius={99}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              fontSize={{ lg: "50px", xs: "25px" }}
+              fontWeight={"bold"}
+              color={"white"}
+              position={"relative"}
+              mt={"150px"}
+            >
+              <img
+                width={"auto"}
+                height={"100%"}
+                src="/assets/deliverPackage.png"
+                alt="deliverPackage"
+              />
               <Box
-                width={{ lg: "319px", xs: "117px" }}
-                height={{ lg: "572px", xs: "211px" }}
-                border="2px solid #454545"
-                borderRadius={99}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                fontSize={{ lg: "50px", xs: "25px" }}
-                fontWeight={"bold"}
-                color={"white"}
-                position={"relative"}
-                mt={"150px"}
-              >
-                <img
-                  width={"auto"}
-                  height={"100%"}
-                  src="/assets/deliverPackage.png"
-                  alt="deliverPackage"
-                />
-                <Box
-                  sx={{
-                    backgroundColor: "#45454536",
-                    borderRadius: 99,
-                    transition: "0.2s ease",
-                    ":hover": {
-                      cursor: "pointer",
-                      backgroundColor: "#ffffff17",
-                      backdropFilter: "blur(2px)",
-                    },
+                sx={{
+                  backgroundColor: "#45454536",
+                  borderRadius: 99,
+                  transition: "0.2s ease",
+                  ":hover": {
+                    cursor: "pointer",
+                    backgroundColor: "#ffffff17",
+                    backdropFilter: "blur(2px)",
+                  },
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  "&:hover .package": {
+                    display: "none",
+                  },
+                  "&:hover Button": {
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    "&:hover .package": {
-                      display: "none",
-                    },
-                    "&:hover Button": {
-                      display: "flex",
+                  },
+                }}
+                position={"absolute"}
+                width={"100%"}
+                height={"100%"}
+              >
+                <Box className="package" textAlign={"center"}>
+                  بإمكاني التوصيل
+                </Box>
+                <Button
+                  onClick={() =>
+                    cookies.get("_auth_token")
+                      ? (window.location.pathname = "/canDeliver")
+                      : (window.location.pathname = "/login")
+                  }
+                  sx={{
+                    display: "none",
+                    backgroundColor: "tranparent",
+                    border: "3px solid #454545",
+                    width: "50%",
+                    height: "10%",
+                    borderRadius: 99,
+                    fontSize: "30px",
+                    fontWeight: "bold",
+                    ":hover": {
+                      backgroundColor: "#00000036",
                     },
                   }}
-                  position={"absolute"}
-                  width={"100%"}
-                  height={"100%"}
                 >
-                  <Box className="package" textAlign={"center"}>
-                    بإمكاني التوصيل
-                  </Box>
-                  <Button
-                    onClick={() => (window.location.pathname = "/canDeliver")}
-                    sx={{
-                      display: "none",
-                      backgroundColor: "tranparent",
-                      border: "3px solid #454545",
-                      width: "50%",
-                      height: "10%",
-                      borderRadius: 99,
-                      fontSize: "30px",
-                      fontWeight: "bold",
-                      ":hover": {
-                        backgroundColor: "#00000036",
-                      },
-                    }}
-                  >
-                    <ArrowBackIosIcon sx={{ color: "grey" }} />
-                    <ArrowBackIosIcon sx={{ color: "#454545" }} />
-                    <ArrowBackIosIcon sx={{ color: "#454545" }} />
-                  </Button>
-                </Box>
+                  <ArrowBackIosIcon sx={{ color: "grey" }} />
+                  <ArrowBackIosIcon sx={{ color: "#454545" }} />
+                  <ArrowBackIosIcon sx={{ color: "#454545" }} />
+                </Button>
               </Box>
             </Box>
           </Box>
@@ -347,7 +359,11 @@ function Home() {
                       </Box>
                     </Box>
                     <Button
-                      onClick={() => navigator(`/packageInfo/${order._id}`)}
+                      onClick={() => {
+                        cookies.get("_auth_token")
+                          ? navigator(`/packageInfo/${order._id}`)
+                          : navigator("/login");
+                      }}
                       sx={{
                         display: "none",
                         width: "40%",
@@ -411,33 +427,40 @@ function Home() {
               drivers.map((driver) => (
                 <Box height={"355px"}>
                   <Paper
+                    onClick={() => {
+                      cookies.get("_auth_token")
+                        ? (window.location.pathname = `/driverinfo/${driver._id}`)
+                        : (window.location.pathname = "/login");
+                    }}
                     border="2px solid #454545"
                     fontSize={"50px"}
                     fontWeight={"bold"}
                     color={"white"}
                     sx={{
+                      cursor: "pointer",
                       position: "relative",
                       backgroundColor: "transparent",
                       height: { lg: "auto", xs: 116 },
                       width: { lg: 355, xs: 177 },
                       margin: { lg: 4, xs: 2 },
+                      marginTop: { xs: 30, lg: 0 },
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       borderRadius: 30,
                       ":hover": {
-                        height: {lg: "396px" , xs: '80%'},
+                        height: { lg: "396px", xs: "100%" },
                         my: 2,
                         borderRadius: 20,
                       },
                       "&:hover .driverContainer": {
                         borderRadius: 20,
-                        height: {lg :"396px", xs: "100%"},
+                        height: { lg: "396px", xs: "100%" },
                         backgroundColor: "#45454580",
                         backdropFilter: "blur(2px)",
                       },
                       ":hover img": {
-                        height: {lg: "100%", xs: '100%'},
+                        height: { lg: "100%", xs: "100%" },
                         width: "100%",
                       },
                       ":hover div img": {
@@ -454,8 +477,8 @@ function Home() {
                     }}
                   >
                     <img
-                      width={'100%'}
-                      height={'auto'}
+                      width={"100%"}
+                      height={"auto"}
                       src="/assets/driver.png"
                       alt="driver"
                       style={{ borderRadius: 80 }}
@@ -472,13 +495,13 @@ function Home() {
                       position={"absolute"}
                       flexDirection={"column"}
                       color={"white"}
-                      fontSize={{lg: "26px", xs: "13px"}}
+                      fontSize={{ lg: "26px", xs: "13px" }}
                       fontWeight={"bold"}
                     >
                       <img
                         width={"95px"}
                         height={"95px"}
-                        src="./assets/personLogox2.png"
+                        src="/assets/personLogox2.png"
                         style={{ transition: "0.2s ease" }}
                         alt="driver"
                       />
@@ -585,7 +608,17 @@ function Home() {
                 </Box>
               ))
             ) : (
-              <Paper>خطا</Paper>
+              <Paper
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                هناك خطا
+              </Paper>
             )}
           </Carousel>
         </Box>
@@ -618,5 +651,7 @@ const responsive = {
     items: 2,
   },
 };
+
+const top100Films = [{ label: "The Shawshank Redemption", year: 1994 }];
 
 export default Home;

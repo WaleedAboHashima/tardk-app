@@ -56,17 +56,19 @@ function CanDeliver() {
         case 201:
           setOpen(true);
           setTimeout(() => {
-            window.location.pathname = '/'
+            window.location.pathname = "/";
           }, 2000);
           break;
         case 400:
-          setError('خطا في البيانات')
+          setError("خطا في البيانات");
           break;
+        case 500:
+          setError("الحد الاقصي لاجمالي السعر الادني من 10");
         default:
           break;
       }
     }
-  }
+  };
 
   useEffect(() => {
     handleStatus();
@@ -85,7 +87,11 @@ function CanDeliver() {
       <TopBar />
       <Box
         display={"flex"}
-        sx={{ backgroundColor: "#F2F2F2", direction: "rtl", overflowX: {xs: 'scroll', lg: 'unset'} }}
+        sx={{
+          backgroundColor: "#F2F2F2",
+          direction: "rtl",
+          overflowX: { xs: "scroll", lg: "unset" },
+        }}
       >
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -102,300 +108,324 @@ function CanDeliver() {
           <Box fontSize={"35px"}>يرجى تعبئة البيانات التالية (أضافه طرد)</Box>
           <Formik onSubmit={handleSubmit} initialValues={initialState}>
             {({ values, errors, touched, handleChange, handleSubmit }) => (
-              <form
-                onSubmit={handleSubmit}
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  flexDirection: "column",
-                  gap: 30,
-                  margin: 10,
-                }}
-              >
-                <Box display={"flex"} gap={"30px"}>
-                  <TextField
-                    name="username"
-                    value={values.username}
-                    onChange={handleChange}
-                    onChangeCapture={(e) => setUsername(e.target.value)}
-                    error={!!errors.username && !!touched.username}
-                    helperText={errors.username && touched.username}
-                    placeholder="اسم الشخص"
-                    InputProps={{
-                      style: {
-                        backgroundColor: "white",
-                        border: "2px solid black",
-                        width: "369px",
-                        borderRadius: 99,
-                        fontSize: "25px",
-                        height: "50px",
-                        color: "black",
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <PersonIcon
-                            sx={{ width: 35, height: 35, color: "#454545" }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    name="source_location"
-                    value={source_location}
-                    onChange={handleChange}
-                    onChangeCapture={(e) => setSource_Location(e.target.value)}
-                    error={
-                      !!errors.source_location && !!touched.source_location
-                    }
-                    helperText={
-                      errors.source_location && touched.source_location
-                    }
-                    placeholder="مكان السكن"
-                    InputProps={{
-                      style: {
-                        backgroundColor: "white",
-                        border: "2px solid black",
-                        width: "369px",
-                        borderRadius: 99,
-                        fontSize: "25px",
-                        height: "50px",
-                        color: "black",
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <LocationOnIcon
-                            sx={{ width: 35, height: 35, color: "#454545" }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Box>
-                <Box display={"flex"} gap={"30px"}>
-                  <TextField
-                    name="dis_location"
-                    value={values.dis_location}
-                    onChange={handleChange}
-                    onChangeCapture={(e) => setDis_Location(e.target.value)}
-                    error={!!errors.dis_location && !!touched.dis_location}
-                    helperText={errors.dis_location && touched.dis_location}
-                    placeholder="مكان السفر"
-                    InputProps={{
-                      style: {
-                        backgroundColor: "white",
-                        border: "2px solid black",
-                        width: "369px",
-                        borderRadius: 99,
-                        fontSize: "25px",
-                        height: "50px",
-                        color: "black",
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <LocationOnIcon
-                            sx={{ width: 35, height: 35, color: "#454545" }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    name="price"
-                    value={values.price}
-                    onChange={handleChange}
-                    onChangeCapture={(e) => setPrice(e.target.value)}
-                    error={!!errors.price && !!touched.price}
-                    helperText={errors.price && touched.price}
-                    placeholder="سعر التوصيل/ ك"
-                    InputProps={{
-                      style: {
-                        backgroundColor: "white",
-                        border: "2px solid black",
-                        width: "369px",
-                        borderRadius: 99,
-                        fontSize: "25px",
-                        height: "50px",
-                        color: "black",
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <CurrencyExchangeIcon
+              <Box width={'100%'}>
+                <form
+                  onSubmit={handleSubmit}
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    flexDirection: "column",
+                    gap: 30,
+                    margin: 10,
+                  }}
+                >
+                  <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
+                    <TextField
+                      name="username"
+                      value={values.username}
+                      onChange={handleChange}
+                      onChangeCapture={(e) => setUsername(e.target.value)}
+                      error={!!errors.username && !!touched.username}
+                      helperText={errors.username && touched.username}
+                      placeholder="اسم الشخص"
+                      InputProps={{
+                        style: {
+                          backgroundColor: "white",
+                          border: "2px solid black",
+                          width: "369px",
+                          borderRadius: 99,
+                          fontSize: "25px",
+                          height: "50px",
+                          color: "black",
+                        },
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <PersonIcon
+                              sx={{ width: 35, height: 35, color: "#454545" }}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    <TextField
+                      name="source_location"
+                      value={source_location}
+                      onChange={handleChange}
+                      onChangeCapture={(e) =>
+                        setSource_Location(e.target.value)
+                      }
+                      error={
+                        !!errors.source_location && !!touched.source_location
+                      }
+                      helperText={
+                        errors.source_location && touched.source_location
+                      }
+                      placeholder="مكان السكن"
+                      InputProps={{
+                        style: {
+                          backgroundColor: "white",
+                          border: "2px solid black",
+                          width: "369px",
+                          borderRadius: 99,
+                          fontSize: "25px",
+                          height: "50px",
+                          color: "black",
+                        },
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LocationOnIcon
+                              sx={{ width: 35, height: 35, color: "#454545" }}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Box>
+                  <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
+                    <TextField
+                      name="dis_location"
+                      value={values.dis_location}
+                      onChange={handleChange}
+                      onChangeCapture={(e) => setDis_Location(e.target.value)}
+                      error={!!errors.dis_location && !!touched.dis_location}
+                      helperText={errors.dis_location && touched.dis_location}
+                      placeholder="مكان السفر"
+                      InputProps={{
+                        style: {
+                          backgroundColor: "white",
+                          border: "2px solid black",
+                          width: "369px",
+                          borderRadius: 99,
+                          fontSize: "25px",
+                          height: "50px",
+                          color: "black",
+                        },
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LocationOnIcon
+                              sx={{ width: 35, height: 35, color: "#454545" }}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    <TextField
+                      name="price"
+                      value={values.price}
+                      onChange={handleChange}
+                      onChangeCapture={(e) => setPrice(e.target.value)}
+                      error={!!errors.price && !!touched.price}
+                      helperText={errors.price && touched.price}
+                      placeholder="سعر التوصيل/ ك"
+                      InputProps={{
+                        style: {
+                          backgroundColor: "white",
+                          border: "2px solid black",
+                          width: "369px",
+                          borderRadius: 99,
+                          fontSize: "25px",
+                          height: "50px",
+                          color: "black",
+                        },
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <CurrencyExchangeIcon
+                              sx={{
+                                width: 35,
+                                height: 35,
+                                color: "#454545",
+                                pl: 1,
+                              }}
+                            />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <IconButton
+                            position="end"
                             sx={{
-                              width: 35,
-                              height: 35,
-                              color: "#454545",
-                              pl: 1,
+                              cursor: "pointer",
+                              backgroundColor: "#454545",
+                              color: "white",
+                              height: "100%",
+                              borderRadius: "99px",
+                              width: "107px",
+                              ":hover": { backgroundColor: "#454545" },
                             }}
-                          />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <IconButton
-                          position="end"
-                          sx={{
-                            cursor: "pointer",
-                            backgroundColor: "#454545",
-                            color: "white",
-                            height: "100%",
-                            borderRadius: "99px",
-                            width: "107px",
-                            ":hover": { backgroundColor: "#454545" },
-                          }}
-                        >
-                          <Box
-                            fontSize={"20px"}
-                            display={"flex"}
-                            justifyContent={"center"}
-                            alignItems={"center"}
                           >
-                            {commission ? commission : "العموله"}
-                          </Box>
-                        </IconButton>
-                      ),
-                    }}
-                  />
-                </Box>
-                <Box display={"flex"} gap={"30px"}>
-                  <TextField
-                    name="packageSize"
-                    value={values.packageSize}
-                    onChange={handleChange}
-                    onChangeCapture={(e) => setPackageSize(e.target.value)}
-                    error={!!errors.packageSize && !!touched.packageSize}
-                    helperText={errors.packageSize && touched.packageSize}
-                    placeholder="حجم الاعلي الطرد"
-                    InputProps={{
-                      style: {
-                        backgroundColor: "white",
-                        border: "2px solid black",
-                        width: "237px",
-                        borderRadius: 99,
-                        fontSize: "25px",
-                        height: "50px",
-                        color: "black",
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img
-                            src="./assets/inputPackage.png"
-                            alt="packageinput"
-                            style={{ width: 35, height: 35, color: "#454545" }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    name="phone"
-                    value={values.phone}
-                    onChange={handleChange}
-                    onChangeCapture={(e) => setPhone(e.target.value)}
-                    error={!!errors.phone && !!touched.phone}
-                    helperText={errors.phone && touched.phone}
-                    placeholder="رقم الهاتف"
-                    InputProps={{
-                      style: {
-                        backgroundColor: "white",
-                        border: "2px solid black",
-                        width: "369px",
-                        borderRadius: 99,
-                        fontSize: "25px",
-                        height: "50px",
-                        color: "black",
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <PhoneIcon
-                            sx={{ width: 35, height: 35, color: "#454545" }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Box>
-                <Box display={'flex'} justifyContent={'center'} alignItems={'center'} fontSize={20} color={'red'} fontWeight={'bold'}>{error}</Box>
-                <Divider sx={{ borderWidth: 2 }} />
-                <Box height={"140px"}>
+                            <Box
+                              fontSize={"20px"}
+                              display={"flex"}
+                              justifyContent={"center"}
+                              alignItems={"center"}
+                            >
+                              {commission && price
+                                ? Math.round(price * commission) / 100
+                                : 0}
+                            </Box>
+                          </IconButton>
+                        ),
+                      }}
+                    />
+                  </Box>
+                  <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
+                    <TextField
+                      name="packageSize"
+                      value={values.packageSize}
+                      onChange={handleChange}
+                      onChangeCapture={(e) => setPackageSize(e.target.value)}
+                      error={!!errors.packageSize && !!touched.packageSize}
+                      helperText={errors.packageSize && touched.packageSize}
+                      placeholder="حجم الاعلي الطرد"
+                      InputProps={{
+                        style: {
+                          backgroundColor: "white",
+                          border: "2px solid black",
+                          width: "237px",
+                          borderRadius: 99,
+                          fontSize: "25px",
+                          height: "50px",
+                          color: "black",
+                        },
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <img
+                              src="./assets/inputPackage.png"
+                              alt="packageinput"
+                              style={{
+                                width: 35,
+                                height: 35,
+                                color: "#454545",
+                              }}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    <TextField
+                      name="phone"
+                      value={values.phone}
+                      onChange={handleChange}
+                      onChangeCapture={(e) => setPhone(e.target.value)}
+                      error={!!errors.phone && !!touched.phone}
+                      helperText={errors.phone && touched.phone}
+                      placeholder="رقم الهاتف"
+                      InputProps={{
+                        style: {
+                          backgroundColor: "white",
+                          border: "2px solid black",
+                          width: "369px",
+                          borderRadius: 99,
+                          fontSize: "25px",
+                          height: "50px",
+                          color: "black",
+                        },
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <PhoneIcon
+                              sx={{ width: 35, height: 35, color: "#454545" }}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Box>
                   <Box
                     display={"flex"}
-                    fontSize={"25px"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    fontSize={20}
+                    color={"red"}
                     fontWeight={"bold"}
-                    color={"#454545"}
                   >
-                    <motion.img
-                      onClick={() => setConditions(!conditions)}
-                      whileTap={{ scale: 1.1 }}
-                      style={{ margin: "0 0 20px 5px", cursor: "pointer" }}
-                      src={
-                        conditions
-                          ? "./assets/checkmarkEnabled.png"
-                          : "./assets/checkmarkDisabled.png"
-                      }
-                    />
-                    أتعهد وأقسم بالله اني سأقوم بدفع عمولة الموقع اذا تم التوصيل
-                    وهي ١٠٪ ولن تبرأ ذمتي قبل الدفع.
+                    {error}
                   </Box>
-                </Box>
-                <Box display={"flex"} justifyContent={"left"}>
-                  <Button
-                    type="submit"
-                    disabled={
-                      conditions &&
-                      username &&
-                      packageSize &&
-                      dis_location &&
-                      source_location &&
-                      price
-                        ? false
-                        : true
-                    }
-                    sx={{
-                      fontSize: "25px",
-                      fontWeight: "bold",
-                      display: "flex",
-                      gap: 2,
-                      backgroundColor: "#454545",
-                      ":hover": { backgroundColor: "#454545" },
-                    }}
-                    variant="contained"
-                  >
-                    <img src="/assets/checkMarkWhite.png" alt="checkmark" />
-                    توصيل{" "}
-                  </Button>
-                  <Dialog
-                    open={open}
-                    close={() => setOpen(!open)}
-                    sx={{ backdropFilter: "blur(5px)" }}
-                  >
-                    <DialogContent
-                      sx={{
-                        width: "507px",
-                        height: "227px",
-                        display: "flex",
-                        backgroundColor: "#454545",
-                        fontSize: "35px",
-                        fontWeight: "bold",
-                        color: "white",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
+                  <Divider sx={{ borderWidth: 2 }} />
+                  <Box height={"140px"}>
+                    <Box
+                      display={"flex"}
+                      fontSize={{lg: "25px", xs: '15px'}}
+                      fontWeight={"bold"}
+                      color={"#454545"}
                     >
-                      تم الإضافة بنجاح
-                      <img
-                        width={"68px"}
-                        height={"68px"}
-                        src="./assets/markWhiteBig.png"
-                        alt="check"
+                      <motion.img
+                        onClick={() => setConditions(!conditions)}
+                        whileTap={{ scale: 1.1 }}
+                        style={{ margin: "0 0 20px 5px", cursor: "pointer" }}
+                        src={
+                          conditions
+                            ? "./assets/checkmarkEnabled.png"
+                            : "./assets/checkmarkDisabled.png"
+                        }
                       />
-                    </DialogContent>
-                  </Dialog>
-                </Box>
-              </form>
+                      أتعهد وأقسم بالله اني سأقوم بدفع عمولة الموقع اذا تم
+                      التوصيل وهي ١٠٪ ولن تبرأ ذمتي قبل الدفع.
+                    </Box>
+                  </Box>
+                  <Box display={"flex"} justifyContent={"left"}>
+                    <Button
+                      type="submit"
+                      disabled={
+                        conditions &&
+                        username &&
+                        packageSize &&
+                        dis_location &&
+                        source_location &&
+                        price
+                          ? false
+                          : true
+                      }
+                      sx={{
+                        fontSize: "25px",
+                        fontWeight: "bold",
+                        display: "flex",
+                        gap: 2,
+                        backgroundColor: "#454545",
+                        ":hover": { backgroundColor: "#454545" },
+                      }}
+                      variant="contained"
+                    >
+                      <img src="/assets/checkMarkWhite.png" alt="checkmark" />
+                      توصيل{" "}
+                    </Button>
+                    <Dialog
+                      open={open}
+                      close={() => setOpen(!open)}
+                      sx={{ backdropFilter: "blur(5px)" }}
+                    >
+                      <DialogContent
+                        sx={{
+                          width: "507px",
+                          height: "227px",
+                          display: "flex",
+                          backgroundColor: "#454545",
+                          fontSize: "35px",
+                          fontWeight: "bold",
+                          color: "white",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        تم الإضافة بنجاح
+                        <img
+                          width={"68px"}
+                          height={"68px"}
+                          src="./assets/markWhiteBig.png"
+                          alt="check"
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </Box>
+                </form>
+              </Box>
             )}
           </Formik>
         </Box>
-        <Box display={{lg: 'initial', xs: 'none'}} width={{ lg: "60%", xl: "50%" }} sx={{ direction: "ltr" }} p={5}>
+        <Box
+          display={{ lg: "initial", xs: "none" }}
+          width={{ lg: "60%", xl: "50%" }}
+          sx={{ direction: "ltr" }}
+          p={5}
+        >
           <ImageList sx={{ width: { lg: 400, xl: 500 } }} cols={7}>
             {itemData.map((item) => (
               <ImageListItem

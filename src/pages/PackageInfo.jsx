@@ -86,7 +86,7 @@ function PackageInfo() {
                           width={"171px"}
                           height={"171px"}
                           style={{ borderRadius: 10 }}
-                          src={`https://tardq.onrender.com/${img}`}
+                          src={img}
                           alt="لا يوجد صور لهذا الطرد"
                         />
                       </Box>
@@ -107,7 +107,7 @@ function PackageInfo() {
             <img
               style={{ textAlign: "center" }}
               width={"80%"}
-              src={`https://tardq.onrender.com/${firstImage}`}
+              src={firstImage}
               alt="لا يوجد صور لهذا الطرد"
             />
             <Box

@@ -65,7 +65,7 @@ function AddPackage() {
     formData.append("source_location", source_location);
     formData.append("type_eviction", type_eviction);
     formData.append("dis_location", type_eviction);
-    formData.append("price", price);
+    formData.append("price");
     formData.append("phone", phone);
     formData.append("eviction_size", eviction_size);
     formData.append("order_photo", files);
@@ -77,8 +77,8 @@ function AddPackage() {
         case 201:
           setOpen(true);
           setTimeout(() => {
-            navigator("/");
-          }, 2000);
+            window.location.pathname = '/';
+          }, 3000);
           break;
         default:
           setOpen(false);
@@ -111,15 +111,15 @@ function AddPackage() {
         sx={{ backgroundColor: "#F2F2F2", direction: "rtl" , overflowX: 'scroll'}}
       >
         <Box
-          width={{ lg: "60%", xl: "50%" }}
-          p={5}
+          width={{ lg: "60%", xl: "70%",md: '50%', xs: '100%' }}
+          p={{xs: 0, lg: 5}}
           display={"flex"}
           flexDirection={"column"}
         >
-          <Box fontSize={"35px"}>يرجى تعبئة البيانات التالية (أضافه طرد)</Box>
+          <Box fontSize={"35px"} px={{xs: 2, lg: 0}}>يرجى تعبئة البيانات التالية (أضافه طرد)</Box>
           <Formik initialValues={initialState} onSubmit={handleSubmit}>
             {({ values, handleChange, handleSubmit, setFieldValue }) => (
-              <Box>
+              <Box width={'100%'}>
               <form
                 onSubmit={handleSubmit}
                 style={{
@@ -128,9 +128,10 @@ function AddPackage() {
                   flexDirection: "column",
                   gap: 30,
                   margin: 10,
+                  width: '100%'
                 }}
               >
-                <Box display={"flex"} gap={"30px"}>
+                <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
                   <TextField
                     name="username"
                     value={values.username}
@@ -215,7 +216,7 @@ function AddPackage() {
                     }}
                   />
                 </Box>
-                <Box display={"flex"} gap={"30px"}>
+                <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
                   <TextField
                     name="dis_location"
                     value={values.dis_location}
@@ -292,7 +293,7 @@ function AddPackage() {
                             justifyContent={"center"}
                             alignItems={"center"}
                           >
-                            {commission ? `${commission [0].commission}%` : ""}
+                            {commission && price ? price * commission [0].commission / 100 : "0"}
                           </Box>
                         </IconButton>
                       ),
@@ -326,7 +327,7 @@ function AddPackage() {
                     }}
                   />
                 </Box>
-                <Box display={"flex"} gap={"30px"}>
+                <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
                   <FormControl
                     sx={{
                       width: "237px",
@@ -498,7 +499,7 @@ function AddPackage() {
                 <Box height={"140px"}>
                   <Box
                     display={"flex"}
-                    fontSize={"25px"}
+                    fontSize={{lg: "25px", xs: '15px'}}
                     fontWeight={"bold"}
                     color={"#454545"}
                   >
@@ -517,13 +518,15 @@ function AddPackage() {
                   </Box>
                   <Box
                     display={"flex"}
-                    fontSize={"25px"}
+                    fontSize={{lg: "25px", xs: '15px'}}
+
                     fontWeight={"bold"}
                     color={"#454545"}
                   >
                     <motion.img
                       onClick={() => setConditions(!conditions)}
-                      whileTap={{ scale: 1.1 }}
+                        whileTap={{ scale: 1.1 }}
+                        
                       style={{ margin: "0 0 20px 5px", cursor: "pointer" }}
                       src={
                         conditions
@@ -535,7 +538,7 @@ function AddPackage() {
                     الموجود في الصوره.
                   </Box>
                 </Box>
-                <Box display={"flex"} justifyContent={"left"}>
+                <Box display={"flex"} justifyContent={{lg: "left", xs: 'center'}}>
                   <Button
                     type="submit"
                     disabled={

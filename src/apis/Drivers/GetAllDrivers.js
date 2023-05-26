@@ -10,7 +10,7 @@ const initialState = {
   status: "",
 };
 const cookies = new Cookies();
-const api = "https://tardq.onrender.com/user/delivery"
+const api = "https://tardq.onrender.com/auth/delivery"
 
 export const GetDriversHandler = createAsyncThunk(
   "GetPackagesSlice/GetPackagesHandler",

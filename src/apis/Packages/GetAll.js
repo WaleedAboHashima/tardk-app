@@ -10,7 +10,7 @@ const initialState = {
   status: "",
 };
 const cookies = new Cookies();
-const api = "https://tardq.onrender.com/user/order";
+const api = "https://tardq.onrender.com/auth/order";
 
 export const GetPackagesHandler = createAsyncThunk(
   "GetPackagesSlice/GetPackagesHandler",

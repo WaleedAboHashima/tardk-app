@@ -83,7 +83,7 @@ function Register() {
         >
           <Box
             width={"693px"}
-            height={{ lg: "100%", xl: "841px" }}
+            height={{lg: "100%", xl: "841px" }}
             sx={{
               backgroundColor: "#FFFFFF20",
               backdropFilter: "blur(15px)",
@@ -289,10 +289,10 @@ function Register() {
                     <Button
                       type="submit"
                       sx={{
-                        position: "fixed",
-                        bottom: 1,
+                        position: 'fixed',
+                        bottom: {lg: 1, xs: -80},
                         height: "15%",
-                        backgroundColor: "#FFCFA182",
+                        backgroundColor: {lg: "#FFCFA182", xs: "#CFA182"},
                         ":hover": { background: "#CFA182" },
                         fontSize: "40px",
                         color: "#454545",

@@ -143,86 +143,92 @@ function TopBar() {
             ))}
           </ListItem>
           {cookies.get("_auth_token") && cookies.get("_auth_role") ? (
-            <ListItem
-              sx={{
-                color: "white",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "right",
-                justifyContent: "right",
-              }}
-              disablePadding
-            >
-              <ListItemButton
-                onClick={() => navigator(`/message`)}
-                sx={
-                  location.pathname === `/message`
-                    ? {
-                        width: "100%",
-                        background: "white",
-                        color: "#454545",
-                        transition: "cubic-bezier(0.4, 0, 0.2, 1)",
-                        transitionDelay: "100ms",
-                        ":hover": {
-                          backgroundColor: "white",
-                        },
-                        fontWeight: "bold",
-                      }
-                    : {
-                        width: "100%",
-                        ":hover": {
-                          backgroundColor: "white",
-                          color: "#454545",
-                          transitionDelay: "100ms",
-                        },
-                        fontWeight: "bold",
-                      }
-                }
+            <>
+              <ListItem
+                sx={{
+                  color: "white",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "right",
+                  justifyContent: "right",
+                }}
+                disablePadding
               >
-                الرسائل
-              </ListItemButton>
-            </ListItem>
-          ) : cookies.get('_auth_role') === "651001091051101310" ? (
-            <ListItem
-            sx={{
-              color: "white",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "right",
-              justifyContent: "right",
-            }}
-            disablePadding
-          >
-            <ListItemButton
-              onClick={() => navigator(`/admin/adminpanel`)}
-              sx={
-                location.pathname === `/admin/adminpanel`
-                  ? {
-                      width: "100%",
-                      background: "white",
-                      color: "#454545",
-                      transition: "cubic-bezier(0.4, 0, 0.2, 1)",
-                      transitionDelay: "100ms",
-                      ":hover": {
-                        backgroundColor: "white",
-                      },
-                      fontWeight: "bold",
+                <ListItemButton
+                  onClick={() => navigator(`/message`)}
+                  sx={
+                    location.pathname === `/message`
+                      ? {
+                          width: "100%",
+                          background: "white",
+                          color: "#454545",
+                          transition: "cubic-bezier(0.4, 0, 0.2, 1)",
+                          transitionDelay: "100ms",
+                          ":hover": {
+                            backgroundColor: "white",
+                          },
+                          fontWeight: "bold",
+                        }
+                      : {
+                          width: "100%",
+                          ":hover": {
+                            backgroundColor: "white",
+                            color: "#454545",
+                            transitionDelay: "100ms",
+                          },
+                          fontWeight: "bold",
+                        }
+                  }
+                >
+                  الرسائل
+                </ListItemButton>
+              </ListItem>
+              {cookies.get("_auth_role") === "651001091051101310" && (
+                <ListItem
+                  sx={{
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "right",
+                    justifyContent: "right",
+                  }}
+                  disablePadding
+                >
+                  <ListItemButton
+                    onClick={() => navigator(`/admin/adminpanel`)}
+                    sx={
+                      location.pathname === `/admin/adminpanel`
+                        ? {
+                            width: "100%",
+                            background: "white",
+                            color: "#454545",
+                            transition: "cubic-bezier(0.4, 0, 0.2, 1)",
+                            transitionDelay: "100ms",
+                            ":hover": {
+                              backgroundColor: "white",
+                            },
+                            fontWeight: "bold",
+                          }
+                        : {
+                            width: "100%",
+                            ":hover": {
+                              backgroundColor: "white",
+                              color: "#454545",
+                              transitionDelay: "100ms",
+                            },
+                            fontWeight: "bold",
+                          }
                     }
-                  : {
-                      width: "100%",
-                      ":hover": {
-                        backgroundColor: "white",
-                        color: "#454545",
-                        transitionDelay: "100ms",
-                      },
-                      fontWeight: "bold",
-                    }
-              }
-            >
-              لوحه التحكم
-            </ListItemButton>
-          </ListItem>
-          ) : ""}
+                  >
+                    لوحه التحكم
+                  </ListItemButton>
+                </ListItem>
+              )}
+            </>
+          ) : (
+            ""
+          )}
+
           {!cookies.get("_auth_token") ? (
             <Box
               display={"flex"}
@@ -354,7 +360,7 @@ function TopBar() {
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex" },
-              gap: 4,
+              gap: { lg: 4, md: 1 },
             }}
           >
             {pages.map((page) => (
@@ -390,7 +396,7 @@ function TopBar() {
                         const lastMessage = messages[messages.length - 1];
                         lastMessages.push(lastMessage);
                       }
-                      setMessages(lastMessages)
+                      setMessages(lastMessages);
                     });
                   }}
                   className={"nav"}
@@ -439,7 +445,13 @@ function TopBar() {
                           <Box key={message._id}>
                             <MenuItem
                               onClick={() =>
-                                navigator(`/message/${cookies.get('_auth_id') === message.from._id ? message.to._id : message.from._id}`)
+                                navigator(
+                                  `/message/${
+                                    cookies.get("_auth_id") === message.from._id
+                                      ? message.to._id
+                                      : message.from._id
+                                  }`
+                                )
                               }
                               style={menuItemStyle}
                               key={message._id}
@@ -621,7 +633,7 @@ function TopBar() {
                     cookies.remove("_auth_username");
                     cookies.remove("_auth_id");
                     setTimeout(() => {
-                      window.location.pathname = '/'
+                      window.location.pathname = "/";
                     }, 1000);
                   }}
                 >

@@ -16,6 +16,7 @@ import ChangeIconReducer from "./Admin/ChangeIcon"
 import PayPalSecretReducer from "./Admin/AddPaypal"
 import PaypalActiveReducer from "./Admin/ActivatePaypal"
 import ConfirmPaymentRedcuer from "./Payment/ConfirmPayment"
+import SearchReducer from "./Search"
 export const store = configureStore({
     reducer: {
         Login: LoginReducer,
@@ -36,6 +37,7 @@ export const store = configureStore({
         PayPalSecret: PayPalSecretReducer,
         PaypalActive: PaypalActiveReducer,
         ConfirmPayment: ConfirmPaymentRedcuer,
+        Search: SearchReducer,
 
     }
 })

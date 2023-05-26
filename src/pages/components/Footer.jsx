@@ -148,7 +148,7 @@ function Footer() {
         <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
           <img
             width={{ xs: "300px", lg: "418px" }}
-            height={{ xs: "auto", lg: "133px" }}
+            height={{ xs: "418px", lg: "133px" }}
             src={`${
               icon ? `https://tardq.onrender.com/${icon}` : "/assets/TARDK.png"
             } `}

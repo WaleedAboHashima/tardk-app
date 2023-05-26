@@ -137,10 +137,8 @@ function AllDrivers() {
                       <Box
                         className="driverContainer"
                         sx={{
-                          backgroundColor: "#45454546",
                           transition: "0.5s ease",
                         }}
-                        borderRadius={20}
                         display={"flex"}
                         justifyContent={"center"}
                         alignItems={"center"}

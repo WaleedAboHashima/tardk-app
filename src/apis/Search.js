@@ -10,13 +10,13 @@ const initialState = {
   status: "",
 };
 const cookies = new Cookies();
-const api = "https://tardq.onrender.com/user/message";
+const api = "https://tardq.onrender.com/auth/search?search=";
 
-export const GetMessagesHandler = createAsyncThunk(
-  "GetMessagesHandler/GetMessagesSlice",
-  async () => {
+export const SearchHandler = createAsyncThunk(
+  "SearchHandler/SearchSlice",
+  async (arg) => {
     try {
-      const response = await axios.get(api, {
+      const response = await axios.get(api + arg.search, {} , {
         headers: { authorization: `Bearer ${cookies.get("_auth_token")}` },
       });
       return {
@@ -32,12 +32,12 @@ export const GetMessagesHandler = createAsyncThunk(
   }
 );
 
-const GetMessagesSlice = createSlice({
-  name: "GetMessagesSlice",
+const SearchSlice = createSlice({
+  name: "SearchSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(GetMessagesHandler.fulfilled, (state, action) => {
+    builder.addCase(SearchHandler.fulfilled, (state, action) => {
       state.loading = true;
       if (action.payload.status === 200) {
         state.data = action.payload.data;
@@ -53,14 +53,14 @@ const GetMessagesSlice = createSlice({
         state.loading = false;
       }
     });
-    builder.addCase(GetMessagesHandler.rejected, (state, action) => {
+    builder.addCase(SearchHandler.rejected, (state, action) => {
       state.loading = false;
       state.error = "Server Error";
       state.data = {};
       state.state = "Rejected";
       state.status = 500;
     });
-    builder.addCase(GetMessagesHandler.pending, (state) => {
+    builder.addCase(SearchHandler.pending, (state) => {
       state.loading = true;
       state.error = "";
       state.data = {};
@@ -70,4 +70,4 @@ const GetMessagesSlice = createSlice({
   },
 });
 
-export default GetMessagesSlice.reducer;
+export default SearchSlice.reducer;
