@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { ConfirmPaymentHandler } from "../apis/Payment/ConfirmPayment";
-// import { paypal } from 'paypal-rest-sdk';
+import { Box } from "@mui/material";
 
 function Success() {
   const location = useLocation();
@@ -24,15 +24,20 @@ function Success() {
         switch (res.payload.status) {
           case 200:
             setError(200);
-            localStorage.removeItem("amount");
             setTimeout(() => {
-              window.location.pathname = "/";
+              localStorage.removeItem("amount");
+              window.location.href = "https://main.d328sn5gxpslxw.amplifyapp.com/";
             }, 3000);
             break;
           case 500 || 401:
             setError(500);
+            window.location.href = "https://main.d328sn5gxpslxw.amplifyapp.com/";
             localStorage.removeItem("amount");
             break;
+          case 400:
+            setError(400);
+            window.location.href = "https://main.d328sn5gxpslxw.amplifyapp.com/";
+            localStorage.removeItem("amount");
           default:
             break;
         }
@@ -41,7 +46,7 @@ function Success() {
   }, [dispatch]);
   // paypal.payment.execute();
   return (
-    <div
+    <Box
       style={{
         display: "flex",
         height: "100vh",
@@ -51,18 +56,36 @@ function Success() {
       }}
     >
       {error === 200 ? (
-        <img
-          width={"50%"}
-          height={"50%"}
-          src="/assets/PaymentSuccess.png"
-          alt="PaymentSuccessful"
-        />
+        <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
+          <img
+            width={"256px"}
+            height={"256px"}
+            src="/assets/PaymentSuccess.png"
+            alt="PaymentSuccessful"
+          />
+          تمت العمليه بنجاح
+        </Box>
       ) : error === 500 ? (
-        <img src="/assets/PaymentFailure.png" alt="PaymentFailure" />
+        <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
+          <img
+            width={"810px"}
+            height={"450px"}
+            src="/assets/PaymentFailure.png"
+            alt="PaymentFailure"
+          />
+          فشلت العمليه
+        </Box>
       ) : (
-        ""
+        <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
+          <img
+            width={"810px"}
+            height={"450px"}
+            src="/assets/PaymentFailure.png"
+            alt="PaymentFailure"
+          />
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 

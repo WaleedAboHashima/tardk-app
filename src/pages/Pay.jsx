@@ -4,7 +4,10 @@ import {
   Button,
   Dialog,
   DialogContent,
+  FormControl,
   InputAdornment,
+  MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -14,16 +17,21 @@ import Footer from "./components/Footer";
 import { Formik } from "formik";
 import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import * as yup from "yup";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import CheckIcon from "@mui/icons-material/Check";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { PayTaxesHandler } from "../apis/Payment/PayTaxes";
 import Cookies from "universal-cookie";
+import { RulesHandler } from "../apis/rules";
 function Pay() {
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState();
   const [amount, setAmount] = useState();
   const [error, setError] = useState();
+  const [commission, setCommission] = useState();
+  const [type, setType] = useState('paypal');
+  const [IBAN, setIBAN] = useState();
   const state = useSelector((state) => state.PayTaxes);
   const dispatch = useDispatch();
   const cookies = new Cookies();
@@ -58,6 +66,16 @@ function Pay() {
 
   useEffect(() => {
     handleStateChange();
+    dispatch(RulesHandler()).then((res) => {
+      if (res.payload) {
+        setCommission(
+          res.payload.data.rules.filter(
+            (r) => r.type === "commission" && r.commission
+          )
+        );
+          res.payload.data.rules.filter((r) => r.type === "Bank" && setIBAN(r.IBAN))
+      }
+    });
   }, [state.status]);
 
   return (
@@ -102,21 +120,21 @@ function Pay() {
             >
               <Box
                 display={"flex"}
-                height={{lg: "326px", xs: '100%'}}
-                width={{lg: "537px", xs: '100%'}}
+                height={{ lg: "450px", xs: "100%" }}
+                width={{ lg: "537px", xs: "100%" }}
                 flexDirection={"column"}
                 gap={2}
               >
-                <Box  fontSize={"25px"} fontWeight={"bold"}>
+                <Box fontSize={"25px"} fontWeight={"bold"}>
                   كلمة المرور
                 </Box>
-                <Box  fontSize={"15px"} fontWeight={"bold"} color={"#45454580"}>
+                <Box fontSize={"15px"} fontWeight={"bold"} color={"#45454580"}>
                   أدخل كلمة مرور حسابك للتأكيد
                 </Box>
                 <Box display={"flex"} height={"100%"}>
                   <Formik
                     validationSchema={validSchema}
-                    initialValues={{ password: "", amount: "" }}
+                    initialValues={{ password: "", amount: "", IBAN: "" }}
                     onSubmit={handleSubmit}
                   >
                     {({
@@ -133,40 +151,98 @@ function Pay() {
                           display: "flex",
                           flexDirection: "column",
                           gap: 31,
-                          width: '100%'
+                          width: "100%",
                         }}
                       >
-                        <TextField
-                          name="amount"
-                          value={values.amount}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          onChangeCapture={(e) => setAmount(e.target.value)}
-                          error={!!touched.amount && !!errors.amount}
-                          helperText={touched.amount && errors.amount}
-                          fullWidth
-                          type="text"
-                          InputProps={{
-                            style: styless.input,
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <CurrencyPoundIcon sx={{ color: "black" }} />
-                              </InputAdornment>
-                            ),
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <img
-                                  src="./assets/successTick.png"
-                                  alt="success"
-                                />
-                              </InputAdornment>
-                            ),
+                        <FormControl
+                          sx={{
+                            direction: "rtl",
+                            svg: { left: "7px", right: "unset" },
                           }}
-                        />
+                        >
+                          <Select
+                            fullWidth
+                            defaultValue={type}
+                            name="type_eviction"
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={(e) => {
+                              setType(e.target.value);
+                            }}
+                            sx={{
+                              backgroundColor: "white",
+                              borderRadius: 99,
+                            }}
+                          >
+                            <MenuItem disabled dir="rtl" value={0}>
+                              طريقه الدفع
+                            </MenuItem>
+                            <MenuItem dir="rtl" value={"paypal"}>
+                              PayPal
+                            </MenuItem>
+                            <MenuItem dir="rtl" value={"bank"}>
+                              حساب بنكي
+                            </MenuItem>
+                          </Select>
+                        </FormControl>
+                        {type === "paypal" ? (
+                          <TextField
+                            name="amount"
+                            value={values.amount}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            onChangeCapture={(e) => setAmount(e.target.value)}
+                            error={!!touched.amount && !!errors.amount}
+                            helperText={touched.amount && errors.amount}
+                            fullWidth
+                            type="text"
+                            InputProps={{
+                              style: styless.input,
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <CurrencyPoundIcon sx={{ color: "black" }} />
+                                </InputAdornment>
+                              ),
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <img
+                                    src="./assets/successTick.png"
+                                    alt="success"
+                                  />
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        ) : (
+                          <TextField
+                            name="IBAN"
+                            value={IBAN}
+                            onBlur={handleBlur}
+                            fullWidth
+                            type="text"
+                            InputProps={{
+                              style: styless.input,
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <AccountBalanceIcon sx={{ color: "black" }} />
+                                </InputAdornment>
+                              ),
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <img
+                                    src="./assets/successTick.png"
+                                    alt="success"
+                                  />
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        )}
                         <TextField
                           name="password"
                           value={values.password}
                           onBlur={handleBlur}
+                          sx={type === "paypal" ? {display: 'block' } : {display: 'none'}}
                           onChange={handleChange}
                           onChangeCapture={(e) => setPassword(e.target.value)}
                           error={!!touched.password && !!errors.password}
@@ -203,8 +279,13 @@ function Pay() {
                           position={"relative"}
                           sx={{ backgroundColor: "brown" }}
                         >
-                          <img width={'100%'} height={'100%'} src="./assets/pay.png" alt="pay" />
-                          <Box 
+                          <img
+                            width={"100%"}
+                            height={"100%"}
+                            src="./assets/pay.png"
+                            alt="pay"
+                          />
+                          <Box
                             position={"absolute"}
                             top={"50%"}
                             left={"50%"}
@@ -220,7 +301,9 @@ function Pay() {
                               color={"white"}
                               fontWeight={"bold"}
                             >
-                              عمولة الموقع 50%
+                              {commission
+                                ? `عمولة الموقع ${commission[0].commission}%`
+                                : "عموله الموقع "}
                             </Box>
                             <Box
                               fontWeight={"bold"}
@@ -238,16 +321,16 @@ function Pay() {
                         >
                           <Button
                             type="submit"
-                            sx={{
+                            sx={type === "paypal" ? {
                               fontSize: "25px",
                               backgroundColor: "#454545",
                               ":hover": {
                                 backgroundColor: "white",
                                 color: "#454545",
                               },
-                              width: {lg:"40%", xs: "100%"},
+                              width: { lg: "40%", xs: "100%" },
                               borderRadius: "20px",
-                            }}
+                            }: {display: 'none'}}
                             variant="contained"
                           >
                             <CheckIcon sx={{ width: "35px", height: "35px" }} />

@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import ChangeLogo from "./pages/Admin/ChangeLogo";
 import Success from "./pages/Success";
 import Search from "./pages/Search";
+import Cancel from "./pages/Cancel";
 function App() {
   const cookies = new Cookies();
   const dispatch = useDispatch();
@@ -58,10 +59,11 @@ function App() {
         <Route path="/pay" element={<Pay />} />
         <Route path="/allPackages" element={<AllProducts />} />
         <Route path="/allDrivers" element={<AllDrivers />} />
-        <Route path="/success" element={<Success />} />
         <Route path="/search/:input" element={<Search />} />
         {cookies.get("_auth_role") && cookies.get("_auth_token") ? (
           <>
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
           <Route path="/addPackage" element={<AddPackage />} />
           <Route path="/canDeliver" element={<CanDeliver />} />
           <Route path="/message/:id" element={<DeliverMessage />} />

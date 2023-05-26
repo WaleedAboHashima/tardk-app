@@ -98,31 +98,33 @@ const SidePanel = () => {
           </Box>
           {/* Menu Items */}
           <Box display={"flex"} flexDirection={"column"} gap={5}>
+          <Item
+              title="الرئيسيه"
+              to="/"
+              selected={selected}
+              setSelected={setSelected}
+            />
             <Item
               title="التحكم بالصور"
               to="/admin/adminpanel"
-              icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="التحكم في سياسة الاستخدام"
               to="/admin/termsofuse"
-              icon={<CreditCardOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="التحكم في الخصوصية"
               to="/admin/conditions"
-              icon={<CreditCardOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="التحكم في العمولة والسداد"
               to="/admin/taxes"
-              icon={<CreditCardOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />

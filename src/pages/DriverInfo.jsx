@@ -106,7 +106,7 @@ function DriverInfo() {
                   alt="logo"
                 />
                 <Box
-                  onClick={() => navigator(`/message/${driver._id}`)}
+                  onClick={() => navigator(`/message/${driver.user._id}`)}
                   display={"flex"}
                   gap={2}
                   fontSize={"19px"}

@@ -11,6 +11,7 @@ const initialState = {
 }
 const cookies = new Cookies();
 const api = 'https://tardq.onrender.com/user/confirmPayment';
+// const api = 'http://localhost:8080/user/confirmPayment';
 
 export const ConfirmPaymentHandler = createAsyncThunk('ConfirmPaymentSlice/ConfirmPaymentHandler', async (arg) => {
     try {

@@ -18,6 +18,7 @@ import { Formik } from "formik";
 import { PayPalSecretHandler } from "../../apis/Admin/AddPaypal";
 import { RulesHandler } from "./../../apis/rules";
 import { PaypalActivateHandler } from "./../../apis/Admin/ActivatePaypal";
+import { ChangeIBANhandler } from './../../apis/Admin/ChangeIBAN';
 
 function Taxes() {
   const [commission, setCommission] = useState();
@@ -27,12 +28,16 @@ function Taxes() {
   const [clientId, setClientId] = useState();
   const [clientSecret, setClientSecret] = useState();
   const [error, setError] = useState();
+  const [IBAN, setIBAN] = useState();
   const [payment_id, setPaymentId] = useState();
+  const [ibanMessage, setibanMessage] = useState();
   const state = useSelector((state) => state.Rules);
 
   const handleActive = () => {
     if (state.data.rules) {
-      const filter = state.data.rules.filter((rule) => rule.mode === paypalType);
+      const filter = state.data.rules.filter(
+        (rule) => rule.mode === paypalType
+      );
       setPaymentId(filter[0]._id);
       if (payment_id) {
         dispatch(PaypalActivateHandler({ payment_id }));
@@ -40,9 +45,26 @@ function Taxes() {
     }
   };
 
+  const handleIban = () => {
+    dispatch(ChangeIBANhandler({ IBAN: IBAN })).then((res) => {
+      if (res.payload) {
+        switch (res.payload.status) {
+          case 200:
+            setibanMessage('تمت العمليه بنجاح')
+            break;
+          case 400:
+            setibanMessage('حدث خطأ')
+            break;
+          default:
+            break;
+        }
+      }
+    } )
+  }
+
   useEffect(() => {
-    handleActive()
-  }, [paypalType])
+    handleActive();
+  }, [paypalType]);
 
   const handleSubmit = () => {
     dispatch(
@@ -197,7 +219,7 @@ function Taxes() {
               </Box>
             </Box>
             <Box pr={5} width={"50%"} color={"#454545"}>
-              <Box my={"20%"} display={"flex"} flexDirection={"column"} gap={2}>
+              <Box display={"flex"} flexDirection={"column"} gap={3}>
                 <Box fontSize={"25px"} color={"#45454580"}>
                   ادخال روابط بايبال
                 </Box>
@@ -226,7 +248,7 @@ function Taxes() {
                             name="row-radio-buttons-group"
                           >
                             <FormControlLabel
-                              value="live"
+                              value="sandbox"
                               onChange={handleChange}
                               onChangeCapture={(e) => setType(e.target.value)}
                               control={<Radio />}
@@ -235,7 +257,7 @@ function Taxes() {
                             <FormControlLabel
                               onChange={handleChange}
                               onChangeCapture={(e) => setType(e.target.value)}
-                              value="sandbox"
+                              value="live"
                               control={<Radio />}
                               label="Live"
                             />
@@ -246,7 +268,7 @@ function Taxes() {
                           onChange={handleChange}
                           value={values.clientId}
                           onChangeCapture={(e) => setClientId(e.target.value)}
-                          placeholder="PayPal Client Id"
+                          label="PayPal Client Id"
                           fullWidth
                         />
                         <TextField
@@ -256,7 +278,7 @@ function Taxes() {
                           onChangeCapture={(e) =>
                             setClientSecret(e.target.value)
                           }
-                          placeholder="PayPal Client Secret"
+                          label="PayPal Client Secret"
                           fullWidth
                         />
                         <Button
@@ -275,6 +297,53 @@ function Taxes() {
                         </Button>
                         <Box color={"red"} fontWeight={"bold"}>
                           {error}
+                        </Box>
+                      </form>
+                    )}
+                  </Formik>
+                </Box>
+                <Box fontSize={"25px"} color={"#45454580"}>
+                  ادخال رقم الحساب البنكي
+                </Box>
+                <Box display={"flex"} justifyContent={"center"} gap={5}>
+                  <Formik onSubmit={handleIban} initialValues={{ IBAN: "" }}>
+                    {({ values, handleChange, handleSubmit }) => (
+                      <form
+                        onSubmit={handleSubmit}
+                        dir="ltr"
+                        style={{
+                          display: "flex",
+                          gap: 20,
+                          flexDirection: "column",
+                          width: "80%",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <TextField
+                          name="IBAN"
+                          onChange={handleChange}
+                          value={values.IBAN}
+                          onChangeCapture={(e) => setIBAN(e.target.value)}
+                          label="Bank IBAN"
+                          fullWidth
+                        />
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            width: "100%",
+                            backgroundColor: "#454545",
+                            ":hover": {
+                              backgroundColor: "#EEE",
+                              color: "black",
+                            },
+                          }}
+                        >
+                          Submit
+                        </Button>
+                        <Box color={"red"} fontWeight={"bold"}>
+                          {ibanMessage}
                         </Box>
                       </form>
                     )}

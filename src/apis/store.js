@@ -15,6 +15,7 @@ import ChangeLogoReducer from "./Admin/ChangeLogo"
 import ChangeIconReducer from "./Admin/ChangeIcon"
 import PayPalSecretReducer from "./Admin/AddPaypal"
 import PaypalActiveReducer from "./Admin/ActivatePaypal"
+import IBANReducer from "./Admin/ChangeIBAN"
 import ConfirmPaymentRedcuer from "./Payment/ConfirmPayment"
 import SearchReducer from "./Search"
 export const store = configureStore({
@@ -38,6 +39,7 @@ export const store = configureStore({
         PaypalActive: PaypalActiveReducer,
         ConfirmPayment: ConfirmPaymentRedcuer,
         Search: SearchReducer,
+        IBAN: IBANReducer,
 
     }
 })

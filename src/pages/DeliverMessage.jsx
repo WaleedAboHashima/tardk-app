@@ -17,12 +17,13 @@ function DeliverMessage() {
   const navigator = useNavigate();
   const [messages, setMessages] = useState([]);
   const state = useSelector((state) => state.Messages);
-  const socket = io(`https://tardq.onrender.com?id=${cookies.get("_auth_id")}`);
   const [allMessages, setAllMessages] = useState([]);
   const [privateMessage, setPrivateMessage] = useState();
   const [socketChange, setSocketChange] = useState(false);
   const containerRef = useRef(null);
+  const [socket, setSocket] = useState();
   const input = useRef();
+  // console.log(test)
   const handleSocket = () => {
     socket.emit("newMessage", {
       sender: cookies.get("_auth_id"),
@@ -39,6 +40,13 @@ function DeliverMessage() {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }
+
+  useEffect(() => {
+    const socket = io(
+      `https://tardq.onrender.com?id=${cookies.get("_auth_id")}`
+    );
+    setSocket(socket);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -252,23 +260,28 @@ function DeliverMessage() {
                       />
                       <Box p={2} display={"flex"} flexDirection={"column"}>
                         <span>
-                          {messages
-                            ? messages.map(
-                                (message) =>
-                                cookies.get("_auth_id") ===
-                                message[message.length - 1].from._id
-                                  ? message[message.length - 1].to.username
-                                  : message[message.length - 1].from.username
+                          {allMessages
+                            ? allMessages.map((m) =>
+                                cookies.get("_auth_id") === m.from._id
+                                  ? m.to.username
+                                  : m.from.username
                               )
-                            : messages.map((m) => m[m.length - 1].to.username)}
+                            : "اسم السائق"}
                         </span>
                         <span>
-                          {messages.map((message) =>
-                            cookies.get("_auth_id") ===
-                            message[message.length - 1].from._id
-                              ? message[message.length - 1].to.active ? "متصل" : "غير متصل"
-                              : message[message.length - 1].from.active ? "متصل" : "غير متصل"
-                          )}
+                          {allMessages
+                            ? allMessages.map((m) =>
+                                cookies.get("_auth_id") === m.from.active
+                                  ? "متصل"
+                                  : "غير المتصل"
+                                  ? m.to.active
+                                    ? "متصل"
+                                    : "غير متصل"
+                                  : m.from.active
+                                  ? "متصل"
+                                  : "غير متصل"
+                              )
+                            : "الحاله"}
                         </span>
                       </Box>
                     </Box>

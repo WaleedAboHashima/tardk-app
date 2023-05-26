@@ -34,7 +34,6 @@ function CanDeliver() {
   const [packageSize, setPackageSize] = useState();
   const dispatch = useDispatch();
   const [commission, setCommission] = useState();
-  const [phone, setPhone] = useState();
   const [error, setError] = useState();
   const state = useSelector((state) => state.AddDelivery);
 
@@ -44,7 +43,6 @@ function CanDeliver() {
         username: username,
         source_location: source_location,
         dis_location: dis_location,
-        phone: phone,
         price: price,
         eviction_size: packageSize,
       })
@@ -301,33 +299,6 @@ function CanDeliver() {
                         ),
                       }}
                     />
-                    <TextField
-                      name="phone"
-                      value={values.phone}
-                      onChange={handleChange}
-                      onChangeCapture={(e) => setPhone(e.target.value)}
-                      error={!!errors.phone && !!touched.phone}
-                      helperText={errors.phone && touched.phone}
-                      placeholder="رقم الهاتف"
-                      InputProps={{
-                        style: {
-                          backgroundColor: "white",
-                          border: "2px solid black",
-                          width: "369px",
-                          borderRadius: 99,
-                          fontSize: "25px",
-                          height: "50px",
-                          color: "black",
-                        },
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <PhoneIcon
-                              sx={{ width: 35, height: 35, color: "#454545" }}
-                            />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
                   </Box>
                   <Box
                     display={"flex"}
@@ -463,7 +434,6 @@ const initialState = {
   price: "",
   packageSize: "",
   source_location: "",
-  phone: "",
 };
 
 const itemData = [

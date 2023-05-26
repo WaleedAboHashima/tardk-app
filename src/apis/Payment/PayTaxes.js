@@ -11,6 +11,7 @@ const initialState = {
 }
 const cookies = new Cookies();
 const api = 'https://tardq.onrender.com/user/pay';
+// const api = 'http://localhost:8080/user/pay';
 
 export const PayTaxesHandler = createAsyncThunk('PayTaxesSlice/PayTaxesHandler', async (arg) => {
     try {
@@ -52,7 +53,6 @@ const PayTaxesSlice = createSlice({
             }
         })
         builder.addCase(PayTaxesHandler.rejected, (state, action) => {
-            console.log(action)
             state.loading = false;
             state.error = 'Server Error';
             state.data = {};
