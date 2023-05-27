@@ -437,7 +437,7 @@ function TopBar() {
                       >
                         <CircularProgress />
                       </Box>
-                    ) : (
+                    ) : messages.length > 0 ? (
                       messages.map((message) => {
                         const time = new Date(message.createdAt);
                         const timeMinutes = time.getMinutes();
@@ -503,6 +503,19 @@ function TopBar() {
                           </Box>
                         );
                       })
+                    ) : (
+                      <Box
+                        color={"red"}
+                        fontSize={"23px"}
+                        fontWeight={"bold"}
+                        width={"100%"}
+                        height={"100%"}
+                        display={"flex"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                      >
+                        لا توجد رسائل
+                      </Box>
                     )}
                   </MenuList>
                 </Menu>
@@ -539,7 +552,11 @@ function TopBar() {
               }}
             >
               {[
-                <MenuList key={'menu'} dense sx={{ width: 200, direction: "rtl" }}>
+                <MenuList
+                  key={"menu"}
+                  dense
+                  sx={{ width: 200, direction: "rtl" }}
+                >
                   <MenuItem
                     onClick={() =>
                       cookies.get("_auth_token") && cookies.get("_auth_role")

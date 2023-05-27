@@ -293,7 +293,7 @@ function Home() {
             </Button>
           </Box>
           <Carousel responsive={responsive} rtl itemClass="4">
-            {allOrders ? (
+            {allOrders && allOrders.length > 0 ? (
               allOrders.map((order) => (
                 <Paper
                   key={order._id}
@@ -386,19 +386,23 @@ function Home() {
                 </Paper>
               ))
             ) : (
-              <Paper
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                هناك خطا
-              </Paper>
+              <Box></Box>
             )}
           </Carousel>
+          {allOrders && allOrders.length === 0 && (
+            <Box
+              fontSize={"25px"}
+              fontWeight={"bold"}
+              height={"50%"}
+              width={"100%"}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              color={'white'}
+            >
+              لا توجد طرود
+            </Box>
+          )}
         </Box>
         <Box
           width={"100%"}
@@ -613,19 +617,23 @@ function Home() {
                 </Box>
               ))
             ) : (
-              <Paper
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                هناك خطا
-              </Paper>
+              <Box></Box>
             )}
           </Carousel>
+          {drivers && drivers.length === 0 && (
+            <Box
+              fontSize={"25px"}
+              fontWeight={"bold"}
+              height={"50%"}
+              width={"100%"}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              color={'red'}
+            >
+              لا يوجد سائقين
+            </Box>
+          )}
         </Box>
         <Footer />
       </Box>

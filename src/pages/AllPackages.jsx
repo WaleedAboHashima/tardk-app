@@ -1,9 +1,4 @@
-import {
-  Box,
-  Button,
-  Paper,
-
-} from "@mui/material";
+import { Box, Button, Paper } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect } from "react";
 import TopBar from "./components/TopBar";
@@ -24,7 +19,7 @@ function AllPackages() {
   }, []);
   return (
     <motion.div
-      style={{height: '100vh', width: '100%'}}
+      style={{ height: "100vh", width: "100%" }}
       initial={{ opacity: 0, transition: { duration: 0.5 } }}
       animate={{ opacity: 1, transition: { duration: 0.5 } }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -85,8 +80,7 @@ function AllPackages() {
                   >
                     <CircularProgress color="success" />
                   </Box>
-                ) : (
-                  state.data.orders &&
+                ) : state.data.orders && state.data.orders.length > 0 ? (
                   state.data.orders.map((order) => (
                     <Paper
                       key={order._id}
@@ -171,6 +165,19 @@ function AllPackages() {
                       </Box>
                     </Paper>
                   ))
+                ) : (
+                  <Box
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    height={"100vh"}
+                    width={"100vw"}
+                    fontSize={"35px"}
+                    fontWeight={"bold"}
+                    color="red"
+                  >
+                    لا يوجد طرود
+                  </Box>
                 )}
               </>
             ) : (

@@ -290,12 +290,12 @@ function CanDeliver() {
                       onChangeCapture={(e) => setPackageSize(e.target.value)}
                       error={!!errors.packageSize && !!touched.packageSize}
                       helperText={errors.packageSize && touched.packageSize}
-                      placeholder="حجم الاعلي الطرد"
+                      placeholder="sm, md , lg , xl, xxl, xxxl"
                       InputProps={{
                         style: {
                           backgroundColor: "white",
                           border: "2px solid black",
-                          width: "237px",
+                          width: "100%",
                           borderRadius: 99,
                           fontSize: "25px",
                           height: "50px",

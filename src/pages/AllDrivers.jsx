@@ -1,10 +1,4 @@
-import {
-  Box,
-  ListItem,
-  ListItemIcon,
-  Paper,
-
-} from "@mui/material";
+import { Box, ListItem, ListItemIcon, Paper } from "@mui/material";
 import React, { useEffect } from "react";
 import TopBar from "./components/TopBar";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -26,7 +20,7 @@ function AllDrivers() {
 
   return (
     <motion.div
-      style={{height: '100vh', width: '100%'}}
+      style={{ height: "100vh", width: "100%" }}
       initial={{ opacity: 0, transition: { duration: 0.5 } }}
       animate={{ opacity: 1, transition: { duration: 0.5 } }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -74,12 +68,12 @@ function AllDrivers() {
             display={"flex"}
             justifyContent={"space-evenly"}
             flexWrap={"wrap"}
-            border={{lg: "3px dashed grey", sx: 'none'}}
+            border={{ lg: "3px dashed grey", sx: "none" }}
             m={1}
           >
             {cookies.get("_auth_token") && cookies.get("_auth_role") ? (
               <>
-                {state.data.delivery ? (
+                {state.data.delivery && state.data.delivery.length > 0 ? (
                   state.data.delivery.map((delivery) => (
                     <Paper
                       key={delivery._id}
@@ -92,7 +86,7 @@ function AllDrivers() {
                         cursor: "pointer",
                         position: "relative",
                         backgroundColor: "transparent",
-                        height: { lg: "auto", xs: '100%' },
+                        height: { lg: "auto", xs: "100%" },
                         width: { lg: 355, xs: 177 },
                         margin: { lg: 4, xs: 2 },
                         display: "flex",
@@ -117,7 +111,7 @@ function AllDrivers() {
                         },
                         ":hover div img": {
                           height: "95px",
-                          width: {lg: "95px"},
+                          width: { lg: "95px" },
                         },
                         "&:hover .driverDetails": {
                           display: "flex",
@@ -146,7 +140,7 @@ function AllDrivers() {
                         position={"absolute"}
                         flexDirection={"column"}
                         color={"white"}
-                        fontSize={{lg: "26px", xs: '13px'}}
+                        fontSize={{ lg: "26px", xs: "13px" }}
                         fontWeight={"bold"}
                       >
                         <img
@@ -255,6 +249,19 @@ function AllDrivers() {
                       </Box>
                     </Paper>
                   ))
+                ) : state.data.delivery && state.data.delivery.length === 0 ? (
+                  <Box
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    height={"100vh"}
+                    width={"100vw"}
+                    fontSize={"35px"}
+                    fontWeight={"bold"}
+                    color="red"
+                  >
+                    لا يوجد سائقين
+                  </Box>
                 ) : (
                   <Box
                     display={"flex"}

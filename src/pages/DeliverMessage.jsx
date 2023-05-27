@@ -22,6 +22,7 @@ function DeliverMessage() {
   const [socketChange, setSocketChange] = useState(false);
   const containerRef = useRef(null);
   const [socket, setSocket] = useState();
+  const [live, setLive] = useState(false);
   const input = useRef();
   // console.log(test)
   const handleSocket = () => {
@@ -33,10 +34,7 @@ function DeliverMessage() {
     setPrivateMessage("");
     input.current.value = "";
     setSocketChange(!socketChange);
-
-    socket.on("newMessage", (data) => {
-      console.log(data);
-    });
+    setLive(!live);
   };
 
   function scrollToBottom() {
@@ -55,6 +53,14 @@ function DeliverMessage() {
   useEffect(() => {
     scrollToBottom();
   }, [allMessages]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("receiveNewMessage", () => {
+        dispatch(GetMessagesHandler());
+      });
+    }
+  }, [live]);
 
   useEffect(() => {
     dispatch(GetMessagesHandler()).then((res) => {
@@ -109,119 +115,140 @@ function DeliverMessage() {
             flexDirection={"column"}
             gap={"30px"}
           >
-            {messages.map((message, index) => (
-              <Box
-                key={index++}
-                display={"flex"}
-                flexDirection={"column"}
-                sx={{
-                  backgroundColor:
-                    params.id === message[message.length - 1].from._id ||
-                    params.id === message[message.length - 1].to._id
-                      ? "#F2F2F2"
-                      : "#454545",
-                }}
-                borderRadius={3}
-              >
-                <Box>
-                  <Box key={index++}>
-                    <Box
-                      textOverflow={"ellipsis"}
-                      height={"166px"}
-                      onClick={() =>
-                        navigator(
-                          `/message/${
-                            cookies.get("_auth_id") !==
-                            message[message.length - 1].from._id
-                              ? message[message.length - 1].from._id
-                              : message[message.length - 1].to._id
-                          }`
-                        )
-                      }
-                      key={message[message.length - 1]._id}
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "20px",
-                        color:
-                          params.id === message[message.length - 1].from._id ||
-                          params.id === message[message.length - 1].to._id
-                            ? "#454545"
-                            : "white",
-                        cursor: "pointer",
-                        ":hover": {
-                          backgroundColor: "#FFFFFF20",
-                          transition: "0.2s ease",
-                        },
-                      }}
-                      px={2}
-                    >
+            {messages.length > 0 ? (
+              messages.map((message, index) => (
+                <Box
+                  key={index++}
+                  display={"flex"}
+                  flexDirection={"column"}
+                  sx={{
+                    backgroundColor:
+                      params.id === message[message.length - 1].from._id ||
+                      params.id === message[message.length - 1].to._id
+                        ? "#F2F2F2"
+                        : "#454545",
+                  }}
+                  borderRadius={3}
+                >
+                  <Box>
+                    <Box key={index++}>
                       <Box
-                        fontSize={"15px"}
-                        fontWeight={"bold"}
-                        color={
-                          params.id === message[message.length - 1].from._id ||
-                          params.id === message[message.length - 1].to._id
-                            ? "#454545"
-                            : "white"
+                        textOverflow={"ellipsis"}
+                        height={"166px"}
+                        onClick={() =>
+                          navigator(
+                            `/message/${
+                              cookies.get("_auth_id") !==
+                              message[message.length - 1].from._id
+                                ? message[message.length - 1].from._id
+                                : message[message.length - 1].to._id
+                            }`
+                          )
                         }
-                        justifyContent={"space-between"}
+                        key={message[message.length - 1]._id}
                         sx={{
-                          width: "100%",
                           display: "flex",
+                          flexDirection: "column",
+                          gap: "20px",
+                          color:
+                            params.id ===
+                              message[message.length - 1].from._id ||
+                            params.id === message[message.length - 1].to._id
+                              ? "#454545"
+                              : "white",
+                          cursor: "pointer",
+                          ":hover": {
+                            backgroundColor: "#FFFFFF20",
+                            transition: "0.2s ease",
+                          },
                         }}
+                        px={2}
                       >
-                        <Box width={"100%"} display={"flex"} p={2}>
-                          <img
-                            width={"69px"}
-                            height={"69px"}
-                            src="/assets/personLogo.png"
-                            alt="personLogo"
-                          />
-                          <Box p={2} display={"flex"} flexDirection={"column"}>
-                            <span>
-                              السائق:
-                              {cookies.get("_auth_id") ===
-                              message[message.length - 1].from._id
-                                ? message[message.length - 1].to.username
-                                : message[message.length - 1].from.username}
-                            </span>
-                            <span>
-                              {cookies.get("_auth_id") ===
-                              message[message.length - 1].from._id
-                                ? message[message.length - 1].to.active
-                                  ? "متصل"
-                                  : "غير متصل"
-                                : message[message.length - 1].from.active
-                                ? "متصل"
-                                : "غير متصل"}
-                            </span>
-                          </Box>
-                        </Box>
-                        <span
-                          style={{
-                            fontSize: "11px",
-                            fontWeight: "normal",
-                            paddingTop: "30px",
+                        <Box
+                          fontSize={"15px"}
+                          fontWeight={"bold"}
+                          color={
+                            params.id ===
+                              message[message.length - 1].from._id ||
+                            params.id === message[message.length - 1].to._id
+                              ? "#454545"
+                              : "white"
+                          }
+                          justifyContent={"space-between"}
+                          sx={{
+                            width: "100%",
+                            display: "flex",
                           }}
                         >
-                          {message[message.length - 1].time}
-                        </span>
-                      </Box>
-                      <Box
-                        fontSize={"17px"}
-                        overflow={"hidden"}
-                        textOverflow={"ellipsis"}
-                        height={"20%"}
-                        width={"100%"}
-                      >
-                        {message[message.length - 1].message}
+                          <Box width={"100%"} display={"flex"} p={2}>
+                            <img
+                              width={"69px"}
+                              height={"69px"}
+                              src="/assets/personLogo.png"
+                              alt="personLogo"
+                            />
+                            <Box
+                              p={2}
+                              display={"flex"}
+                              flexDirection={"column"}
+                            >
+                              <span>
+                                السائق:
+                                {cookies.get("_auth_id") ===
+                                message[message.length - 1].from._id
+                                  ? message[message.length - 1].to.username
+                                  : message[message.length - 1].from.username}
+                              </span>
+                              <span>
+                                {cookies.get("_auth_id") ===
+                                message[message.length - 1].from._id
+                                  ? message[message.length - 1].to.active
+                                    ? "متصل"
+                                    : "غير متصل"
+                                  : message[message.length - 1].from.active
+                                  ? "متصل"
+                                  : "غير متصل"}
+                              </span>
+                            </Box>
+                          </Box>
+                          <span
+                            style={{
+                              fontSize: "11px",
+                              fontWeight: "normal",
+                              paddingTop: "30px",
+                            }}
+                          >
+                            {message[message.length - 1].time}
+                          </span>
+                        </Box>
+                        <Box
+                          fontSize={"17px"}
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          height={"20%"}
+                          width={"100%"}
+                        >
+                          {message[message.length - 1].message}
+                        </Box>
                       </Box>
                     </Box>
                   </Box>
                 </Box>
+              ))
+            ) : (
+              <Box
+                fontSize={"25px"}
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                fontWeight={"bold"}
+                color={"red"}
+                width={"100%"}
+                height={"100%"}
+              >
+                لا توجد رسائل
               </Box>
-            ))}
+            )}
           </Box>
           {state.loading ? (
             <Box
@@ -241,7 +268,7 @@ function DeliverMessage() {
                   boxShadow: "rgba(0, 0.2, 0, 0) 0px 19px 38px",
                 }}
                 width={{ lg: "70%", xs: "100%" }}
-                p={2}
+                p={{ lg: 2, xs: 0 }}
                 display={"flex"}
                 flexDirection={"column"}
                 gap={1}
@@ -265,25 +292,28 @@ function DeliverMessage() {
                       />
                       <Box p={2} display={"flex"} flexDirection={"column"}>
                         <span>
-                          {allMessages
-                            ? allMessages.map((m) =>
-                                cookies.get("_auth_id") === m.from._id
-                                  ? m.to.username
-                                  : m.from.username
+                          {messages
+                            ? messages.map((message) =>
+                                cookies.get("_auth_id") ===
+                                  message[message.length - 1].from._id &&
+                                params.id === message[message.length - 1].to._id
+                                  ? message[message.length - 1].to.username
+                                  : message[message.length - 1].from.username
                               )
                             : "اسم السائق"}
                         </span>
                         <span>
-                          {messages
-                            ? messages.map((m) =>
-                                cookies.get("_auth_id") ===
-                                m[m.length - 1].from._id
-                                  ? m[m.length - 1].to.active
-                                    ? "متصل"
-                                    : "غير متصل"  
-                                  : ""
-                              )
-                            : "الحاله"}
+                          {messages &&
+                            messages.map((message) =>
+                              cookies.get("_auth_id") ===
+                              message[message.length - 1].from._id
+                                ? message[message.length - 1].to.active
+                                  ? "متصل"
+                                  : "غير متصل"
+                                : message[message.length - 1].from.active
+                                ? "متصل"
+                                : "غير متصل"
+                            )}
                         </span>
                       </Box>
                     </Box>
@@ -312,6 +342,7 @@ function DeliverMessage() {
                             maxWidth={"320px"}
                             p={3}
                             sx={{
+                              wordBreak: "break-all",
                               backgroundColor: "#E6E6E6",
                               borderRadius: "20px 20px 0 20px",
                               direction: "rtl",
@@ -337,7 +368,6 @@ function DeliverMessage() {
                               height={"auto"}
                               width={{ lg: "320px", xs: "200px" }}
                               borderRadius={9}
-                              wordWrap="break-word"
                               p={2}
                               sx={{
                                 backgroundColor: "#E6E6E6",

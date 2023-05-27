@@ -26,54 +26,42 @@ import Socials from "./pages/Admin/Socials";
 function App() {
   const cookies = new Cookies();
   const dispatch = useDispatch();
-  const [websiteIconUrl, setWebsiteIconUrl] = useState("");
+  const [newLogo, setNewLogo] = useState();
+  useEffect(() => {
+    // Fetch the rules from the backend
+    dispatch(RulesHandler()).then((res) => {
+      if (res.payload) {
+        // Get the main logo URL from the rules
+        const rules = res.payload.data.rules;
+        const logoUrl = rules.find((rule) => rule.type === "main_logo")?.main_logo;
+
+        // Update the newLogo state
+        setNewLogo(logoUrl);
+      }
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Update the favicon URL when the newLogo state changes
+    if (newLogo) {
+      const favicon = document.querySelector("link[rel='icon']");
+      favicon.href = newLogo + "?v=" +Date.now();
+    }
+  }, [newLogo]);
   // useEffect(() => {
-  //   dispatch(RulesHandler())
-  //     .then((response) => {
-  //       if (response.payload) {
-  //         if (response.payload.data) {
-  //           const logo = response.payload.data.rules.filter(
-  //             (f) => f.type === "main_logo"
-  //           );
-  //           setWebsiteIconUrl(logo[0].main_logo);
-  //           const manifestLink = document.querySelector('link[rel="manifest"]');
-  //           if (manifestLink) {
-  //             const manifestUrl = manifestLink.getAttribute("href");
-  //             fetch(manifestUrl)
-  //               .then((response) => response.json())
-  //               .then((manifest) => {
-  //                 const newManifest = {
-  //                   ...manifest,
-  //                   icons: [
-  //                     {
-  //                       src: websiteIconUrl,
-  //                       sizes: "192x192",
-  //                       type: "image/png",
-  //                     },
-  //                     {
-  //                       src: websiteIconUrl,
-  //                       sizes: "512x512",
-  //                       type: "image/png",
-  //                     },
-  //                   ],
-  //                 };
-  //                 manifestLink.setAttribute(
-  //                   "href",
-  //                   URL.createObjectURL(
-  //                     new Blob([JSON.stringify(newManifest)], {
-  //                       type: "application/json",
-  //                     })
-  //                   )
-  //                 );
-  //               });
-  //           }
-  //         }
-  //       }
-  //     })
-  //     .catch((error) => console.log(error));
-  // }, []);
+  //   dispatch(RulesHandler()).then((res) => {
+  //     if (res.payload) {
+  //       const rules = res.payload.data.rules;
+  //       const logoUrl = res.payload.data.rules.filter(
+  //         (rule) => rule.type === "main_logo" && setNewLogo(rule.main_logo)
+  //       );
+  //       const faveicon = document.querySelector("link[rel='icon']");
+  //       faveicon.href = newLogo + "?v=" + Date.now();
+  //     }
+  //   });
+  // }, [dispatch]);
   return (
-    <div className="App" style={{ overflowX: "hidden"}}>
+    <div className="App" style={{ overflowX: "hidden" }}>
       <Routes>
         <Route path="/*" element={<Home />} />
         <Route path="/login" element={<Login />} />

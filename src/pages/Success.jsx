@@ -75,16 +75,7 @@ function Success() {
           />
           فشلت العمليه
         </Box>
-      ) : (
-        <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-          <img
-            width={"810px"}
-            height={"450px"}
-            src="/assets/PaymentFailure.png"
-            alt="PaymentFailure"
-          />
-        </Box>
-      )}
+      ) : ""}
     </Box>
   );
 }

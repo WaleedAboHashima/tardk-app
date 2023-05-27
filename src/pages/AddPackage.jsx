@@ -78,9 +78,9 @@ function AddPackage() {
       switch (state.status) {
         case 201:
           setOpen(true);
-          // setTimeout(() => {
-          //   window.location.pathname = "/";
-          // }, 3000);
+          setTimeout(() => {
+            window.location.pathname = "/";
+          }, 3000);
           break;
         default:
           setOpen(false);
