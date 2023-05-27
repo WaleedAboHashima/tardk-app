@@ -18,7 +18,7 @@ import { Formik } from "formik";
 import { PayPalSecretHandler } from "../../apis/Admin/AddPaypal";
 import { RulesHandler } from "./../../apis/rules";
 import { PaypalActivateHandler } from "./../../apis/Admin/ActivatePaypal";
-import { ChangeIBANhandler } from './../../apis/Admin/ChangeIBAN';
+import { ChangeIBANhandler } from "./../../apis/Admin/ChangeIBAN";
 
 function Taxes() {
   const [commission, setCommission] = useState();
@@ -50,17 +50,17 @@ function Taxes() {
       if (res.payload) {
         switch (res.payload.status) {
           case 200:
-            setibanMessage('تمت العمليه بنجاح')
+            setibanMessage("تمت العمليه بنجاح");
             break;
           case 400:
-            setibanMessage('حدث خطأ')
+            setibanMessage("حدث خطأ");
             break;
           default:
             break;
         }
       }
-    } )
-  }
+    });
+  };
 
   useEffect(() => {
     handleActive();
@@ -113,21 +113,30 @@ function Taxes() {
         alignItems={"center"}
         sx={{ backgroundColor: "#F2F2F2" }}
       >
-        <Box width={"1257px"} height={{lg:"682px", xs: '100%'}} display={"flex"}>
+        <Box
+          width={"1257px"}
+          height={{ lg: "682px", xs: "100%" }}
+          display={"flex"}
+        >
           <Box
             sx={{ backgroundColor: "white" }}
-            p={{lg: 5, xs: 1}}
+            p={{ lg: 5, xs: 1 }}
             display={"flex"}
             width={"100%"}
-            flexDirection={{ xs: 'column', lg: 'row' }}
+            flexDirection={{ xs: "column", lg: "row" }}
           >
             <Box
-              width={{lg: "50%", xs: '100%'}}
+              width={{ lg: "50%", xs: "100%" }}
               color={"#454545"}
-              borderLeft={{ lg: '2px solid #454545', xs: '0px' }}
-              borderBottom={{xs: '2px solid #454545', lg: '0px'}}
+              borderLeft={{ lg: "2px solid #454545", xs: "0px" }}
+              borderBottom={{ xs: "2px solid #454545", lg: "0px" }}
             >
-              <Box my={"20%"} display={"flex"} flexDirection={"column"} gap={{lg: 5 , xs: 2}}>
+              <Box
+                my={"20%"}
+                display={"flex"}
+                flexDirection={"column"}
+                gap={{ lg: 5, xs: 2 }}
+              >
                 <Box fontSize={"35px"} fontWeight={"bold"}>
                   عموله الموقع
                 </Box>
@@ -136,61 +145,51 @@ function Taxes() {
                 </Box>
                 <Box fontSize={"25px"} color={"#454545"}>
                   العمولة:
-                  <TextField
-                    disabled
-                    placeholder="لكل $5"
-                    sx={{ pr: "10px" }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Select
-                            disableTyping={true}
-                            onChange={(e) => {
-                              setCommission(e.target.value);
-                            }}
-                            defaultValue={0}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            sx={{
-                              backgroundColor: "#454545",
-                              border: "2px solid #454545",
-                              borderRadius: 99,
-                              color: "white",
-                              width: "111px",
-                              height: "57px",
-                              svg: {
-                                right: "unset",
-                                left: "7px",
-                                color: "white",
-                              },
-                            }}
-                          >
-                            <MenuItem dir="rtl" value={"0"}>
-                              0$
-                            </MenuItem>
-                            <MenuItem dir="rtl" value={"10"}>
-                              10$
-                            </MenuItem>
-                            <MenuItem dir="rtl" value={"20"}>
-                              20$
-                            </MenuItem>
-                            <MenuItem dir="rtl" value={"30"}>
-                              30$
-                            </MenuItem>
-                            <MenuItem dir="rtl" value={"40"}>
-                              40$
-                            </MenuItem>
-                            <MenuItem dir="rtl" value={"50"}>
-                              50$
-                            </MenuItem>
-                            <MenuItem dir="rtl" value={"60"}>
-                              60$
-                            </MenuItem>
-                          </Select>
-                        </InputAdornment>
-                      ),
+                  <Select
+                    disableTyping={true}
+                    onChange={(e) => {
+                      setCommission(e.target.value);
                     }}
-                  />
+                    defaultValue={0}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    sx={{
+                      backgroundColor: "#454545",
+                      border: "2px solid #454545",
+                      borderRadius: 99,
+                      color: "white",
+                      pr: 1,
+                      width: "50%",
+                      height: "57px",
+                      svg: {
+                        right: "unset",
+                        left: "7px",
+                        color: "white",
+                      },
+                    }}
+                  >
+                    <MenuItem dir="rtl" value={"0"}>
+                      0%
+                    </MenuItem>
+                    <MenuItem dir="rtl" value={"10"}>
+                      10%
+                    </MenuItem>
+                    <MenuItem dir="rtl" value={"20"}>
+                      20%
+                    </MenuItem>
+                    <MenuItem dir="rtl" value={"30"}>
+                      30%
+                    </MenuItem>
+                    <MenuItem dir="rtl" value={"40"}>
+                      40%
+                    </MenuItem>
+                    <MenuItem dir="rtl" value={"50"}>
+                      50%
+                    </MenuItem>
+                    <MenuItem dir="rtl" value={"60"}>
+                      60%
+                    </MenuItem>
+                  </Select>
                 </Box>
                 <Box display={"flex"}>
                   تفعيل وضعيه البايبال :
@@ -220,9 +219,17 @@ function Taxes() {
                 </Box>
               </Box>
             </Box>
-            <Box pr={{ lg: 5, xs: 1 }} width={{lg: "50%",  xs: '100%'}} color={"#454545"}>
+            <Box
+              pr={{ lg: 5, xs: 1 }}
+              width={{ lg: "50%", xs: "100%" }}
+              color={"#454545"}
+            >
               <Box display={"flex"} flexDirection={"column"} gap={3}>
-                <Box fontSize={"25px"} mt={{xs: 3, lg: 0}} color={"#45454580"}>
+                <Box
+                  fontSize={"25px"}
+                  mt={{ xs: 3, lg: 0 }}
+                  color={"#45454580"}
+                >
                   ادخال روابط بايبال
                 </Box>
                 <Box display={"flex"} justifyContent={"center"} gap={5}>

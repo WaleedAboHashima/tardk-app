@@ -270,7 +270,6 @@ function Home() {
         </Box>
         <Box
           width={"100%"}
-          height={{ lg: "600px", xs: "auto" }}
           sx={{
             background: "url(./assets/allPackages.jpg) no-repeat center center",
           }}
@@ -450,7 +449,7 @@ function Home() {
                       height: { lg: "auto", xs: 116 },
                       width: { lg: 355, xs: 177 },
                       margin: { lg: 4, xs: 2 },
-                      marginTop: { xs: 30, lg: 0 },
+                      marginTop: { xs: 5, lg: 0 },
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
@@ -521,7 +520,7 @@ function Home() {
                           sx={{
                             display: "none",
                             justifyContent: "right",
-                            marginRight: 10,
+                            marginRight: 0,
                           }}
                           dir="rtl"
                         >
@@ -545,7 +544,7 @@ function Home() {
                           sx={{
                             display: "none",
                             justifyContent: "right",
-                            marginRight: 10,
+                            marginRight: 0,
                           }}
                           dir="rtl"
                         >
@@ -569,7 +568,7 @@ function Home() {
                           sx={{
                             display: "none",
                             justifyContent: "right",
-                            marginRight: 10,
+                            marginRight: 0,
                           }}
                           dir="rtl"
                         >
@@ -593,7 +592,7 @@ function Home() {
                           sx={{
                             display: "none",
                             justifyContent: "right",
-                            marginRight: 10,
+                            marginRight: 0,
                           }}
                           dir="rtl"
                         >
