@@ -7,8 +7,6 @@ import {
   Paper,
   ListItem,
   ListItemIcon,
-  Autocomplete,
-  createFilterOptions,
   List,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -54,6 +52,7 @@ function Home() {
     >
       <TopBar />
       <Box
+        overflow={"hidden"}
         display="flex"
         flexDirection={"column"}
         width="auto"
@@ -657,6 +656,5 @@ const responsive = {
     items: 2,
   },
 };
-
 
 export default Home;

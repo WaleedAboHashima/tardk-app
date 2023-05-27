@@ -22,55 +22,56 @@ import ChangeLogo from "./pages/Admin/ChangeLogo";
 import Success from "./pages/Success";
 import Search from "./pages/Search";
 import Cancel from "./pages/Cancel";
+import Socials from "./pages/Admin/Socials";
 function App() {
   const cookies = new Cookies();
   const dispatch = useDispatch();
   const [websiteIconUrl, setWebsiteIconUrl] = useState("");
-  useEffect(() => {
-    dispatch(RulesHandler())
-      .then((response) => {
-        if (response.payload) {
-          if (response.payload.data) {
-            const logo = response.payload.data.rules.filter(
-              (f) => f.type === "main_logo"
-            );
-            setWebsiteIconUrl(logo[0].main_logo);
-            const manifestLink = document.querySelector('link[rel="manifest"]');
-            if (manifestLink) {
-              const manifestUrl = manifestLink.getAttribute("href");
-              fetch(manifestUrl)
-                .then((response) => response.json())
-                .then((manifest) => {
-                  const newManifest = {
-                    ...manifest,
-                    icons: [
-                      {
-                        src: websiteIconUrl,
-                        sizes: "192x192",
-                        type: "image/png",
-                      },
-                      {
-                        src: websiteIconUrl,
-                        sizes: "512x512",
-                        type: "image/png",
-                      },
-                    ],
-                  };
-                  manifestLink.setAttribute(
-                    "href",
-                    URL.createObjectURL(
-                      new Blob([JSON.stringify(newManifest)], {
-                        type: "application/json",
-                      })
-                    )
-                  );
-                });
-            }
-          }
-        }
-      })
-      .catch((error) => console.log(error));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(RulesHandler())
+  //     .then((response) => {
+  //       if (response.payload) {
+  //         if (response.payload.data) {
+  //           const logo = response.payload.data.rules.filter(
+  //             (f) => f.type === "main_logo"
+  //           );
+  //           setWebsiteIconUrl(logo[0].main_logo);
+  //           const manifestLink = document.querySelector('link[rel="manifest"]');
+  //           if (manifestLink) {
+  //             const manifestUrl = manifestLink.getAttribute("href");
+  //             fetch(manifestUrl)
+  //               .then((response) => response.json())
+  //               .then((manifest) => {
+  //                 const newManifest = {
+  //                   ...manifest,
+  //                   icons: [
+  //                     {
+  //                       src: websiteIconUrl,
+  //                       sizes: "192x192",
+  //                       type: "image/png",
+  //                     },
+  //                     {
+  //                       src: websiteIconUrl,
+  //                       sizes: "512x512",
+  //                       type: "image/png",
+  //                     },
+  //                   ],
+  //                 };
+  //                 manifestLink.setAttribute(
+  //                   "href",
+  //                   URL.createObjectURL(
+  //                     new Blob([JSON.stringify(newManifest)], {
+  //                       type: "application/json",
+  //                     })
+  //                   )
+  //                 );
+  //               });
+  //           }
+  //         }
+  //       }
+  //     })
+  //     .catch((error) => console.log(error));
+  // }, []);
   return (
     <div className="App" style={{ overflowX: "hidden"}}>
       <Routes>
@@ -98,6 +99,7 @@ function App() {
         {cookies.get("_auth_role") === "651001091051101310" ? (
           <>
             <Route path="/admin/adminpanel" element={<AdminPanel />} />
+            <Route path="/admin/socials" element={<Socials />} />
             <Route path="/admin/termsofuse" element={<TermsOfUse />} />
             <Route path="/admin/conditions" element={<Conditions />} />
             <Route path="/admin/taxes" element={<Taxes />} />

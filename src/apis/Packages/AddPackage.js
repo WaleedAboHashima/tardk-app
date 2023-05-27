@@ -22,7 +22,7 @@ export const AddPackageHandler = createAsyncThunk('AddPackageSlice/AddPackageHan
     }
     catch (err) {
         return {
-            message: err.response.data.err.status,
+            message: err.response.data,
             status: err.response.status
         }
     }
@@ -52,7 +52,6 @@ const AddPackageSlice = createSlice({
             }
         })
         builder.addCase(AddPackageHandler.rejected, (state, action) => {
-            console.log(action)
             state.loading = false;
             state.error = 'Server Error';
             state.data = {};

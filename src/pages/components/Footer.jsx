@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Link } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import  { RulesHandler } from "./../../apis/rules";
+import rules, { RulesHandler } from "./../../apis/rules";
 
 function Footer() {
   const dispatch = useDispatch();
@@ -9,6 +9,19 @@ function Footer() {
   const [termsOfUse, setTermsOfUse] = useState();
   const [conditions, setConditions] = useState();
   const [icon, setIcon] = useState();
+  const [whatsApp, setWhatsapp] = useState();
+  const [facebook, setFacebook] = useState();
+  const [insta, setInsta] = useState();
+
+  const handleClick = (phoneNumber) => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.open(`whatsapp://send?phone=${phoneNumber}`);
+    } else {
+      window.open(`tel:${phoneNumber}`);
+    }
+  };
+
   useEffect(() => {
     dispatch(RulesHandler()).then((res) => {
       if (res.payload.data) {
@@ -21,19 +34,32 @@ function Footer() {
         const icon = res.payload.data.rules.filter(
           (rule) => rule.type === "main_img"
         );
+        const whatsapp = res.payload.data.rules.filter(
+          (rule) => rule.type === "whatsapp"
+        );
+        const facebook = res.payload.data.rules.filter(
+          (rule) => rule.type === "facebook"
+        );
+        const insta = res.payload.data.rules.filter(
+          (rule) => rule.type === "instagram"
+        );
         setTermsOfUse(termsOfUse[0].textBody);
         setConditions(condition[0].textBody);
         setIcon(icon[0].main_img);
+        setWhatsapp(whatsapp[0].whatsapp);
+        setFacebook(facebook[0].facebook);
+        setInsta(insta[0].instagram);
       }
     });
   }, [dispatch]);
   return (
     <Box
       sx={{
+        backgroundColor: "white",
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        height: { xs: "auto", lg: "512px" },
+        height: { xs: "auto", lg: "100%" },
         direction: "rtl",
         textAlign: { xs: "center", lg: "unset" },
       }}
@@ -42,14 +68,17 @@ function Footer() {
         <Typography variant="h6">
           سياسة الاستخدام:
           <Box height={"100px"}>
-          <Typography sx={{wordWrap:'break-word'}}>{state.data.rules ? termsOfUse : "سياسة الاستخدام"}</Typography>
-
+            <Typography sx={{ wordWrap: "break-word" }}>
+              {state.data.rules ? termsOfUse : "سياسة الاستخدام"}
+            </Typography>
           </Box>
         </Typography>
         <Typography variant="h6">
           سياسة الخصوصية:
           <Box height={"100px"} textOverflow={"ellipsis"}>
-            <Typography sx={{wordWrap:'break-word'}}>{state.data.rules ? conditions : "سياسة الخصوصية"}</Typography>
+            <Typography sx={{ wordWrap: "break-word" }}>
+              {state.data.rules ? conditions : "سياسة الخصوصية"}
+            </Typography>
           </Box>
         </Typography>
       </Box>
@@ -70,24 +99,27 @@ function Footer() {
             تواصل معنا عبر
           </Typography>
           <Box display={"flex"} gap={1} justifyContent={"center"}>
-            <img
-              style={{ cursor: "pointer", width: "40px", height: "40px" }}
-              onClick={() => ""}
-              src="/assets/whatsAppLogo.png"
-              alt="companylogos"
-            />
-            <img
-              style={{ cursor: "pointer", width: "40px", height: "40px" }}
-              onClick={() => ""}
-              src={"/assets/facebookLogo.png"}
-              alt="companylogos"
-            />
-            <img
-              style={{ cursor: "pointer", width: "40px", height: "40px" }}
-              onClick={() => ""}
-              src="/assets/instaLogo.png"
-              alt="companylogos"
-            />
+            <a href={`https://wa.me/${whatsApp}`}>
+              <img
+                style={{ cursor: "pointer", width: "40px", height: "40px" }}
+                src="/assets/whatsAppLogo.png"
+                alt="companylogos"
+              />
+            </a>
+            <a href={facebook} target="_blank">
+              <img
+                style={{ cursor: "pointer", width: "40px", height: "40px" }}
+                src={"/assets/facebookLogo.png"}
+                alt="companylogos"
+              />
+            </a>
+            <a href={insta} target="_blank">
+              <img
+                style={{ cursor: "pointer", width: "40px", height: "40px" }}
+                src="/assets/instaLogo.png"
+                alt="companylogos"
+              />
+            </a>
           </Box>
         </Box>
         <Box
@@ -120,7 +152,7 @@ function Footer() {
               جميع الطرود
             </Link>
           </Box>
-        </Box>{" "}
+        </Box>
         <Box
           display={"flex"}
           flexDirection={"column"}
@@ -136,7 +168,13 @@ function Footer() {
             justifyContent={"center"}
             height={"26px"}
           >
-            <img height={"26px"} src="/assets/PayPal.png" alt="companylogos" />
+            <img
+              onClick={() => handleClick(whatsApp)}
+              height={"26px"}
+              src="/assets/PayPal.png"
+              alt="companylogos"
+            />
+
             <img
               height={"30px"}
               src="/assets/Master Card.png"
@@ -147,11 +185,9 @@ function Footer() {
         </Box>
         <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
           <img
-            width={{ xs: "300px", lg: "418px" }}
-            height={{ xs: "418px", lg: "133px" }}
-            src={`${
-              icon ? icon : "/assets/TARDK.png"
-            } `}
+            width="400px"
+            height="200px"
+            src={`${icon ? icon : "/assets/TARDK.png"} `}
             alt="Tardk"
           />
         </Box>

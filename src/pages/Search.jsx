@@ -59,7 +59,7 @@ function Search() {
                   >
                     <CircularProgress color="success" />
                   </Box>
-                ) : results.evictions.length > 0 ? (
+                ) : results.evictions && results.evictions.length > 0 ? (
                   results.evictions.map((res) => (
                     <Paper
                       key={res._id}

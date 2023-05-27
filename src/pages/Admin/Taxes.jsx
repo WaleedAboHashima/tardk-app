@@ -113,19 +113,21 @@ function Taxes() {
         alignItems={"center"}
         sx={{ backgroundColor: "#F2F2F2" }}
       >
-        <Box width={"1257px"} height={"682px"} display={"flex"}>
+        <Box width={"1257px"} height={{lg:"682px", xs: '100%'}} display={"flex"}>
           <Box
             sx={{ backgroundColor: "white" }}
-            p={5}
+            p={{lg: 5, xs: 1}}
             display={"flex"}
             width={"100%"}
+            flexDirection={{ xs: 'column', lg: 'row' }}
           >
             <Box
-              width={"50%"}
+              width={{lg: "50%", xs: '100%'}}
               color={"#454545"}
-              sx={{ borderLeft: "2px solid #454545" }}
+              borderLeft={{ lg: '2px solid #454545', xs: '0px' }}
+              borderBottom={{xs: '2px solid #454545', lg: '0px'}}
             >
-              <Box my={"20%"} display={"flex"} flexDirection={"column"} gap={5}>
+              <Box my={"20%"} display={"flex"} flexDirection={"column"} gap={{lg: 5 , xs: 2}}>
                 <Box fontSize={"35px"} fontWeight={"bold"}>
                   عموله الموقع
                 </Box>
@@ -218,9 +220,9 @@ function Taxes() {
                 </Box>
               </Box>
             </Box>
-            <Box pr={5} width={"50%"} color={"#454545"}>
+            <Box pr={{ lg: 5, xs: 1 }} width={{lg: "50%",  xs: '100%'}} color={"#454545"}>
               <Box display={"flex"} flexDirection={"column"} gap={3}>
-                <Box fontSize={"25px"} color={"#45454580"}>
+                <Box fontSize={"25px"} mt={{xs: 3, lg: 0}} color={"#45454580"}>
                   ادخال روابط بايبال
                 </Box>
                 <Box display={"flex"} justifyContent={"center"} gap={5}>

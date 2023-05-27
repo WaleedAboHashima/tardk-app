@@ -10,32 +10,44 @@ const initialState = {
   status: "",
 };
 const cookies = new Cookies();
-const api = "https://tardq.onrender.com/auth/rules";
+const api = "https://tardq.onrender.com/admin/rule?type=";
 
-export const RulesHandler = createAsyncThunk(
-  "RulesHandler/RulesSlice",
-  async () => {
+export const ChangeSocialHandler = createAsyncThunk(
+  "ChangeSocialHandler/SocialSlice",
+  async (arg) => {
     try {
-      const response = await axios.get(api)
+      const response = await axios.post(
+        api + arg.type,
+        arg.type === "facebook"
+          ? {
+              facebook: arg.data,
+            }
+          : arg.type === "whatsapp"
+          ? {
+              whatsapp: arg.data,
+            }
+          : { instagram: arg.data },
+        { headers: { authorization: `Bearer ${cookies.get("_auth_token")}` } }
+      );
       return {
         data: response.data,
         status: response.status,
       };
     } catch (err) {
       return {
-        message: err.response.data.err.msg,
+        message: err.response.data.err,
         status: err.response.status,
       };
     }
   }
 );
 
-const RulesSlice = createSlice({
-  name: "RulesSlice",
+const SocialSlice = createSlice({
+  name: "SocialSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(RulesHandler.fulfilled, (state, action) => {
+    builder.addCase(ChangeSocialHandler.fulfilled, (state, action) => {
       state.loading = true;
       if (action.payload.status === 200) {
         state.data = action.payload.data;
@@ -51,14 +63,15 @@ const RulesSlice = createSlice({
         state.loading = false;
       }
     });
-    builder.addCase(RulesHandler.rejected, (state, action) => {
+    builder.addCase(ChangeSocialHandler.rejected, (state, action) => {
+      console.log(action);
       state.loading = false;
       state.error = "Server Error";
       state.data = {};
       state.state = "Rejected";
       state.status = 500;
     });
-    builder.addCase(RulesHandler.pending, (state) => {
+    builder.addCase(ChangeSocialHandler.pending, (state) => {
       state.loading = true;
       state.error = "";
       state.data = {};
@@ -68,4 +81,4 @@ const RulesSlice = createSlice({
   },
 });
 
-export default RulesSlice.reducer;
+export default SocialSlice.reducer;

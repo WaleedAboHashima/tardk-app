@@ -63,12 +63,15 @@ function AddPackage() {
     formData.append("eviction_name", eviction_name);
     formData.append("source_location", source_location);
     formData.append("type_eviction", type_eviction);
-    formData.append("dis_location", type_eviction);
+    formData.append("dis_location", dis_location);
     formData.append("price", price);
     formData.append("phone", phone);
     formData.append("eviction_size", eviction_size);
-    formData.append("order_photo", [files.map(f => f.data)]);
+    files.map(file => {
+      formData.append("order_photo", file.data)
+    })
     dispatch(AddPackageHandler(formData)).then(() => handleStatus());
+    
   };
   const handleStatus = () => {
     if (state.status) {

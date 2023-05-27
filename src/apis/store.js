@@ -17,6 +17,7 @@ import PayPalSecretReducer from "./Admin/AddPaypal"
 import PaypalActiveReducer from "./Admin/ActivatePaypal"
 import IBANReducer from "./Admin/ChangeIBAN"
 import ConfirmPaymentRedcuer from "./Payment/ConfirmPayment"
+import SocialsReducer from "./Admin/Socials"
 import SearchReducer from "./Search"
 export const store = configureStore({
     reducer: {
@@ -40,6 +41,7 @@ export const store = configureStore({
         ConfirmPayment: ConfirmPaymentRedcuer,
         Search: SearchReducer,
         IBAN: IBANReducer,
+        Socials: SocialsReducer,
 
     }
 })
