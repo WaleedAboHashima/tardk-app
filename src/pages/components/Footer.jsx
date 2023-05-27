@@ -150,7 +150,7 @@ function Footer() {
             width={{ xs: "300px", lg: "418px" }}
             height={{ xs: "418px", lg: "133px" }}
             src={`${
-              icon ? `https://tardq.onrender.com/${icon}` : "/assets/TARDK.png"
+              icon ? icon : "/assets/TARDK.png"
             } `}
             alt="Tardk"
           />

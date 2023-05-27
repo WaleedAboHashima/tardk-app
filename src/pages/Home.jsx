@@ -9,6 +9,7 @@ import {
   ListItemIcon,
   Autocomplete,
   createFilterOptions,
+  List,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
@@ -29,8 +30,7 @@ function Home() {
   const navigator = useNavigate();
   const cookies = new Cookies();
   const dispatch = useDispatch();
-  const [search, setSearch] = useState('');
-
+  const [search, setSearch] = useState("");
   useEffect(() => {
     dispatch(GetPackagesHandler()).then((res) => {
       if (res.payload.data) {
@@ -47,7 +47,7 @@ function Home() {
   }, [dispatch]);
 
   return (
-    <motion.Box
+    <motion.div
       initial={{ opacity: 0, transition: { duration: 0.5 } }}
       animate={{ opacity: 1, transition: { duration: 0.5 } }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -103,7 +103,9 @@ function Home() {
                 style: { fontSize: "25px", paddingRight: 10 },
                 endAdornment: (
                   <IconButton
-                    onClick={() =>  window.location.pathname = `/search/${search}`}
+                    onClick={() =>
+                      (window.location.pathname = `/search/${search}`)
+                    }
                     position="end"
                     sx={{
                       cursor: "pointer",
@@ -295,6 +297,7 @@ function Home() {
             {allOrders ? (
               allOrders.map((order) => (
                 <Paper
+                  key={order._id}
                   sx={{
                     height: { lg: 369, xs: 150 },
                     width: { lg: 347, xs: 140 },
@@ -425,8 +428,9 @@ function Home() {
           <Carousel responsive={responsive} rtl itemClass="4">
             {drivers ? (
               drivers.map((driver) => (
-                <Box height={"355px"}>
+                <Box height={"355px"} key={driver._id}>
                   <Paper
+                    key={driver.username}
                     onClick={() => {
                       cookies.get("_auth_token")
                         ? (window.location.pathname = `/driverinfo/${driver._id}`)
@@ -507,102 +511,104 @@ function Home() {
                       />
                       <Box>{driver.username}</Box>
                       <Box className="number">{driver.phone}</Box>
-                      <ListItem
-                        className="driverDetails"
-                        disableGutters
-                        sx={{
-                          display: "none",
-                          justifyContent: "right",
-                          marginRight: 10,
-                        }}
-                        dir="rtl"
-                      >
-                        <ListItemIcon sx={{ minWidth: 0 }}>
-                          <div
-                            style={{
-                              width: "0.5em",
-                              height: "0.5em",
-                              textAlign: "right",
-                              borderRadius: "50%",
-                              backgroundColor: "white",
-                            }}
-                          />
-                        </ListItemIcon>
-                        الرقم:
-                        {driver.user.phone}
-                      </ListItem>
-                      <ListItem
-                        className="driverDetails"
-                        disableGutters
-                        sx={{
-                          display: "none",
-                          justifyContent: "right",
-                          marginRight: 10,
-                        }}
-                        dir="rtl"
-                      >
-                        <ListItemIcon sx={{ minWidth: 0 }}>
-                          <div
-                            style={{
-                              width: "0.5em",
-                              height: "0.5em",
-                              textAlign: "right",
-                              borderRadius: "50%",
-                              backgroundColor: "white",
-                            }}
-                          />
-                        </ListItemIcon>
-                        السعر:
-                        {driver.price}
-                      </ListItem>
-                      <ListItem
-                        className="driverDetails"
-                        disableGutters
-                        sx={{
-                          display: "none",
-                          justifyContent: "right",
-                          marginRight: 10,
-                        }}
-                        dir="rtl"
-                      >
-                        <ListItemIcon sx={{ minWidth: 0 }}>
-                          <div
-                            style={{
-                              width: "0.5em",
-                              height: "0.5em",
-                              textAlign: "right",
-                              borderRadius: "50%",
-                              backgroundColor: "white",
-                            }}
-                          />
-                        </ListItemIcon>
-                        مكان السكن:
-                        {driver.source_location}
-                      </ListItem>
-                      <ListItem
-                        className="driverDetails"
-                        disableGutters
-                        sx={{
-                          display: "none",
-                          justifyContent: "right",
-                          marginRight: 10,
-                        }}
-                        dir="rtl"
-                      >
-                        <ListItemIcon sx={{ minWidth: 0 }}>
-                          <div
-                            style={{
-                              width: "0.5em",
-                              height: "0.5em",
-                              textAlign: "right",
-                              borderRadius: "50%",
-                              backgroundColor: "white",
-                            }}
-                          />
-                        </ListItemIcon>
-                        مكان السفر:
-                        {driver.dis_location}
-                      </ListItem>
+                      <List>
+                        <ListItem
+                          className="driverDetails"
+                          disableGutters
+                          sx={{
+                            display: "none",
+                            justifyContent: "right",
+                            marginRight: 10,
+                          }}
+                          dir="rtl"
+                        >
+                          <ListItemIcon sx={{ minWidth: 0 }}>
+                            <div
+                              style={{
+                                width: "0.5em",
+                                height: "0.5em",
+                                textAlign: "right",
+                                borderRadius: "50%",
+                                backgroundColor: "white",
+                              }}
+                            />
+                          </ListItemIcon>
+                          الرقم:
+                          {driver.user.phone}
+                        </ListItem>
+                        <ListItem
+                          className="driverDetails"
+                          disableGutters
+                          sx={{
+                            display: "none",
+                            justifyContent: "right",
+                            marginRight: 10,
+                          }}
+                          dir="rtl"
+                        >
+                          <ListItemIcon sx={{ minWidth: 0 }}>
+                            <div
+                              style={{
+                                width: "0.5em",
+                                height: "0.5em",
+                                textAlign: "right",
+                                borderRadius: "50%",
+                                backgroundColor: "white",
+                              }}
+                            />
+                          </ListItemIcon>
+                          السعر:
+                          {driver.price}
+                        </ListItem>
+                        <ListItem
+                          className="driverDetails"
+                          disableGutters
+                          sx={{
+                            display: "none",
+                            justifyContent: "right",
+                            marginRight: 10,
+                          }}
+                          dir="rtl"
+                        >
+                          <ListItemIcon sx={{ minWidth: 0 }}>
+                            <div
+                              style={{
+                                width: "0.5em",
+                                height: "0.5em",
+                                textAlign: "right",
+                                borderRadius: "50%",
+                                backgroundColor: "white",
+                              }}
+                            />
+                          </ListItemIcon>
+                          مكان السكن:
+                          {driver.source_location}
+                        </ListItem>
+                        <ListItem
+                          className="driverDetails"
+                          disableGutters
+                          sx={{
+                            display: "none",
+                            justifyContent: "right",
+                            marginRight: 10,
+                          }}
+                          dir="rtl"
+                        >
+                          <ListItemIcon sx={{ minWidth: 0 }}>
+                            <div
+                              style={{
+                                width: "0.5em",
+                                height: "0.5em",
+                                textAlign: "right",
+                                borderRadius: "50%",
+                                backgroundColor: "white",
+                              }}
+                            />
+                          </ListItemIcon>
+                          مكان السفر:
+                          {driver.dis_location}
+                        </ListItem>
+                      </List>
                     </Box>
                   </Paper>
                 </Box>
@@ -622,9 +628,9 @@ function Home() {
             )}
           </Carousel>
         </Box>
+        <Footer />
       </Box>
-      <Footer />
-    </motion.Box>
+    </motion.div>
   );
 }
 
@@ -652,6 +658,5 @@ const responsive = {
   },
 };
 
-const top100Films = [{ label: "The Shawshank Redemption", year: 1994 }];
 
 export default Home;

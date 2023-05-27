@@ -25,33 +25,54 @@ import Cancel from "./pages/Cancel";
 function App() {
   const cookies = new Cookies();
   const dispatch = useDispatch();
-  const [websiteIconUrl, setWebsiteIconUrl] = useState('/favicon.ico');
-
+  const [websiteIconUrl, setWebsiteIconUrl] = useState("");
   useEffect(() => {
     dispatch(RulesHandler())
       .then((response) => {
-        if (response.payload.data.rules) {
-          const logo = response.payload.data.rules.filter(f => f.type === "main_logo")
-          setWebsiteIconUrl(logo[0].main_logo);
-          updateLinkTag(`https://tardq.onrender.com/${logo[0].main_logo}`);
+        if (response.payload) {
+          if (response.payload.data) {
+            const logo = response.payload.data.rules.filter(
+              (f) => f.type === "main_logo"
+            );
+            setWebsiteIconUrl(logo[0].main_logo);
+            const manifestLink = document.querySelector('link[rel="manifest"]');
+            if (manifestLink) {
+              const manifestUrl = manifestLink.getAttribute("href");
+              fetch(manifestUrl)
+                .then((response) => response.json())
+                .then((manifest) => {
+                  const newManifest = {
+                    ...manifest,
+                    icons: [
+                      {
+                        src: websiteIconUrl,
+                        sizes: "192x192",
+                        type: "image/png",
+                      },
+                      {
+                        src: websiteIconUrl,
+                        sizes: "512x512",
+                        type: "image/png",
+                      },
+                    ],
+                  };
+                  manifestLink.setAttribute(
+                    "href",
+                    URL.createObjectURL(
+                      new Blob([JSON.stringify(newManifest)], {
+                        type: "application/json",
+                      })
+                    )
+                  );
+                });
+            }
+          }
         }
       })
       .catch((error) => console.log(error));
   }, []);
-
-  function updateLinkTag(newHref) {
-    const linkTag = document.querySelector('link[rel="icon"]');
-    if (linkTag) {
-      linkTag.href = newHref;
-    } else {
-      const newLinkTag = document.createElement('link');
-      newLinkTag.rel = 'icon';
-      newLinkTag.href = newHref;
-      document.head.appendChild(newLinkTag);
-    }
-  }
   return (
-    <div className="App" style={{overflowX:"hidden", overflowY: 'hidden'}}>
+    <div className="App" style={{ overflowX: "hidden"}}>
       <Routes>
         <Route path="/*" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -62,14 +83,14 @@ function App() {
         <Route path="/search/:input" element={<Search />} />
         {cookies.get("_auth_role") && cookies.get("_auth_token") ? (
           <>
-          <Route path="/success" element={<Success />} />
-          <Route path="/cancel" element={<Cancel />} />
-          <Route path="/addPackage" element={<AddPackage />} />
-          <Route path="/canDeliver" element={<CanDeliver />} />
-          <Route path="/message/:id" element={<DeliverMessage />} />
-          <Route path="/message" element={<DeliverMessage />} />
-          <Route path="/driverInfo/:id" element={<DriverInfo />} />
-          <Route path="/packageInfo/:id" element={<PackageInfo />} />
+            <Route path="/success" element={<Success />} />
+            <Route path="/cancel" element={<Cancel />} />
+            <Route path="/addPackage" element={<AddPackage />} />
+            <Route path="/canDeliver" element={<CanDeliver />} />
+            <Route path="/message/:id" element={<DeliverMessage />} />
+            <Route path="/message" element={<DeliverMessage />} />
+            <Route path="/driverInfo/:id" element={<DriverInfo />} />
+            <Route path="/packageInfo/:id" element={<PackageInfo />} />
           </>
         ) : (
           ""

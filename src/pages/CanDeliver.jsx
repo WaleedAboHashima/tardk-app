@@ -81,7 +81,12 @@ function CanDeliver() {
   }, [state.status]);
 
   return (
-    <motion.Box height={"100vh"} width={"100%"}>
+    <motion.div
+      style={{ height: "100vh", width: "100%" }}
+      initial={{ opacity: 0, transition: { duration: 0.5 } }}
+      animate={{ opacity: 1, transition: { duration: 0.5 } }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    >
       <TopBar />
       <Box
         display={"flex"}
@@ -106,7 +111,7 @@ function CanDeliver() {
           <Box fontSize={"35px"}>يرجى تعبئة البيانات التالية (أضافه طرد)</Box>
           <Formik onSubmit={handleSubmit} initialValues={initialState}>
             {({ values, errors, touched, handleChange, handleSubmit }) => (
-              <Box width={'100%'}>
+              <Box width={"100%"}>
                 <form
                   onSubmit={handleSubmit}
                   style={{
@@ -117,7 +122,11 @@ function CanDeliver() {
                     margin: 10,
                   }}
                 >
-                  <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
+                  <Box
+                    display={"flex"}
+                    gap={"30px"}
+                    flexDirection={{ xs: "column", lg: "row" }}
+                  >
                     <TextField
                       name="username"
                       value={values.username}
@@ -179,7 +188,11 @@ function CanDeliver() {
                       }}
                     />
                   </Box>
-                  <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
+                  <Box
+                    display={"flex"}
+                    gap={"30px"}
+                    flexDirection={{ xs: "column", lg: "row" }}
+                  >
                     <TextField
                       name="dis_location"
                       value={values.dis_location}
@@ -265,7 +278,11 @@ function CanDeliver() {
                       }}
                     />
                   </Box>
-                  <Box display={"flex"} gap={"30px"} flexDirection={{xs: 'column', lg: 'row'}}>
+                  <Box
+                    display={"flex"}
+                    gap={"30px"}
+                    flexDirection={{ xs: "column", lg: "row" }}
+                  >
                     <TextField
                       name="packageSize"
                       value={values.packageSize}
@@ -314,7 +331,7 @@ function CanDeliver() {
                   <Box height={"140px"}>
                     <Box
                       display={"flex"}
-                      fontSize={{lg: "25px", xs: '15px'}}
+                      fontSize={{ lg: "25px", xs: "15px" }}
                       fontWeight={"bold"}
                       color={"#454545"}
                     >
@@ -415,7 +432,7 @@ function CanDeliver() {
         </Box>
       </Box>
       <Footer />
-    </motion.Box>
+    </motion.div>
   );
 }
 

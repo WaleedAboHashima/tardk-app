@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 function Cancel() {
     useEffect(() => {
         setTimeout(() => {
-            window.location.href = 'http://localhost:3000/'
+            window.location.href = 'https://main.d328sn5gxpslxw.amplifyapp.com/'
         }, 3000);
     }, [])
   return (

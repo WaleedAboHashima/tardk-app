@@ -24,12 +24,11 @@ function Search() {
     });
   }, []);
   return (
-    <motion.Box
-      height={"100vh"}
-      width={"100%"}
-      initial={{ opacity: 0, transition: { duration: 0.5 } }}
-      animate={{ opacity: 1, transition: { duration: 0.5 } }}
-      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    <motion.div
+    style={{height: '100vh', width: '100%'}}
+    initial={{ opacity: 0, transition: { duration: 0.5 } }}
+    animate={{ opacity: 1, transition: { duration: 0.5 } }}
+    exit={{ opacity: 0, transition: { duration: 0.5 } }}
     >
       <TopBar />
       <Box sx={{ direction: "rtl", backgroundColor: "#F2F2F2" }}>
@@ -178,7 +177,7 @@ function Search() {
         </Box>
       </Box>
       <Footer />
-    </motion.Box>
+    </motion.div>
   );
 }
 

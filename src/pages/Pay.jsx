@@ -67,7 +67,7 @@ function Pay() {
   useEffect(() => {
     handleStateChange();
     dispatch(RulesHandler()).then((res) => {
-      if (res.payload) {
+      if (res.payload.data) {
         setCommission(
           res.payload.data.rules.filter(
             (r) => r.type === "commission" && r.commission
@@ -79,12 +79,11 @@ function Pay() {
   }, [state.status]);
 
   return (
-    <motion.Box
-      height={"100vh"}
-      width={"100%"}
-      initial={{ opacity: 0, transition: { duration: 0.5 } }}
-      animate={{ opacity: 1, transition: { duration: 0.5 } }}
-      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+    <motion.div
+    style={{height: '100vh', width: '100%'}}
+    initial={{ opacity: 0, transition: { duration: 0.5 } }}
+    animate={{ opacity: 1, transition: { duration: 0.5 } }}
+    exit={{ opacity: 0, transition: { duration: 0.5 } }}
     >
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -389,7 +388,7 @@ function Pay() {
         )}
       </Box>
       <Footer />
-    </motion.Box>
+    </motion.div>
   );
 }
 const validSchema = yup.object({

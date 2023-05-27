@@ -33,6 +33,10 @@ function DeliverMessage() {
     setPrivateMessage("");
     input.current.value = "";
     setSocketChange(!socketChange);
+
+    socket.on("newMessage", (data) => {
+      console.log(data);
+    });
   };
 
   function scrollToBottom() {
@@ -107,6 +111,7 @@ function DeliverMessage() {
           >
             {messages.map((message, index) => (
               <Box
+                key={index++}
                 display={"flex"}
                 flexDirection={"column"}
                 sx={{
@@ -269,17 +274,14 @@ function DeliverMessage() {
                             : "اسم السائق"}
                         </span>
                         <span>
-                          {allMessages
-                            ? allMessages.map((m) =>
-                                cookies.get("_auth_id") === m.from.active
-                                  ? "متصل"
-                                  : "غير المتصل"
-                                  ? m.to.active
+                          {messages
+                            ? messages.map((m) =>
+                                cookies.get("_auth_id") ===
+                                m[m.length - 1].from._id
+                                  ? m[m.length - 1].to.active
                                     ? "متصل"
-                                    : "غير متصل"
-                                  : m.from.active
-                                  ? "متصل"
-                                  : "غير متصل"
+                                    : "غير متصل"  
+                                  : ""
                               )
                             : "الحاله"}
                         </span>
@@ -304,7 +306,7 @@ function DeliverMessage() {
                   >
                     {/* Box */}
                     {allMessages.map((m) => (
-                      <>
+                      <Box key={m._id}>
                         {m.from._id === params.id ? (
                           <Box
                             maxWidth={"320px"}
@@ -348,7 +350,7 @@ function DeliverMessage() {
                             </Box>
                           </Box>
                         )}
-                      </>
+                      </Box>
                     ))}
 
                     {/* Box */}

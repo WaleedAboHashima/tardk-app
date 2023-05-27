@@ -23,9 +23,8 @@ function AllPackages() {
     dispatch(GetPackagesHandler());
   }, []);
   return (
-    <motion.Box
-      height={"100vh"}
-      width={"100%"}
+    <motion.div
+      style={{height: '100vh', width: '100%'}}
       initial={{ opacity: 0, transition: { duration: 0.5 } }}
       animate={{ opacity: 1, transition: { duration: 0.5 } }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -90,6 +89,7 @@ function AllPackages() {
                   state.data.orders &&
                   state.data.orders.map((order) => (
                     <Paper
+                      key={order._id}
                       sx={{
                         height: 369,
                         width: 347,
@@ -191,7 +191,7 @@ function AllPackages() {
         </Box>
       </Box>
       <Footer />
-    </motion.Box>
+    </motion.div>
   );
 }
 
