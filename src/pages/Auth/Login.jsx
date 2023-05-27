@@ -1,4 +1,10 @@
-import { Box, Button, InputAdornment, TextField, Backdrop } from "@mui/material";
+import {
+  Box,
+  Button,
+  InputAdornment,
+  TextField,
+  Backdrop,
+} from "@mui/material";
 import { Formik } from "formik";
 import React, { useEffect } from "react";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -7,7 +13,8 @@ import * as yup from "yup";
 import Cookies from "universal-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginHandler } from "../../apis/Auth/Login";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
+import { Link } from "react-router-dom";
 function Login() {
   const cookies = new Cookies();
   const dispatch = useDispatch();
@@ -198,6 +205,11 @@ function Login() {
                         ),
                       }}
                     />
+                    <Box width={'70%'}>
+                      <Link to={'/register'} style={{color:'white', textAlign: "right" }}>
+                        لا يوجد حساب؟ سجل هنا
+                      </Link>
+                    </Box>
                     <Box color={"red"}>{error}</Box>
                     <Button
                       type="submit"
