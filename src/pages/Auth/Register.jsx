@@ -1,4 +1,11 @@
-import { Box, Button, InputAdornment, TextField, Backdrop } from "@mui/material";
+import {
+  Box,
+  Button,
+  InputAdornment,
+  TextField,
+  Backdrop,
+  Select,
+} from "@mui/material";
 import { Formik } from "formik";
 import React, { useEffect } from "react";
 import EmailIcon from "@mui/icons-material/Email";
@@ -16,6 +23,7 @@ function Register() {
   const [phone, setPhone] = React.useState();
   const [email, setEmail] = React.useState();
   const [location, setLocation] = React.useState();
+  const [code, setCode] = React.useState();
   const [error, setError] = React.useState();
   const [password, setPassword] = React.useState();
   const state = useSelector((state) => state.Register);
@@ -25,7 +33,7 @@ function Register() {
     if (state.status) {
       switch (state.status) {
         case 201:
-          window.location.pathname = "/login";
+          // window.location.pathname = "/login";
           break;
         case 400:
           setError("يوجد مستخدم بهذا الرقم");
@@ -44,7 +52,7 @@ function Register() {
     dispatch(
       RegisterHandler({
         username: username,
-        phone: phone,
+        phone: phone.startsWith("0") && code.endsWith("0") ? code + phone.slice(1) : code + phone,
         email: email,
         location: location,
         password: password,
@@ -83,7 +91,7 @@ function Register() {
         >
           <Box
             width={"693px"}
-            height={{lg: "100%", xl: "841px" }}
+            height={{ lg: "100%", xl: "841px" }}
             sx={{
               backgroundColor: "#FFFFFF20",
               backdropFilter: "blur(15px)",
@@ -220,6 +228,22 @@ function Register() {
                                   : { color: "white", fontSize: "30px" }
                               }
                             />
+                            <TextField
+                              name="code"
+                              value={values.code}
+                              onChange={handleChange}
+                              onChangeCapture={(e) => setCode(e.target.value) }
+                              sx={{width: '80px'}}
+                              placeholder="كود الدوله"
+                              variant="standard"
+                              InputProps={{
+                                style: { fontSize: "20px", color: "white" },
+                                classes: {
+                                  underline: "white-underline",
+                                  focused: "white-focused",
+                                },
+                              }}
+                            />
                           </InputAdornment>
                         ),
                       }}
@@ -289,10 +313,10 @@ function Register() {
                     <Button
                       type="submit"
                       sx={{
-                        position: 'fixed',
-                        bottom: {lg: 1, xs: -80},
+                        position: "fixed",
+                        bottom: { lg: 1, xs: -80 },
                         height: "15%",
-                        backgroundColor: {lg: "#FFCFA182", xs: "#CFA182"},
+                        backgroundColor: { lg: "#FFCFA182", xs: "#CFA182" },
                         ":hover": { background: "#CFA182" },
                         fontSize: "40px",
                         color: "#454545",
@@ -317,6 +341,7 @@ const initialState = {
   username: "",
   location: "",
   email: "",
+  code: "",
   phone: "",
   password: "",
 };
