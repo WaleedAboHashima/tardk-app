@@ -33,7 +33,7 @@ function Register() {
     if (state.status) {
       switch (state.status) {
         case 201:
-          // window.location.pathname = "/login";
+          window.location.pathname = "/login";
           break;
         case 400:
           setError("يوجد مستخدم بهذا الرقم");
